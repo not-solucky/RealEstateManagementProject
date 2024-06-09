@@ -1,0 +1,14 @@
+.header-section{
+    background-color: var(--gray-10);
+    color: white;
+
+    .container{
+        max-width: 1920px;
+        margin: auto;
+        padding: 0 clamp(80px, calc(80px + (162 - 80) * ((100vw - 1440px) / (1920 - 1440))), 162px);
+        display: flex;
+        justify-content: space-between;
+
+        
+    }
+}

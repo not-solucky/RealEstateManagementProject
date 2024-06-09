@@ -1,3 +1,13 @@
-
+.header-section {
+  background-color: var(--gray-10);
+  color: white;
+}
+.header-section .container {
+  max-width: 1920px;
+  margin: auto;
+  padding: 0 clamp(80px, 80px + 82 * (100vw - 1440px) / 480, 162px);
+  display: flex;
+  justify-content: space-between;
+}
 
 /*# sourceMappingURL=navbar.css.map */
