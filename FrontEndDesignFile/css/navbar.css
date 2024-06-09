@@ -5,9 +5,52 @@
 .header-section .container {
   max-width: 1920px;
   margin: auto;
-  padding: 0 clamp(80px, 80px + 82 * (100vw - 1440px) / 480, 162px);
+  padding: 20px clamp(80px, 80px + 82 * (100vw - 1440px) / 480, 162px);
   display: flex;
   justify-content: space-between;
+}
+.header-section .container .active {
+  padding: 14px 24px;
+  background-color: var(--gray-08);
+  border-radius: 10px;
+  border: 1px solid var(--gray-15);
+}
+.header-section .container .logo {
+  display: flex;
+  align-items: center;
+  font-size: var(--medium);
+}
+.header-section .container .logo a {
+  text-decoration: none;
+  color: white;
+  font-weight: var(--font-weight-bold);
+}
+.header-section .container .logo img {
+  width: 50px;
+  height: 50px;
+}
+.header-section .container .navbar ul {
+  display: flex;
+  list-style: none;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+.header-section .container .navbar ul li {
+  color: white;
+  font-size: var(--extra-small);
+  cursor: pointer;
+}
+.header-section .container .sign-up {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.header-section .container .sign-up li {
+  font-size: var(--extra-small);
+  list-style: none;
+  color: white;
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=navbar.css.map */
