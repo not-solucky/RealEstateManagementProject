@@ -42,3 +42,48 @@
     --small: 20px;
     --extra-small: 18px;
 }
+
+.container{
+    max-width: 1920px;
+    margin: auto;
+    padding: 0 clamp(80px, calc(80px + (162 - 80) * ((100vw - 1440px) / (1920 - 1440))), 162px);
+}
+
+@media screen and (max-width: 1440px){
+    :root{
+        --Extra-big: 46px;
+        --big: 38px;
+        --medium: 20px;
+        --small: 18px;  
+        --extra-small: 14px;
+    }
+    .container{
+        padding: 0 clamp(40px, calc(40px + (80 - 40) * ((100vw - 1024px) / (1440 - 1024))), 80px);
+    }
+    
+}
+
+@media screen and (max-width: 1024px){
+    
+    .container{
+        padding: 0 clamp(20px, calc(20px + (40 - 20) * ((100vw - 600px) / (1024 - 600))), 40px);
+    }
+    
+}
+
+@media screen and (max-width: 600px){
+    
+    .container{
+        padding: 0 clamp(16px, calc(16px + (20 - 16) * ((100vw - 420px) / (600 - 420))), 20px);
+    }
+    
+}
+
+
+@media screen and (max-width: 420px){
+    
+    .container{
+        padding: 0 16px;
+    }
+    
+}

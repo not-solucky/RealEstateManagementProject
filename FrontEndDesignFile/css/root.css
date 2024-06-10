@@ -38,4 +38,38 @@
   --extra-small: 18px;
 }
 
+.container {
+  max-width: 1920px;
+  margin: auto;
+  padding: 0 clamp(80px, 80px + 82 * (100vw - 1440px) / 480, 162px);
+}
+
+@media screen and (max-width: 1440px) {
+  :root {
+    --Extra-big: 46px;
+    --big: 38px;
+    --medium: 20px;
+    --small: 18px;
+    --extra-small: 14px;
+  }
+  .container {
+    padding: 0 clamp(40px, 40px + 40 * (100vw - 1024px) / 416, 80px);
+  }
+}
+@media screen and (max-width: 1024px) {
+  .container {
+    padding: 0 clamp(20px, 20px + 20 * (100vw - 600px) / 424, 40px);
+  }
+}
+@media screen and (max-width: 600px) {
+  .container {
+    padding: 0 clamp(16px, 16px + 4 * (100vw - 420px) / 180, 20px);
+  }
+}
+@media screen and (max-width: 420px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+
 /*# sourceMappingURL=root.css.map */

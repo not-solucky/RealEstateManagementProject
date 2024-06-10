@@ -8,9 +8,8 @@ body{
     border-bottom: 1px solid var(--gray-15) ;
 
     .container{
-        max-width: 1920px;
-        margin: auto;
-        padding: 20px clamp(80px, calc(80px + (162 - 80) * ((100vw - 1440px) / (1920 - 1440))), 162px);
+        padding-top: 20px;
+        padding-bottom: 20px;
         display: flex;
         justify-content: space-between;
         .active{
@@ -65,3 +64,23 @@ body{
 
     }
 }
+
+@media screen and (max-width: 1440px){
+    .header-section{
+        .container{
+            padding-top: 16px;
+            padding-bottom: 16px;
+            .active{
+                padding: 14px 20px;
+
+            }
+
+            .navbar{
+                ul{
+                    gap: 24px;
+                }
+            }
+        }
+    }
+}
+

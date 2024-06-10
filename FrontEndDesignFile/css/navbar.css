@@ -8,9 +8,8 @@ body {
   border-bottom: 1px solid var(--gray-15);
 }
 .header-section .container {
-  max-width: 1920px;
-  margin: auto;
-  padding: 20px clamp(80px, 80px + 82 * (100vw - 1440px) / 480, 162px);
+  padding-top: 20px;
+  padding-bottom: 20px;
   display: flex;
   justify-content: space-between;
 }
@@ -56,6 +55,19 @@ body {
   list-style: none;
   color: white;
   cursor: pointer;
+}
+
+@media screen and (max-width: 1440px) {
+  .header-section .container {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+  .header-section .container .active {
+    padding: 14px 20px;
+  }
+  .header-section .container .navbar ul {
+    gap: 24px;
+  }
 }
 
 /*# sourceMappingURL=navbar.css.map */
