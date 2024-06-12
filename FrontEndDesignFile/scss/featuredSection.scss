@@ -1,0 +1,115 @@
+.featured-section{
+    background-color: var(--gray-08);
+    .container{
+        padding-top: 150px;
+        .title-container{
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 200px;
+            padding-bottom: 80px;
+            .title{
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+                h2{
+                    font-size: var(--big);
+                    font-weight: var(--font-weight-semibold);
+                }
+                p{
+                    font-size: var(--extra-small);
+                    font-weight: var(--font-weight-medium);
+                    color: var(--gray-60);
+                }
+            }
+            button{
+                padding: 18px 24px;
+                font-size: var(--extra-small);
+                font-weight: var(--font-weight-medium);
+                background-color: var(--gray-08);
+                border: 1px solid var(--gray-15);
+                border-radius: 10px;
+                cursor: pointer;
+                flex-shrink: 0;
+            }
+        }
+
+        .card-container{
+            display: flex;
+            gap: 30px;
+            padding-bottom: 50px;
+            .card{
+                border-radius: 12px;
+                border: 1px solid var(--gray-15);
+                overflow: hidden;
+                padding: 40px;
+                display: flex;
+                flex-direction: column;
+                gap: 30px;
+                max-width: 512px;
+                .card-image{
+                    width: 100%;
+                    aspect-ratio: 72/53;
+                    overflow: hidden;
+                    border-radius: 10px;
+                    img{
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                }
+                .card-content{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 30px;
+                    .card-title{
+                        display: flex;
+                        gap: 6px;
+                        flex-direction: column;
+                        h3{
+                            font-size: var(--medium);
+                            font-weight: var(--font-weight-semibold);
+                        }
+                        p{
+                            font-size: var(--extra-small);
+                            font-weight: var(--font-weight-medium);
+                            color: var(--gray-60);
+                        }
+
+                    }
+                    
+                    .card-footer{
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        .price-box{
+                            display: flex;
+                            gap: 2px;
+                            flex-direction: column;
+                            h2{
+                                font-size: var(--medium);
+                                font-weight: var(--font-weight-semibold);
+                                color: white;
+                            }
+                            p{
+                                font-size: var(--extra-small);
+                                font-weight: var(--font-weight-medium);
+                                color: var(--gray-60);
+                            }
+                        }
+                        button{
+                            padding: 18px 24px;
+                            font-size: var(--extra-small);
+                            font-weight: var(--font-weight-medium);
+                            background-color: var(--purple-60);
+                            border: none;
+                            border-radius: 10px;
+                            cursor: pointer;
+                            color: white;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
