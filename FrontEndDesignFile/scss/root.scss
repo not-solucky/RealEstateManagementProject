@@ -5,6 +5,7 @@
     margin: 0;
     box-sizing: border-box;
     font-family: 'Urbanist', sans-serif;
+    color: white;
 }
 
 :root{
@@ -64,13 +65,7 @@
 }
 
 @media screen and (max-width: 1024px){
-    :root{
-        --Extra-big: 28px;
-        --big: 28px;
-        --medium: 18px;
-        --small: 16px;  
-        --extra-small: 14px; 
-    }
+    
     .container{
         padding: 0 clamp(20px, calc(20px + (40 - 20) * ((100vw - 600px) / (1024 - 600))), 40px);
     }
@@ -78,7 +73,13 @@
 }
 
 @media screen and (max-width: 600px){
-    
+    :root{
+        --Extra-big: 28px;
+        --big: 28px;
+        --medium: 18px;
+        --small: 16px;  
+        --extra-small: 14px; 
+    }
     .container{
         padding: 0 clamp(16px, calc(16px + (20 - 16) * ((100vw - 420px) / (600 - 420))), 20px);
     }

@@ -1,3 +1,122 @@
+.hero-section {
+  background-color: var(--gray-08);
+}
+.hero-section .container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 80px;
+  align-items: center;
+  justify-content: space-between;
+}
+.hero-section .container .image-content {
+  max-height: 600px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.hero-section .container .image-content img {
+  object-fit: contain;
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+}
+.hero-section .container .hero-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 60px;
+  height: 100%;
+}
+.hero-section .container .hero-content .hero-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+}
+.hero-section .container .hero-content .hero-title h1 {
+  font-size: var(--Extra-big);
+  font-weight: var(--font-weight-semibold);
+  color: var(--white);
+}
+.hero-section .container .hero-content .hero-title p {
+  font-size: var(--extra-small);
+  font-weight: var(--medium);
+  color: var(--gray-60);
+}
+.hero-section .container .hero-content .button-container {
+  display: flex;
+  gap: 20px;
+}
+.hero-section .container .hero-content .button-container button {
+  padding: 18px 24px;
+  border-radius: 10px;
+  color: white;
+  font-size: var(--extra-small);
+  background-color: var(--gray-08);
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.hero-section .container .hero-content .button-container .button-1 {
+  border: 1px solid var(--gray-15);
+}
+.hero-section .container .hero-content .button-container .button-1:hover {
+  color: var(--gray-60);
+}
+.hero-section .container .hero-content .button-container .button-2 {
+  background-color: var(--purple-60);
+}
+.hero-section .container .hero-content .button-container .button-2:hover {
+  background-color: var(--purple-65);
+}
 
+@media screen and (max-width: 1440px) {
+  .hero-section .container {
+    column-gap: 60px;
+  }
+  .hero-section .container .hero-content {
+    gap: 80px;
+  }
+  .hero-section .container .hero-content .button-container button {
+    padding: 14px 20px;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .hero-section .container {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    column-gap: 60px;
+  }
+  .hero-section .container .image-content {
+    margin: 40px 0;
+    max-height: 400px;
+    border-radius: 12px;
+  }
+  .hero-section .container .hero-content {
+    gap: 40px;
+  }
+  .hero-section .container .hero-content .hero-title {
+    gap: 16px;
+  }
+  .hero-section .container .hero-content .button-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+  }
+  .hero-section .container .hero-content .button-container button {
+    padding: 14px 20px;
+  }
+}
+@media screen and (max-width: 600px) {
+  .hero-section .container .image-content {
+    max-height: 302px;
+    border-radius: 12px;
+  }
+  .hero-section .container .hero-content .button-container {
+    gap: 16px;
+  }
+}
 
 /*# sourceMappingURL=hero.css.map */

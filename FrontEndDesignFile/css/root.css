@@ -4,6 +4,7 @@
   margin: 0;
   box-sizing: border-box;
   font-family: "Urbanist", sans-serif;
+  color: white;
 }
 
 :root {
@@ -57,6 +58,11 @@
   }
 }
 @media screen and (max-width: 1024px) {
+  .container {
+    padding: 0 clamp(20px, 20px + 20 * (100vw - 600px) / 424, 40px);
+  }
+}
+@media screen and (max-width: 600px) {
   :root {
     --Extra-big: 28px;
     --big: 28px;
@@ -64,11 +70,6 @@
     --small: 16px;
     --extra-small: 14px;
   }
-  .container {
-    padding: 0 clamp(20px, 20px + 20 * (100vw - 600px) / 424, 40px);
-  }
-}
-@media screen and (max-width: 600px) {
   .container {
     padding: 0 clamp(16px, 16px + 4 * (100vw - 420px) / 180, 20px);
   }

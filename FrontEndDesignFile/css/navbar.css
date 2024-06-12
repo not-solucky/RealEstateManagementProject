@@ -107,7 +107,7 @@ body {
     inset: 0 0 0 30%;
     background: hsla(0, 0%, 0%, 0.4);
     backdrop-filter: blur(1rem);
-    padding: 80px 24px;
+    padding: 90px 40px;
     z-index: 999;
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
@@ -115,9 +115,10 @@ body {
   .header-section .container .sidebar .sidebar-navigation {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 24px;
     list-style: none;
     color: white;
+    font-size: var(--medium);
   }
   .header-section .container .sidebar[aria-expanded=true] {
     transform: translateX(0%);
