@@ -103,7 +103,6 @@
   .hero-section .container .hero-content .button-container {
     display: flex;
     flex-direction: column;
-    margin-bottom: 40px;
   }
   .hero-section .container .hero-content .button-container button {
     padding: 14px 20px;

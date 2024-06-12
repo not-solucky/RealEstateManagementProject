@@ -4,6 +4,17 @@
 .featured-section .container {
   padding-top: 150px;
 }
+.featured-section .container .button-2 {
+  padding: 14px 20px;
+  font-size: var(--extra-small);
+  font-weight: var(--font-weight-medium);
+  background-color: var(--purple-60);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+  display: none;
+}
 .featured-section .container .title-container {
   display: flex;
   justify-content: space-between;
@@ -25,7 +36,7 @@
   font-weight: var(--font-weight-medium);
   color: var(--gray-60);
 }
-.featured-section .container .title-container button {
+.featured-section .container .title-container .button-1 {
   padding: 18px 24px;
   font-size: var(--extra-small);
   font-weight: var(--font-weight-medium);
@@ -50,6 +61,7 @@
   flex-direction: column;
   gap: 30px;
   max-width: 512px;
+  height: 100%;
 }
 .featured-section .container .card-container .card .card-image {
   width: 100%;
@@ -66,6 +78,7 @@
   display: flex;
   flex-direction: column;
   gap: 30px;
+  justify-content: space-between;
 }
 .featured-section .container .card-container .card .card-content .card-title {
   display: flex;
@@ -113,6 +126,9 @@
 }
 
 @media screen and (max-width: 1440px) {
+  .featured-section .container .title-container {
+    padding-bottom: 60px;
+  }
   .featured-section .container .card-container {
     gap: 20px;
   }
@@ -131,6 +147,19 @@
   }
 }
 @media screen and (max-width: 1024px) {
+  .featured-section .container {
+    padding-top: 80px;
+  }
+  .featured-section .container .button-2 {
+    display: block;
+    width: 100%;
+  }
+  .featured-section .container .title-container {
+    padding-bottom: 40px;
+  }
+  .featured-section .container .title-container .button-1 {
+    display: none;
+  }
   .featured-section .container .card-container {
     grid-template-columns: repeat(2, 1fr);
     align-items: center;
