@@ -18,6 +18,9 @@ body{
             border-radius: 10px;
             border: 1px solid var(--gray-15);
         }
+        button{
+            display: none;
+        }
         .logo{
             display: flex;
             align-items: center;
@@ -35,6 +38,8 @@ body{
         
         }
         .navbar{
+            display: flex;
+            align-items: center;
             ul{
                 display: flex;
                 list-style: none;
@@ -61,6 +66,9 @@ body{
                 cursor: pointer;
             }
         }
+        .sidebar{
+            display: none;
+        }
 
     }
 }
@@ -84,3 +92,25 @@ body{
     }
 }
 
+@media screen and (max-width: 1024px){
+    .header-section{
+        .container{
+            
+        }
+    }
+    
+    
+}
+
+@media screen and (max-width: 600px){
+    
+    
+    
+}
+
+
+@media screen and (max-width: 420px){
+    
+    
+    
+}

@@ -55,7 +55,7 @@
         --big: 38px;
         --medium: 20px;
         --small: 18px;  
-        --extra-small: 14px;
+        --extra-small: 16px;
     }
     .container{
         padding: 0 clamp(40px, calc(40px + (80 - 40) * ((100vw - 1024px) / (1440 - 1024))), 80px);
@@ -64,7 +64,13 @@
 }
 
 @media screen and (max-width: 1024px){
-    
+    :root{
+        --Extra-big: 28px;
+        --big: 28px;
+        --medium: 18px;
+        --small: 16px;  
+        --extra-small: 14px; 
+    }
     .container{
         padding: 0 clamp(20px, calc(20px + (40 - 20) * ((100vw - 600px) / (1024 - 600))), 40px);
     }
