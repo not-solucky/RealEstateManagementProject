@@ -35,7 +35,8 @@
         }
 
         .card-container{
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 30px;
             padding-bottom: 50px;
             .card{
@@ -112,4 +113,58 @@
             }
         }
     }
+}
+
+@media screen and (max-width: 1440px){
+    .featured-section{
+        .container{
+            .card-container{
+                gap: 20px;
+
+                .card{
+                    padding: clamp(20px, calc(20px + (30 - 20) * ((100vw - 1024px) / (1440 - 1024))), 30px);
+                    gap: 24px;
+                    .card-content{
+                        gap: 24px;
+                        .card-footer{
+                            gap: 10px;
+                            button{
+                                padding: 14px 20px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1024px){
+    .featured-section{
+        .container{
+            .card-container{
+                grid-template-columns: repeat(2, 1fr);
+                align-items: center;
+    
+            }
+        }
+    }
+    
+    
+}
+@media screen and (max-width: 600px){
+    .featured-section{
+        .container{
+            .card-container{
+                grid-template-columns: repeat(1, 1fr);
+                align-items: center;
+                .card{
+                    max-width: 100%;
+                }
+    
+            }
+        }
+    }
+    
+    
 }
