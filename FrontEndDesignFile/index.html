@@ -11,11 +11,11 @@
     <header class="header-section">
         <div class="container">
             <div class="logo">
-                <a href="">
+                
                     Logo
-                </a>
+                
             </div>
-            <button aria-expanded="true"></button>
+            <button id = 'sidebarbutton' aria-expanded="false"></button>
             <nav class="navbar">
                 <ul>
                     <li class="">Home</li>
@@ -29,18 +29,31 @@
                 <li class="active">Sign Up</li>
             </div>
 
-            <div class="sidebar">
+            <div id = 'sidebar' class="sidebar" aria-expanded="false">
                 <ul class="sidebar-navigation">
                     <li class="sidebar-item">Home</li>
-                    <li class="sidebar-item">Contact</li>
                     <li class="sidebar-item">About Us</li>
+                    <li class="sidebar-item">Properties</li>
+                    <li class="sidebar-item">Services</li>
                     <li class="sidebar-item">Sign Up</li>
-                    <li class="sidebar-item">Cart</li>
-                    <li class="sidebar-item">wishlist</li>
                     
                 </ul>
             </div>
         </div>
     </header>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const sidebarbutton = document.getElementById('sidebarbutton');
+        sidebarbutton.addEventListener('click', () => {
+            if(sidebar.getAttribute('aria-expanded') === 'false'){
+                sidebar.setAttribute('aria-expanded', 'true');
+                sidebarbutton.setAttribute('aria-expanded', 'true');
+            }else{
+                sidebar.setAttribute('aria-expanded', 'false');
+                sidebarbutton.setAttribute('aria-expanded', 'false');
+            }
+        })
+    </script>
 </body>
+
 </html>
