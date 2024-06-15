@@ -43,7 +43,9 @@
     --small: 20px;
     --extra-small: 18px;
 }
-
+.no-scroll{
+    overflow: hidden;
+}
 .container{
     max-width: 1920px;
     margin: auto;

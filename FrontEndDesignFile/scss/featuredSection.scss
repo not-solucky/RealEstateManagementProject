@@ -6,13 +6,14 @@
             padding: 14px 20px;
             font-size: var(--extra-small);
             font-weight: var(--font-weight-medium);
-            background-color: var(--purple-60);
-            border: none;
+            background-color: var(--gray-08);
+            border: 1px solid var(--gray-15);
             border-radius: 10px;
             cursor: pointer;
             color: white;
             display: none;
         }
+        
         .title-container{
             display: flex;
             justify-content: space-between;
@@ -49,7 +50,6 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 30px;
-            padding-bottom: 50px;
             .card{
                 border-radius: 12px;
                 border: 1px solid var(--gray-15);
@@ -172,6 +172,8 @@
             .card-container{
                 grid-template-columns: repeat(2, 1fr);
                 align-items: center;
+                padding-bottom: 40px;
+
     
             }
         }

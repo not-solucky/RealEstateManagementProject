@@ -1,0 +1,81 @@
+.faq-section{
+    background-color: var(--gray-08);
+    .container{
+        padding-top: 150px;
+        .button-2{
+            padding: 14px 20px;
+            font-size: var(--extra-small);
+            font-weight: var(--font-weight-medium);
+            background-color: var(--gray-08);
+            border: 1px solid var(--gray-15);
+            border-radius: 10px;
+            cursor: pointer;
+            color: white;
+            display: none;
+        }
+        
+        .title-container{
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 200px;
+            padding-bottom: 80px;
+            .title{
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+                h2{
+                    font-size: var(--big);
+                    font-weight: var(--font-weight-semibold);
+                }
+                p{
+                    font-size: var(--extra-small);
+                    font-weight: var(--font-weight-medium);
+                    color: var(--gray-60);
+                }
+            }
+            .button-1{
+                padding: 18px 24px;
+                font-size: var(--extra-small);
+                font-weight: var(--font-weight-medium);
+                background-color: var(--gray-08);
+                border: 1px solid var(--gray-15);
+                border-radius: 10px;
+                cursor: pointer;
+                flex-shrink: 0;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1440px){
+    .faq-section{
+        .container{
+            .title-container{
+                padding-bottom: 60px;
+            }
+            
+        }
+    }
+}
+
+@media screen and (max-width: 1024px){
+    .faq-section{
+        .container{
+            padding-top: 80px;
+            .button-2{
+                display: block;
+                width: 100%;
+            }
+            .title-container{
+                padding-bottom: 40px;
+                .button-1{
+                    display: none;
+                }
+            }
+            
+        }
+    }
+    
+    
+}

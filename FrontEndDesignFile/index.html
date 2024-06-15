@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./css/navbar.css">
     <link rel="stylesheet" href="./css/hero.css">
     <link rel="stylesheet" href="./css/featuredSection.css">
+    <link rel="stylesheet" href="./css/faqSection.css">
 </head>
 <body>
     <header class="header-section">
@@ -32,7 +33,7 @@
             </div>
 
             <div id = 'sidebar' class="sidebar" aria-expanded="false">
-                <ul class="sidebar-navigation">
+                <ul class="sidebar-navigation" id="sidebar-links">
                     <li class="sidebar-item">Home</li>
                     <li class="sidebar-item">About Us</li>
                     <li class="sidebar-item">Properties</li>
@@ -44,7 +45,7 @@
         </div>
     </header>
 
-    <div class="hero-section">
+    <section class="hero-section">
         <div class="container">
             <div class="hero-content">
                 <div class="hero-title">
@@ -61,9 +62,9 @@
                 <img src="./assets/pexels-camcasey-1722183.jpg" alt="Building Image">
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="featured-section">
+    <section class="featured-section">
         <div class="container">
             <div class="title-container">
                 <div class="title">
@@ -190,13 +191,27 @@
                 </div>
                 
             </div>
-
             <button class = "button-2">View All Properties</button>
 
         </div>
-    </div>
+    </section>
 
-    
+    <section class="faq-section">
+        <div class="container">
+            <div class="title-container">
+                <div class="title">
+                    <h2>Frequently Asked Questions</h2>
+                    <p>Find answers to common questions about our services, property listings, and the real estate process. We're here to provide clarity and assist you every step of the way.</p>
+                </div>
+
+                <button class="button-1">View All FAQ's</button>
+                
+            </div>
+            <div class="accordion-container">
+
+            </div>
+        </div>
+    </section>
     <script>
         const sidebar = document.getElementById('sidebar');
         const sidebarbutton = document.getElementById('sidebarbutton');
@@ -204,10 +219,27 @@
             if(sidebar.getAttribute('aria-expanded') === 'false'){
                 sidebar.setAttribute('aria-expanded', 'true');
                 sidebarbutton.setAttribute('aria-expanded', 'true');
+                document.body.classList.add('no-scroll');
             }else{
                 sidebar.setAttribute('aria-expanded', 'false');
                 sidebarbutton.setAttribute('aria-expanded', 'false');
+                document.body.classList.remove('no-scroll');
             }
+        })
+
+        const sidebarlinks = document.querySelectorAll('.sidebar-item');
+        sidebarlinks.forEach((link) => {
+            link.addEventListener('click', () => {
+                console.log(link.innerText);
+            })
+        })
+
+        URL = 'https:localhost:5000/api/users';
+
+        fetch(URL)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
         })
     </script>
 </body>
