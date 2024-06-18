@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./css/hero.css">
     <link rel="stylesheet" href="./css/featuredSection.css">
     <link rel="stylesheet" href="./css/faqSection.css">
+    <link rel="stylesheet" href="./css/login.css">
 </head>
 <body>
     <header class="header-section">
@@ -34,11 +35,11 @@
 
             <div id = 'sidebar' class="sidebar" aria-expanded="false">
                 <ul class="sidebar-navigation" id="sidebar-links">
-                    <li class="sidebar-item">Home</li>
-                    <li class="sidebar-item">About Us</li>
-                    <li class="sidebar-item">Properties</li>
-                    <li class="sidebar-item">Services</li>
-                    <li class="sidebar-item">Sign Up</li>
+                    <li class="sidebar-item"><a href="#">Home</a></li>
+                    <li class="sidebar-item"><a href="#">About Us</a></li>
+                    <li class="sidebar-item"><a href="#">Properties</a></li>
+                    <li class="sidebar-item"><a href="#">Services</a></li>
+                    <li class="sidebar-item"><a href="#">Sign Up</a></li>
                     
                 </ul>
             </div>
@@ -209,6 +210,45 @@
             </div>
             <div class="accordion-container">
 
+            </div>
+        </div>
+    </section>
+
+    <section class="login-section">
+        <div class="container">
+            <div class="image-content">
+                <img src="./assets/pexels-samarth-1010079.jpg" alt="Building Image">
+            </div>
+            <div class="login-content">
+                <div class="login-title">
+                    <h2>Register Account</h2>
+                    <p>Unlock exclusive access to our property listings, services, and resources by creating an account. Sign up today to begin your journey to finding the perfect property.</p>
+                </div>
+                <div class="login-form">
+                    <div class="form">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" placeholder="Enter your name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" placeholder="Enter your email">
+                        </div> 
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input class ="password" type="password" id="password" name="password" placeholder="Enter your password">
+                        </div> 
+                        <div class="form-group">
+                            <label for="confirm-password">Confirm Password</label>
+                            <input class ="password" type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password">
+                        </div>  
+                        <!-- agree with terms and sercice -->
+                        <div class="check-group">
+                            <input type="checkbox" id="terms" name="terms">
+                            <label for="terms">I agree to the Terms of Use and Privcy Policy</label>
+                        </div>  
+                        <button class="button-1">Sign Up</button>
+                    </div>  
             </div>
         </div>
     </section>

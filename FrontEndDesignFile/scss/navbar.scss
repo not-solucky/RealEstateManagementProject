@@ -46,9 +46,14 @@ body{
                 gap: 30px;
                 
                 li{
-                    color: white;
-                    font-size: var(--extra-small);
-                    cursor: pointer;
+                    a{
+                        text-decoration: none;
+                        color: white;
+                        font-size: var(--extra-small);
+                        cursor: pointer;
+                    }
+                    
+                    
                 }
             }
         }
