@@ -132,14 +132,12 @@ Run the API.
 
 ```
 go run cmd/main.go
-
 ```
 
 If you want to build the API for and executable you can use the following command.
 
 ```
 go build cmd/main.go
-
 ```
 
 
