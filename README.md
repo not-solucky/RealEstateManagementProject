@@ -34,10 +34,12 @@ This real estate management application streamlines the process of managing prop
 - Verify user documents for verification and approve.
 - Remove users or ban users.
 - Reply to queries.
-## Tools used
 
-- React with [Vite](https://vitejs.dev/).
-- Go 
+## Tech Stack
+
+**Client:** React, Vite
+
+**Server:** Go
 
 
 ## Run Locally
