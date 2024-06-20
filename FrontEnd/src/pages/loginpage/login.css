@@ -2,6 +2,17 @@
 .login-section {
   background-color: var(--gray-08);
 }
+.login-section .error-container{
+  display : flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #B76D68;
+  position: sticky;
+  top: 0;
+
+
+}
 .login-section .container {
   display: grid;
   grid-template-columns: 1.25fr 1fr;
@@ -174,6 +185,7 @@
 }
 
 @media screen and (max-width: 1440px) {
+
   .login-section .container {
     column-gap: 30px;
   }

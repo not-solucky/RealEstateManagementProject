@@ -1,4 +1,5 @@
 import "./hero.css"
+import { NavLink } from "react-router-dom";
 
 function Hero() {
     return (
@@ -11,8 +12,8 @@ function Hero() {
                     </div>
 
                     <div className="button-container">
-                        <button className="button-1">Learn More</button>
-                        <button className="button-2">Browse Properties</button>
+                        <NavLink to = "/services" className={"button button-1"}>Learn More </NavLink>
+                        <NavLink to = "/properties" className={"button button-2"}>Browse Properties </NavLink>
                     </div>
                 </div>
                 <div className="image-content">

@@ -9,10 +9,12 @@ function Signuppage() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [phone, setPhone] = useState("")
     const [terms, setTerms] = useState(false)
-    const [error, setError] = useState(Array(5).fill(null));
+    const [error, setError] = useState(Array(6).fill(null));
     const BASE_URL = useContext(ApiContext)
     const [status, setStatus] = useState("")
+    const [message, setMessage] = useState("")
 
     const handleSubmit = (event) => {
         event.preventDefault()
@@ -20,20 +22,34 @@ function Signuppage() {
             axios.post(`${BASE_URL}/register`, {
                 username: name,
                 email: email,
+                phone: phone,
                 password: password
             }).then((response) => {
                 setStatus("success")
             }).catch((error) => {
                 setStatus("error")
+                setMessage(error.response.data.error)
+                console.log(error.response.data.error)
             })
         }
     }
     const validate = () => {
-        let error = Array(5).fill(null)
+        let error = Array(6).fill(null)
         let isValid = true
         const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,}$/;
+        const phoneRegex = /^[0-9]+$/
         if (name === "") {
             error[0] = "Name is required"
+            isValid = false
+        }
+        if (phone === "") {
+            error[5] = "Phone is required"
+            isValid = false
+        } else if (phone.length != 11) {
+            error[5] = "Invalid phone number"
+            isValid = false
+        } else if (!phoneRegex.test(phone)) {
+            error[5] = "Invalid phone number"
             isValid = false
         }
         if (email === "") {
@@ -74,6 +90,15 @@ function Signuppage() {
     return (
         <>
             <section className="login-section">
+                {status === "error" && (
+                    <div className="error-container">
+                        {message.length != 0 ? (
+                            message
+                        ) : (
+                            "An error occured, please try again"
+                        )}
+                    </div>
+                )}
                 <div className="container">
                     <div className="image-content">
                         <img src="/pexels-samarth-1010079.jpg" alt="Building Image"></img>
@@ -105,6 +130,15 @@ function Signuppage() {
                                             placeholder="Enter your email"
                                             onChange={(event) => setEmail(event.target.value)}></input>
                                     {error[1] && <p className="error-message">{error[1]}</p>}
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="phone">Phone Number</label>
+                                    <input  type="text" 
+                                            id="phone" 
+                                            name="phone" 
+                                            placeholder="Enter your phone number"
+                                            onChange={(event) => setPhone(event.target.value)}></input>
+                                    {error[5] && <p className="error-message">{error[5]}</p>}
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="password">Password</label>
@@ -208,7 +242,7 @@ function Status (props) {
                 </div>
                 <div className="login-container">
                     <p>Sign in to your account to continue</p>
-                    <NavLink className="button-1" to={"/signup"}>Sign In</NavLink>
+                    <NavLink className="button-1" to={"/signin"}>Sign In</NavLink>
                 </div>
             </div> 
         </>
