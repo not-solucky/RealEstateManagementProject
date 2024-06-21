@@ -112,6 +112,8 @@ func (h *Handler) handleRegister (w http.ResponseWriter, r *http.Request) {
 		Email: user.Email,
 		Name: user.Name,
 		Password: user.Password,
+		Phone: user.Phone,
+		Role: "client",
 	})
 
 	if err != nil {

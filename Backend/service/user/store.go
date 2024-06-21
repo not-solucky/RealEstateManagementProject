@@ -4,11 +4,11 @@ import (
 	"database/sql"
 	"fmt"
 	"learninggo/types"
+	"log"
 )
 
 type Store struct {
 	DB *sql.DB
-
 }
 
 func NewStore(db *sql.DB) *Store {
@@ -39,8 +39,8 @@ func (s *Store) GetUserByEmail(email string) (*types.User, error) {
 	return u, nil
 }
 
-func (s *Store)GetUserByID(id int) (*types.User, error) {
-	rows, err := s.DB.Query("SELECT * FROM users WHERE id = ?", id)
+func (s *Store) GetUserByID(id int) (*types.User, error) {
+	rows, err := s.DB.Query("SELECT * FROM users WHERE user_id = ?", id)
 
 	if err != nil {
 		return nil, err
@@ -61,24 +61,26 @@ func (s *Store)GetUserByID(id int) (*types.User, error) {
 	return u, nil
 }
 
-
-func (s *Store)CreateUser(user *types.User) error {
-
-	_, err := s.DB.Exec("INSERT INTO users (email, username, password) VALUES (?, ?, ?)", user.Email, user.Name, user.Password)
+func (s *Store) CreateUser(user *types.User) error {
+	log.Printf("Creating user")
+	_, err := s.DB.Exec("INSERT INTO users (email, username, password, role, phone_number) VALUES (?, ?, ?, ?, ?)", user.Email, user.Name, user.Password, user.Role, user.Phone)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-
 func scanRowtoUser(rows *sql.Rows) (*types.User, error) {
 	user := new(types.User)
 	err := rows.Scan(
-		&user.ID, 
-		&user.Email, 
-		&user.Name, 
+		&user.ID,
+		&user.Email,
+		&user.Name,
 		&user.Password,
+		&user.Phone,
+		&user.Role,
+		&user.Verified,
+		&user.UpdatedAt,
 		&user.CreatedAt,
 	)
 	if err != nil {

@@ -40,7 +40,5 @@ func (s *APIServer) Run() error {
 	)
 
 	
-
-
 	return http.ListenAndServe(s.addr, corsHandler(router))
 }
