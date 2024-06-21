@@ -58,7 +58,7 @@ const ImageUploader = () => {
                 aspectRatio: 1, // Set aspect ratio to 1:1 (optional)
                 
               }}
-              aspectRatio={3/2}
+              aspectRatio={72/53}
             
             />
           </div>

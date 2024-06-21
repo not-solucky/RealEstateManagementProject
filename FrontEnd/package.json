@@ -15,7 +15,9 @@
     "react-advanced-cropper": "^0.20.0",
     "react-dom": "^18.2.0",
     "react-image-crop": "^11.0.5",
-    "react-router-dom": "^6.23.1"
+    "react-router-dom": "^6.23.1",
+    "react-spinners": "^0.13.8",
+    "swiper": "^11.1.4"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
