@@ -1,0 +1,25 @@
+.image-section .container .image-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+
+}
+
+.image-section .container .cropped-image{
+    max-height: 600px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.image-section .container .cropped-image img{
+    object-fit: contain;
+    display: block;
+    height: 600px;
+}

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/handlers"
+	"learninggo/service/image"
 	
 )
 
@@ -32,6 +33,9 @@ func (s *APIServer) Run() error {
 	userHandler := user.NewHandler( userStore)
 	userHandler.RegisterRoutes(subrouter)
 	log.Println("Starting server on", s.addr)
+	
+	imageHandler := image.NewHandler()
+	imageHandler.RegisterRoutes(subrouter)
 
 	corsHandler := handlers.CORS(
 		handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), 

@@ -7,6 +7,10 @@ type UserStore interface {
 	GetUserByID(id int) (*User, error)
 	CreateUser(u *User) error
 }
+type ImageStore interface {
+	SaveImageInfo(filename, filepath string) error
+	GetImageInfo(filename string) (*Image, error)
+}
 
 type User struct {
 	ID        int       `json:"user_id"`
@@ -29,4 +33,15 @@ type RegisterUserPayload struct {
 type LoginUserPayload struct {
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required"`
+}
+
+
+
+// Define Image type
+type Image struct {
+	ID        int       `json:"id"`
+	Filename  string    `json:"filename"`
+	Filepath  string    `json:"filepath"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
