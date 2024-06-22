@@ -7,18 +7,26 @@ import ImageSwiper from '../../components/ImageSwiper/ImageSwiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import './properties.css';
+import './propertiestitle.css';
 
 function TitleSection({ title, price }) {
     return (
-        <div className="title-section">
+        <div className="property-title-section">
             <div className="container">
                 <div className="title-content">
                     <h1 className="property-name">
                         {title}
                     </h1>
-                    <div className="property-price">
-                        <p>price</p>
-                        <h2>${price}</h2>
+                    <div className="property-info">
+                        <div className="property-location">
+                            <div className="location-icon"></div>
+                            <p>San Francisco, CA</p>
+                        </div>
+                        <div className="property-price">
+                            <p>For sale</p>
+                            <h2>${price}</h2>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
