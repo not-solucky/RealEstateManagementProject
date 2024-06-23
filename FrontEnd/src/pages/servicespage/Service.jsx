@@ -1,7 +1,7 @@
 function Service() {
     return (
         <>
-            Services page
+            
         </>
     );
 }
