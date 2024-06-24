@@ -1,0 +1,92 @@
+.description-section{
+    .container{
+        padding-top: 30px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        @media screen and (max-width: 1440px){
+            padding-top: 20px;
+            gap: 20px;
+            
+        }
+        @media screen and (max-width: 1024px){
+            grid-template-columns: 1fr;
+            
+        }
+        .description-content{
+            border: 1px solid var(--gray-15);
+            border-radius: 12px;
+            padding: 50px;
+            @media screen and (max-width: 1440px){
+                padding: 40px;
+                
+            }
+            @media screen and (max-width: 1024px){
+                padding: 20px;
+                
+            }
+            .text-content{
+                h2{
+                    font-size: var(--medium);
+                    font-weight: var(--font-weight-semibold);
+                }
+                p{
+                    font-size: var(--extra-small);
+                    margin-top: 14px;
+                    color: var(--gray-60);
+                }
+            }
+        }
+
+        .amenities-content{
+            border: 1px solid var(--gray-15);
+            border-radius: 12px;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            row-gap: 50px;
+            @media screen and (max-width: 1440px){
+                padding: 40px;
+                row-gap: 40px;
+            }
+            @media screen and (max-width: 1024px){
+                padding: 20px;
+                row-gap: 20px;
+                
+            }
+            
+            h2{
+                font-size: var(--medium);
+                font-weight: var(--font-weight-semibold);
+
+            }
+            .amenities-list{
+                display: flex;
+                flex-direction: column;
+                row-gap: 30px;
+                @media screen and (max-width: 1440px){
+                    row-gap: 20px;
+                }
+                @media screen and (max-width: 1024px){
+                    row-gap: 18px;
+                }
+                .amenity-item{
+                    background: linear-gradient(90deg, #1A1A1A 0%, rgba(26, 26, 26, 0) 100%);
+                    font-size: var(--extra-small);
+                    color: var(--gray-60);
+                    padding: 18px 24px;
+                    border-left: 1px solid var(--purple-60);
+
+                    @media screen and (max-width: 1440px){
+                        padding: 14px 16px;
+                        
+                    }
+                    @media screen and (max-width: 1024px){
+                        padding: 10px 12px;
+                        
+                    }
+                }
+            }
+        }
+    }
+}

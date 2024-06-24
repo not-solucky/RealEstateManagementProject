@@ -1,0 +1,87 @@
+.property-title-section{
+    .container{
+        .title-content{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-top: 120px;
+            padding-bottom: 50px;
+            row-gap: 10px;
+            .property-name{
+                font-size: var(--big);
+            }
+
+            .property-info{
+                display: flex;
+                gap: 20px;
+
+                .property-price{
+                    p{
+                        font-size: var(--extra-small);
+                        color: var(--gray-60);
+                        padding-bottom: 5px;
+                        font-weight: var(--font-weight-medium);
+                    }
+                    h2{
+                        font-size: var(--medium);
+                        font-weight: var(--font-weight-semibold);
+                    }
+                }
+                .property-location{
+                    display: flex;
+                    gap: 5px;
+                    align-items: center;
+                    justify-content: center;
+                    border: 1px solid var(--gray-15);
+                    border-radius: 8px;
+                    padding: 5px 10px;
+                    .location-icon{
+                        aspect-ratio: 1/1;
+                        width: 20px;
+                        background-image: url(./icons/location.svg);
+                        background-repeat: no-repeat;
+                        background-size: contain;
+                        background-position: center;
+                        
+                    }
+                    p{
+                        font-size: var(--extra-small);
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+@media screen and (max-width: 1440px){
+    .property-title-section{
+        .container{
+            .title-content{
+                padding-top: 80px;
+                padding-bottom: 40px;
+                
+    
+                
+            }
+        }
+    
+    }
+    
+}
+
+@media screen and (max-width: 1024px){
+    .property-title-section{
+        .container{
+            .title-content{
+                padding-top: 60px;
+                padding-bottom: 30px;
+                
+    
+                
+            }
+        }
+    
+    }
+    
+}
