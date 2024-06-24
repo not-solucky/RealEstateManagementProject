@@ -8,6 +8,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import './properties.css';
 import './propertiestitle.css';
+import './propertiesinfo.css';
 
 function TitleSection({ title, price }) {
     return (
@@ -34,6 +35,32 @@ function TitleSection({ title, price }) {
     );
 }
 
+function PropertyInfo({description, amenities, feature}){
+    return(
+        <div className="description-section">
+            <div className="container">
+                <div className="description-content">
+                    <div className="text-content">
+                        <h2>Description</h2>
+                        <p>{description}</p>
+                    </div>  
+                    
+                    
+                </div>
+                <div className="amenities-content">
+                    <h2>Key Features and Amenities</h2>
+                    <div className="amenities-list">
+                        
+                        {amenities.map((amenity, index) => (
+                            <div className="amenity-item" key={index}>{amenity}</div>
+                        ))}
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
 
 function Propertiespage() {
     const [details, setDetails] = useState(null);
@@ -45,7 +72,20 @@ function Propertiespage() {
                 title: "Seaside Serenity Villa",
                 price: 550000,
                 image: ["/property02.jpg", "/property01.jpg", "/property03.jpg", "/property01.jpg", "/property01.jpg", "/property01.jpg", "/property01.jpg", "/property01.jpg", "/property01.jpg"],
-                description: "A stunning 4-bedroom, 3-bathroom villa in a peaceful suburban neighborhood with a view of the ocean. Perfect for a family looking for a quiet retreat."
+                description: "A stunning 4-bedroom, 3-bathroom villa in a peaceful suburban neighborhood with a view of the ocean. Perfect for a family looking for a quiet retreat.",
+                amenities: [
+                    "Expansive oceanfront terrace for outdoor entertaining",
+                    "Gourmet kitchen with top-of-the-line appliances",
+                    "Spacious living room with fireplace",
+                    "Private beach access for morning strolls and sunset views",
+                    "Master suite with a spa-inspired bathroom and ocean-facing balcony",
+                    "Private garage and ample storage space"
+                ],
+                feature:{
+                    room: 4,
+                    bathroom: 3,
+                    size: 3000
+                }
             });
         }, 2000); // Simulate a network request delay
     }, []);
@@ -56,14 +96,7 @@ function Propertiespage() {
                 <>
                     <TitleSection title={details.title} price={details.price} />
                     <ImageSwiper images={details.image} />
-                    <div className="description-section">
-                        <div className="container">
-                            <div className="description-content">
-                                <h2>Description</h2>
-                                <p>{details.description}</p>
-                            </div>
-                        </div>
-                    </div>
+                    <PropertyInfo description={details.description} amenities={details.amenities} feature={details.feature}/>
                 </>
             ) : (
                 <div className="loading-section">
