@@ -54,3 +54,4 @@ func (h *Handler) handleGetImage(w http.ResponseWriter, r *http.Request) {
 	// Serve the file
 	http.ServeContent(w, r, fileStat.Name(), fileStat.ModTime(), file)
 }
+
