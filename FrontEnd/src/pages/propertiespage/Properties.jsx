@@ -6,9 +6,10 @@ import ImageSwiper from '../../components/ImageSwiper/ImageSwiper';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
-import './properties.css';
-import './propertiestitle.css';
-import './propertiesinfo.css';
+import './stylesheets/properties.css';
+import './stylesheets/propertiestitle.css';
+import './stylesheets/propertiesinfo.css';
+
 
 function TitleSection({ title, price }) {
     return (
