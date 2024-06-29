@@ -19,7 +19,7 @@ function Card({card}){
                         <h2>৳ {card.price}</h2>
 
                     </div>
-                    <button>View Property Details</button>
+                    <button>Property Details</button>
                 </div>
             </div>
 
@@ -72,7 +72,6 @@ function CardSwiper({cards}) {
                     </div>
                 </Swiper>
             </div>
-            
         </>
     );
 }
