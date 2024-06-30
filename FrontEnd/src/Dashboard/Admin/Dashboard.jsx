@@ -5,13 +5,22 @@ import AllUser from '../Pages/AllUser';
 import UserVerification from '../Pages/UserVerification';
 
 import './stylesheets/Dashboard.css';
+import DashboardSidebar from '../Components/Sidebar/Sidebar';
 
 function AdminPanel() {
     return (
         <>
             <div className="dashboard-layout">
                 <DashboardNavbar />
-                <Outlet />
+                <div className="sidebar">
+                    <DashboardSidebar />
+                </div>
+                <div className="dashboard-content">
+
+                    <div className="outlet">
+                        <Outlet />
+                    </div>
+                </div>
             </div>
         </>
     );
