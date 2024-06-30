@@ -1,0 +1,71 @@
+.navbar{
+    background-color: var(--gray-10);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    @media screen and (max-width: 600px){
+        padding: 15px 20px;
+    }
+    .navbar-left{
+        display: flex;
+        align-items: center;
+
+        .hamburger{
+            height: 28px;
+            width: 28px;
+            background-image: url('./icons/hamburger.svg');
+            background-size: cover;
+            cursor: pointer;
+        }
+        .logo{
+            margin-left: 20px;
+            padding: 0 20px;
+            border-left: 2px solid var(--gray-08);
+            font-size: var(--medium);
+
+            @media screen and (max-width: 600px){
+                margin-left: 14px;
+                padding: 0 14px;
+            }
+        }
+    }
+    .navbar-right{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 20px;
+        column-gap: 10px;
+        .profile-name{
+            h4{
+                font-size: var(--small);
+                font-weight: 500;
+                
+
+            }
+            @media screen and (max-width: 1024px){
+                display: none;
+            }
+
+        }
+        .profile-photo{
+            height: 40px;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            background-size: cover;
+            overflow: hidden;
+            img{
+                display: block;
+                width: 100%;
+                height: 100%;
+
+            }
+
+            @media screen and (max-width: 600px){
+                height: 30px;
+            }
+        }
+    }
+    
+}

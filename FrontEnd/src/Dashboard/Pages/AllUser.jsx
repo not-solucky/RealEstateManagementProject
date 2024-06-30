@@ -1,7 +1,7 @@
 function AllUser() {
     return (
         <>
-            All User
+            <div>All user section</div>
         </>
     );
 }

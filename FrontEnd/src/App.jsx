@@ -8,6 +8,11 @@ import Servicespage from './pages/servicespage/Service'
 import Signinpage from './pages/loginpage/Signin'
 import Signuppage from './pages/loginpage/Signup'
 import AdminPanel from './Dashboard/Admin/Dashboard'
+
+import AllUser from './Dashboard/Pages/AllUser'
+import UserProfile from './Dashboard/Pages/UserProfile'
+import UserVerification from './Dashboard/Pages/UserVerification'
+
 import { Routes, Route, useLocation } from 'react-router-dom'
 
 
@@ -24,10 +29,13 @@ function App() {
                 <Route path="/services" element={<Servicespage />} />
                 <Route path="/signin" element={<Signinpage />} />
                 <Route path="/signup" element={<Signuppage />} />
-                <Route path="/dashboard" element={<AdminPanel />} />
+
+                <Route path="/dashboard" element={<AdminPanel />} >
+                    <Route path="alluser" element={<AllUser />} />
+                    <Route path="userprofile" element={<UserProfile />} />
+                    <Route path="userverification" element={<UserVerification />} />
+                </Route>
             </Routes>
-
-
         </>
     )
 }
