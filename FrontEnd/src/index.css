@@ -6,7 +6,9 @@
   font-family: "Urbanist", sans-serif;
   color: white;
 }
-
+body{
+    display: block;
+}
 :root {
   --purple-60: #703bf7;
   --purple-65: #8254F8;
