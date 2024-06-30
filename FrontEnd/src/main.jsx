@@ -5,7 +5,7 @@ import './index.css'
 import { BrowserRouter } from 'react-router-dom'
 import ApiContext from './context/Apicontext.jsx'
 
-const BASE_URL = 'http://localhost:8080/api/v1';
+const BASE_URL = 'http://192.168.0.104:8080/api/v1';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
