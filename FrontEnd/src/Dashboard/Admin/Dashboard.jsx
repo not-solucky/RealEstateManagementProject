@@ -4,7 +4,7 @@ import UserProfile from '../Pages/UserProfile';
 import AllUser from '../Pages/AllUser';
 import UserVerification from '../Pages/UserVerification';
 
-import './stylesheets/Dashboard.css';
+import './stylesheets/Dashboard.scss';
 import DashboardSidebar from '../Components/Sidebar/Sidebar';
 
 function AdminPanel() {
@@ -12,10 +12,10 @@ function AdminPanel() {
         <>
             <div className="dashboard-layout">
                 <DashboardNavbar />
-                <div className="sidebar">
-                    <DashboardSidebar />
-                </div>
                 <div className="dashboard-content">
+                    <div className="sidebar">
+                        <DashboardSidebar />
+                    </div>
 
                     <div className="outlet">
                         <Outlet />

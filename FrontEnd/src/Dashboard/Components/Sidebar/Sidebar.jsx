@@ -1,32 +1,27 @@
+
+import './stylesheets/Sidebar.scss'
+import AllUser from '../../Pages/AllUser';
+import UserProfile from '../../Pages/UserProfile';
+import { AdduserIcon, VerifyuserIcon, AlluserIcon, ProfileIcon } from '../../../components/icons';
+import { NavLink } from 'react-router-dom'
+
+
 function DashboardSidebar() {
     return (
         <>
             <div className="sidebar-container">
-                <div className="sidebar-item">
-                    <div className="sidebar-item-icon">
-                        <i className="fas fa-home"></i>
-                    </div>
-                    <div className="sidebar-item-text">
-                        <h4>Home</h4>
+                <div className="sidebar-items">
+                    <NavLink to="userprofile"><AdduserIcon /> Profile</NavLink>
+
+                    <NavLink to="alluser"><AlluserIcon /> All Users</NavLink>
+                </div>
+                <div className="dashboard-exit">
+                    <div className="line"></div>
+                    <div className="link">
+                        <NavLink to={'/'}>Exit Dashboard</NavLink>
                     </div>
                 </div>
-                <div className="sidebar-item">
-                    <div className="sidebar-item-icon">
-                        <i className="fas fa-user"></i>
-                    </div>
-                    <div className="sidebar-item-text">
-                        <h4>Profile</h4>
-                    </div>
-                </div>
-                <div className="sidebar-item">
-                    <div className="sidebar-item-icon">
-                        <i className="fas fa-users"></i>
-                    </div>
-                    <div className="sidebar-item-text">
-                        <h4>Users</h4>
-                    </div>
-                </div>
-                
+
             </div>
         </>
     );

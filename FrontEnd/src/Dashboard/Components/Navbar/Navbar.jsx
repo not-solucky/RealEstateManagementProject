@@ -1,5 +1,5 @@
 import {NavLink} from 'react-router-dom';
-import './stylesheets/Navbar.css';
+import './stylesheets/Navbar.scss';
 import { useState } from 'react';
 function DashboardNavbar() {
 
@@ -10,7 +10,7 @@ function DashboardNavbar() {
 
     return (
         <>
-            <nav className="navbar">
+            <nav className="dashboard-navbar">
                 <div className="navbar-left">
                     <div className="hamburger"></div>
                     <div className="logo">
