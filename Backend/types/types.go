@@ -11,13 +11,17 @@ type ImageStore interface {
 	SaveImageInfo(filename, filepath string) error
 	GetImageInfo(filename string) (*Image, error)
 }
-
+type UserContext struct {
+	ID   int
+	Role string
+}
 type User struct {
 	ID        int       `json:"user_id"`
 	Name      string    `json:"username"`
 	Email     string    `json:"email"`
 	Password  string    `json:"-"`
 	Phone	  string    `json:"phone_number"`
+	ImagePath string    `json:"image"`
 	Role	  string    `json:"role"`
 	Verified  bool      `json:"is_verified"`
 	CreatedAt time.Time `json:"created_at"`

@@ -57,12 +57,19 @@ func WithJWTAuth(handlerFunc http.HandlerFunc, store types.UserStore) http.Handl
 			return
 		}
 
+		userContext := types.UserContext{
+			ID:   u.ID,
+			Role: u.Role,
+		}
+		
 		// Add the user to the context
+		log.Println(UserKey)
 		ctx := r.Context()
-		ctx = context.WithValue(ctx, UserKey, u.ID)
+		ctx = context.WithValue(ctx, UserKey, userContext)
 		r = r.WithContext(ctx)
 
 		// Call the function if the token is valid
+
 		handlerFunc(w, r)
 	}
 }

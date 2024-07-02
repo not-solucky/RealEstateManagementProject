@@ -2,16 +2,18 @@ package user
 
 import (
 	"fmt"
+	"learninggo/config"
+	"learninggo/service/auth"
 	"learninggo/types"
 	"learninggo/utils"
-	"learninggo/service/auth"
 	"log"
 	"net/http"
 	"strconv"
-	"github.com/gorilla/mux"
+
 	"github.com/go-playground/validator/v10"
-	"learninggo/config"
+	"github.com/gorilla/mux"
 )
+
 
 type Handler struct {
 	store types.UserStore
@@ -28,8 +30,15 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/users/{id}", auth.WithJWTAuth(h.handleGetUser, h.store)).Methods(http.MethodGet)
 }
 func (h *Handler) handleGetUser(w http.ResponseWriter, r *http.Request) {
-	log.Println("Get user handler")
+	// decode token and get user id
+
+	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
+
+	userID := contextValues.ID
+	userRole := contextValues.Role
+	log.Println(userRole)
 	vars := mux.Vars(r)
+
 	id := vars["id"]
 	log.Println("ID", id)
 	idInt, err := strconv.Atoi(id)
@@ -37,7 +46,12 @@ func (h *Handler) handleGetUser(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
-
+	if idInt != userID{
+		if userRole != "admin" {
+			utils.WriteError(w, http.StatusForbidden, fmt.Errorf("forbidden"))
+			return
+		}
+	}
 	user, err := h.store.GetUserByID(idInt)
 	if err != nil {
 		utils.WriteError(w, http.StatusNotFound, err)
@@ -59,7 +73,7 @@ func (h *Handler) handleLogin (w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid payload: %v", errors))
 		return
 	}
-
+	log.Println("User", user)
 	u, err := h.store.GetUserByEmail(user.Email)
 
 	if err != nil {
@@ -114,6 +128,7 @@ func (h *Handler) handleRegister (w http.ResponseWriter, r *http.Request) {
 		Password: user.Password,
 		Phone: user.Phone,
 		Role: "client",
+		ImagePath: "null",
 	})
 
 	if err != nil {
@@ -124,5 +139,4 @@ func (h *Handler) handleRegister (w http.ResponseWriter, r *http.Request) {
 	// return success
 	utils.WriteJSON(w, http.StatusCreated, nil)
 
-	log.Println("Register ")
 }
