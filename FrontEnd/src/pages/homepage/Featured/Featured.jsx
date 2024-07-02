@@ -11,7 +11,7 @@ function Card({card}){
             <div className="card-content">
                 <div className="card-title">
                     <h3>{card.title}</h3>
-                    <p>{card.description}... <span class="description-expand">Read More</span></p>
+                    <p>{card.description}... <span className="description-expand">Read More</span></p>
                 </div>
                 <div className="card-footer">
                     <div className="price-box">
@@ -61,7 +61,7 @@ function CardSwiper({cards}) {
                         <div className="number">
                             <p>{"10"} <span>of {"60"}</span></p>
                         </div>
-                        <button class="button-1">View All Properties</button>
+                        <button className="button-1">View All Properties</button>
                         <div className="swiper-button-container">
                             <div className="swiper-button-prev"></div>
                             <div className="number hidden">
@@ -121,15 +121,15 @@ function Featured() {
     ]
     return (
         <>
-            <section class="featured-section">
-                <div class="container">
-                    <div class="title-container">
-                        <div class="title">
+            <section className="featured-section">
+                <div className="container">
+                    <div className="title-container">
+                        <div className="title">
                             <h2>Featured Properties</h2>
                             <p>Explore our handpicked selection of featured properties. Each listing offers a glimpse into exceptional homes and investments available through Nest Navigator. Click "View Details" for more information.</p>
                         </div>
 
-                        <button class="button-1">View All Properties</button>
+                        <button className="button-1">View All Properties</button>
 
                     </div>
                     <CardSwiper cards = {allcards}/>
