@@ -38,7 +38,7 @@ func (s *APIServer) Run() error {
 
 	corsHandler := handlers.CORS(
 		handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
-		handlers.AllowedOrigins([]string{"http://192.168.0.104:5173", "http://localhost:5173"}),
+		handlers.AllowedOrigins([]string{"*"}),
 		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "UPDATE"}),
 	)
 

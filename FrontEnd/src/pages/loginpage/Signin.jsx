@@ -1,14 +1,13 @@
 import "./login.css"
 import { useState,useContext } from "react"
 import { NavLink } from "react-router-dom"
-import ApiContext from "../../context/Apicontext"
+import {StoreContext} from "../../context/StoreContext"
 import axios from "axios"
-
+import { Allapi } from "../../api/Api"
 function Signinpage() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState(Array(2).fill(null));
-    const BASE_URL = useContext(ApiContext)
     const [status, setStatus] = useState("")
     const [loginError, setLoginError] = useState("")
 
@@ -17,14 +16,14 @@ function Signinpage() {
 
         if (validate()) {
             try {
-                const response = await axios.post(`${BASE_URL}/login`, {
+                const response = await Allapi.post(`/login`, {
                     email: email,
                     password: password,
                 });
 
                 // Extract token from response (assuming token is in the data property)
                 const token = response.data.token;
-
+                localStorage.setItem("nestnavigatortoken", token); // Store token in local storage
                 console.log("Extracted token:", token);
                 setStatus("success"); // Update status for success message
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect,useContext } from 'react'
 import './App.css'
 import Navbar from './components/Navbar/Navbar'
 import Homepage from './pages/homepage/Home'
@@ -14,11 +14,38 @@ import UserProfile from './Dashboard/Pages/UserProfile'
 import UserVerification from './Dashboard/Pages/UserVerification'
 
 import { Routes, Route, useLocation } from 'react-router-dom'
+import { StoreContext } from './context/StoreContext'
+import {Protectedapi} from './api/Api'
+import { jwtDecode } from 'jwt-decode'
+
 
 
 function App() {
     const location = useLocation();
-
+    const { token, setUserInfo } = useContext(StoreContext);
+    
+    useEffect(() => {
+        try {
+            const token = localStorage.getItem("nestnavigatortoken");
+            if (token) {
+                const decodedToken = jwtDecode(token);
+                const userId = decodedToken.userID;
+                const getUser = async () => {
+                    try {
+                        const response = await Protectedapi.get(`/users/${userId}`);
+                        setUserInfo(response.data);
+                        console.log("User info:", response.data);
+                    } catch (error) {
+                        console.log("Error:", error);
+                    }
+                };
+                getUser();
+            }
+        } catch (error) {
+            console.log("Error:", error);
+        }        
+    },[])
+        
     return (
         <>
             {!location.pathname.startsWith('/dashboard') && <Navbar />}

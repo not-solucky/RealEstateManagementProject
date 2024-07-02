@@ -1,10 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./navbar.css";
 import { NavLink } from "react-router-dom";
-
+import {jwtDecode} from 'jwt-decode'
 function Navbar() {
     const [activeItem, setActiveItem] = useState("Home");
-
+    const [token, setToken] = useState(null);
+    useEffect(() => {
+        try {
+            const token = localStorage.getItem("nestnavigatortoken");
+            if (token) { // Check if token exists before decoding
+                const decoded = jwtDecode(token);
+                setToken(decoded);
+            }
+        } catch (error) {
+            console.error("Error decoding token:", error.message); // Log specific error message
+            // Optionally set an error state variable here (if needed)
+        }
+    }, []);
+    
+    // decode token to get user information
+    
     const handleSidebar = () => {
         const sidebar = document.getElementById("sidebar");
         const sidebarButton = document.getElementById("sidebarbutton");
@@ -42,7 +57,15 @@ function Navbar() {
                         </ul>
                     </nav>
                     <div className="sign-up">
-                        <li><NavLink to= "signin">Sign In</NavLink></li>
+                        {token ? 
+                        <div className="user-profile-container">
+                            <li><NavLink to= "dashboard/profile">Account</NavLink></li>
+
+                            <li><NavLink to= "/">Sign out</NavLink></li>
+
+                        </div> : 
+                        <li><NavLink to= "signin">Sign In</NavLink></li>}
+                        
                     </div>
 
                     <div id="sidebar" className="sidebar" aria-expanded="false">
