@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from "react";
-import "./navbar.css";
+import React, { useEffect, useState, useContext } from "react";
+import { StoreContext } from "../../context/StoreContext";
+import "./navbar.scss";
 import { NavLink } from "react-router-dom";
 import {jwtDecode} from 'jwt-decode'
 function Navbar() {
-    const [activeItem, setActiveItem] = useState("Home");
-    const [token, setToken] = useState(null);
+    const { userInfo, token, loading, setToken } = useContext(StoreContext);
+    const [profile, setProfile] = useState({
+        name: "John Doe",
+        photo: "/profile.png",
+    });
+
     useEffect(() => {
-        try {
-            const token = localStorage.getItem("nestnavigatortoken");
-            if (token) { // Check if token exists before decoding
-                const decoded = jwtDecode(token);
-                setToken(decoded);
-            }
-        } catch (error) {
-            console.error("Error decoding token:", error.message); // Log specific error message
-            // Optionally set an error state variable here (if needed)
+        if (userInfo) {
+            setProfile({
+                name: userInfo.username,
+                photo: userInfo.image,
+            });
         }
-    }, []);
-    
+    }, [userInfo]);
+
     // decode token to get user information
     
     const handleSidebar = () => {
@@ -31,6 +32,12 @@ function Navbar() {
             sidebar.setAttribute("aria-expanded", "false");
             sidebarButton.setAttribute("aria-expanded", "false");
         }
+    }
+
+    const signout = () => {
+        localStorage.removeItem("nestnavigatortoken");
+        setToken(null);
+        window.location.reload();
     }
 
     return (
@@ -59,10 +66,17 @@ function Navbar() {
                     <div className="sign-up">
                         {token ? 
                         <div className="user-profile-container">
-                            <li><NavLink to= "dashboard/profile">Account</NavLink></li>
-
-                            <li><NavLink to= "/">Sign out</NavLink></li>
-
+                            <div className="image-content">
+                                <img src={profile.photo === "null"? "/profile.png": profile.photo} alt="profile" />
+                            </div>
+                            
+                            <div className="dropdown-content">
+                                <p>{profile.name}</p>
+                                <NavLink to= "/dashboard/userprofile">Profile</NavLink>
+                                <NavLink to= "/dashboard">Dashboard</NavLink>
+                                <a onClick={signout}>Sign Out</a>
+                            </div>
+                            
                         </div> : 
                         <li><NavLink to= "signin">Sign In</NavLink></li>}
                         

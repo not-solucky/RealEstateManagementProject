@@ -1,8 +1,9 @@
 import {NavLink} from 'react-router-dom';
 import './stylesheets/Navbar.scss';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { StoreContext } from '../../../context/StoreContext';
 function DashboardNavbar() {
-
+    const { userInfo } = useContext(StoreContext);
     const [profile, setProfile] = useState({
         name: 'John Doe',
         photo: '/profile.png'

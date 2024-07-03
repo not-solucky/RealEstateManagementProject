@@ -22,33 +22,13 @@ import { jwtDecode } from 'jwt-decode'
 
 function App() {
     const location = useLocation();
-    const { token, setUserInfo } = useContext(StoreContext);
+    const { token, userInfo } = useContext(StoreContext);
     
-    useEffect(() => {
-        try {
-            const token = localStorage.getItem("nestnavigatortoken");
-            if (token) {
-                const decodedToken = jwtDecode(token);
-                const userId = decodedToken.userID;
-                const getUser = async () => {
-                    try {
-                        const response = await Protectedapi.get(`/users/${userId}`);
-                        setUserInfo(response.data);
-                        console.log("User info:", response.data);
-                    } catch (error) {
-                        console.log("Error:", error);
-                    }
-                };
-                getUser();
-            }
-        } catch (error) {
-            console.log("Error:", error);
-        }        
-    },[])
         
     return (
         <>
             {!location.pathname.startsWith('/dashboard') && <Navbar />}
+            {console.log(userInfo)}
             <Routes>
                 <Route path="/" element={<Homepage />} />
                 <Route path="/about" element={<Aboutpage />} />

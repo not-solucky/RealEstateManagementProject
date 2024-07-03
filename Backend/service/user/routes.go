@@ -57,6 +57,7 @@ func (h *Handler) handleGetUser(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusNotFound, err)
 		return
 	}
+	log.Println("User", user.Email)
 	utils.WriteJSON(w, http.StatusOK, user)
 }
 
@@ -86,7 +87,7 @@ func (h *Handler) handleLogin (w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	secret := []byte(config.Envs.JWTSecret)
-	token, err := auth.CreateJWT(secret, u.ID)
+	token, err := auth.CreateJWT(secret, u)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return

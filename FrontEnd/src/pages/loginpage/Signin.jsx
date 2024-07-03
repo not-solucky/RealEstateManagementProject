@@ -2,7 +2,6 @@ import "./login.css"
 import { useState,useContext } from "react"
 import { NavLink } from "react-router-dom"
 import {StoreContext} from "../../context/StoreContext"
-import axios from "axios"
 import { Allapi } from "../../api/Api"
 function Signinpage() {
     const [email, setEmail] = useState("")
@@ -10,7 +9,7 @@ function Signinpage() {
     const [error, setError] = useState(Array(2).fill(null));
     const [status, setStatus] = useState("")
     const [loginError, setLoginError] = useState("")
-
+    const { setToken } = useContext(StoreContext);
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -24,6 +23,7 @@ function Signinpage() {
                 // Extract token from response (assuming token is in the data property)
                 const token = response.data.token;
                 localStorage.setItem("nestnavigatortoken", token); // Store token in local storage
+                setToken(token); // Update token in context
                 console.log("Extracted token:", token);
                 setStatus("success"); // Update status for success message
 
