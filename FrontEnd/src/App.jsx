@@ -10,7 +10,7 @@ import Signuppage from './pages/loginpage/Signup'
 import AdminPanel from './Dashboard/Admin/Dashboard'
 
 import AllUser from './Dashboard/Pages/AllUser'
-import UserProfile from './Dashboard/Pages/UserProfile'
+import UserProfile from './Dashboard/Pages/UserProfile/UserProfile'
 import UserVerification from './Dashboard/Pages/UserVerification'
 
 import { Routes, Route, useLocation } from 'react-router-dom'

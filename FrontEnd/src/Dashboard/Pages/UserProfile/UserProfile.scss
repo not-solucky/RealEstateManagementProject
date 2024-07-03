@@ -1,0 +1,95 @@
+.profile-container{
+    padding: 36px 36px 12px  36px;
+    
+    .subcontainer{
+        .profile{
+            display: flex;
+            border-radius: 8px;
+            gap: 30px;
+            padding: 24px;
+            background-color: var(--gray-10);
+            .profile-image{
+                aspect-ratio: 1/1;
+                border-radius: 6px;
+                background-size: cover;
+                height: 200px;
+                img{
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 6px;
+                }
+            }
+            .profile-info{
+                display: flex;
+                flex-direction: column;
+
+                h3{
+                    font-size: var(--big);
+
+                }
+                p{
+                    color: var(--gray-50);
+
+                }
+                .joined{
+                    font-size: var(--extra-small);
+                    margin-bottom: 20px;
+                }
+                .email,.phone,.verified,.unverified{
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    font-size: var(--extra-small);
+                    svg{
+                        width: var(--small);
+                        height: var(--small);
+                    }
+                }
+                .email{
+
+                    font-size: var(--extra-small);
+                    margin-bottom: 2px;
+                    svg{
+                        path{
+                            stroke: var(--gray-50);
+                        }
+                    }
+
+                }
+                .phone{
+                    font-size: var(--extra-small);
+                    margin-bottom: 10px;
+                    svg{
+                        path{
+                            fill: var(--gray-50);
+                        }
+                    }
+
+                }
+                .verified{
+                    --verified: rgb(45, 131, 19);
+                    font-size: var(--extra-small);
+                    color: var(--verified);
+                    svg{
+                        path{
+                            fill: var(--verified);
+                            stroke: transparent;
+                        }
+                    }
+                }
+                .unverified{
+                    --notverified: rgb(224, 82, 26);
+                    font-size: var(--extra-small);
+                    color: var(--notverified);
+                    svg{
+                        path{
+                            fill: var(--notverified);
+                            stroke: transparent;
+                        }
+                    }
+                }
+            }
+            
+        }
+    }
+}

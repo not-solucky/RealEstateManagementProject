@@ -50,7 +50,6 @@ func (h *Handler) handleGetImage(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
 	}
-
 	// Serve the file
 	http.ServeContent(w, r, fileStat.Name(), fileStat.ModTime(), file)
 }

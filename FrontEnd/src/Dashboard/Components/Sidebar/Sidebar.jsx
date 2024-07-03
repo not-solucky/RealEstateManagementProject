@@ -1,7 +1,7 @@
 
 import './stylesheets/Sidebar.scss'
 import AllUser from '../../Pages/AllUser';
-import UserProfile from '../../Pages/UserProfile';
+import UserProfile from '../../Pages/UserProfile/UserProfile';
 import { AdduserIcon, VerifyuserIcon, AlluserIcon, ProfileIcon } from '../../../components/icons';
 import { NavLink } from 'react-router-dom'
 

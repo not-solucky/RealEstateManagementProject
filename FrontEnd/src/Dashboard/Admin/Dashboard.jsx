@@ -1,6 +1,6 @@
 import { Routes, Route, useLocation, Outlet } from 'react-router-dom'
 import DashboardNavbar from '../Components/Navbar/Navbar';
-import UserProfile from '../Pages/UserProfile';
+import UserProfile from '../Pages/UserProfile/UserProfile';
 import AllUser from '../Pages/AllUser';
 import UserVerification from '../Pages/UserVerification';
 

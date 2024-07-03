@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useContext } from 'react';
+import { StoreContext } from '../context/StoreContext';
 
 
 const api = "http://192.168.0.104:8080/api/v1"; // Adjust the API base URL as needed
@@ -33,4 +34,9 @@ export const GetStaticUserDocumentImage = (image) => {
 
 export const GetStaticPropertyDocumentImage = (image) => {
     return `${api}/image/pdoc/${image}`;
+}
+export function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    return `Joined ${date.toLocaleDateString('en-GB', options)}`;
 }

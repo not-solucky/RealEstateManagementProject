@@ -84,8 +84,8 @@ func scanRowtoUser(rows *sql.Rows) (*types.User, error) {
 		&user.ImagePath,
 		&user.Role,
 		&user.Verified,
-		&user.UpdatedAt,
 		&user.CreatedAt,
+		&user.UpdatedAt,
 	)
 	if err != nil {
 		return nil, err

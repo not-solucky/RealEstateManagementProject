@@ -11,6 +11,8 @@ const StoreProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        console.log("StoreProvider running")
+        console.log("Token:", token)
         try {
             const token = localStorage.getItem("nestnavigatortoken");
             if (token) {
@@ -42,13 +44,15 @@ const StoreProvider = ({ children }) => {
         } finally {
             setLoading(false);
         }
+    console.log("userInfo:", userInfo)  
     },[token]);
     
     const contextValue = {
         token,
         userInfo,
         setToken,
-        loading
+        loading,
+        setUserInfo
     };
 
     return (
