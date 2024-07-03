@@ -18,3 +18,19 @@ export const Protectedapi = axios.create({
         Authorization: `Bearer ${localStorage.getItem("nestnavigatortoken")}`,
     },
 });
+
+export const GetStaticProfileImage = (image) => {
+    return `${api}/image/profile/${image}`;
+}
+
+export const GetStaticPropertyImage = (image) => {
+    return `${api}/image/property/${image}`;
+}
+
+export const GetStaticUserDocumentImage = (image) => {
+    return `${api}/image/udoc/${image}`;
+}
+
+export const GetStaticPropertyDocumentImage = (image) => {
+    return `${api}/image/pdoc/${image}`;
+}

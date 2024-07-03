@@ -1,13 +1,23 @@
 import {NavLink} from 'react-router-dom';
 import './stylesheets/Navbar.scss';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { StoreContext } from '../../../context/StoreContext';
+import { GetStaticProfileImage } from '../../../api/Api';
 function DashboardNavbar() {
-    const { userInfo } = useContext(StoreContext);
+    const { userInfo, token, loading, setToken } = useContext(StoreContext);
     const [profile, setProfile] = useState({
-        name: 'John Doe',
-        photo: '/profile.png'
+        name: "John Doe",
+        photo: "/profile.png",
     });
+
+    useEffect(() => {
+        if (userInfo) {
+            setProfile({
+                name: userInfo.username,
+                photo: userInfo.image,
+            });
+        }
+    }, [userInfo]);
 
     return (
         <>
@@ -19,12 +29,13 @@ function DashboardNavbar() {
                     </div>
                 </div>
                 <div className="navbar-right">
-                    <div className="profile-photo">
-                        <img src={profile.photo} alt="profile" />
-                    </div>
                     <div className="profile-name">
                         <h4>{profile.name}</h4>
                     </div>
+                    <div className="profile-photo">
+                        <img src={profile.photo === "null"? "/profile.png": GetStaticProfileImage(profile.photo)} alt="profile" />
+                    </div>
+                    
                 </div>
             </nav>
         </>

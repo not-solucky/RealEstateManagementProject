@@ -28,7 +28,6 @@ function App() {
     return (
         <>
             {!location.pathname.startsWith('/dashboard') && <Navbar />}
-            {console.log(userInfo)}
             <Routes>
                 <Route path="/" element={<Homepage />} />
                 <Route path="/about" element={<Aboutpage />} />
