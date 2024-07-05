@@ -57,12 +57,19 @@ func WithJWTAuth(handlerFunc http.HandlerFunc, store types.UserStore) http.Handl
 			return
 		}
 
+		userContext := types.UserContext{
+			ID:   u.ID,
+			Role: u.Role,
+		}
+		
 		// Add the user to the context
+		log.Println(UserKey)
 		ctx := r.Context()
-		ctx = context.WithValue(ctx, UserKey, u.ID)
+		ctx = context.WithValue(ctx, UserKey, userContext)
 		r = r.WithContext(ctx)
 
 		// Call the function if the token is valid
+
 		handlerFunc(w, r)
 	}
 }
@@ -82,13 +89,16 @@ func permissionDenied(w http.ResponseWriter) {
 }
 
 
-func CreateJWT(secret []byte, userID int) (string, error) {
+func CreateJWT(secret []byte, user *types.User) (string, error) {
 	
 	expiration := time.Second * time.Duration(config.Envs.JWTExpirationInSeconds)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"userID": strconv.Itoa(userID),
+		"userID": strconv.Itoa(user.ID),
 		"expiredAt": time.Now().Add(expiration).Unix(),
+		"username" : user.Name,
+		"userImage" : user.ImagePath,
+		
 	})
 
 	tokenString, err := token.SignedString(secret)
