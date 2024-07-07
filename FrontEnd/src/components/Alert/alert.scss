@@ -1,0 +1,28 @@
+.popup-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 40px;
+    top: 0;
+    left: 0;
+    backdrop-filter: blur(1rem);
+    background-color: rgba(0, 0, 0, 0.603);
+    .message-field{
+        p{
+            font-size: var(--medium);
+            color: white;
+
+
+        }
+    }
+    .popup-button{
+        padding: 10px 20px;
+        background-color: var(--purple-60);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+}
