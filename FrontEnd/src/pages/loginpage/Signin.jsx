@@ -2,7 +2,6 @@ import "./login.css"
 import { useState,useContext } from "react"
 import { NavLink } from "react-router-dom"
 import {StoreContext} from "../../context/StoreContext"
-import { Allapi } from "../../api/Api"
 function Signinpage() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")

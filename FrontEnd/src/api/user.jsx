@@ -40,8 +40,8 @@ const Register = async (payload) => {
 }
 
 const getProfile = async () => {
-    
 
+}
 export const UserApi = {
     Login,
     Register,

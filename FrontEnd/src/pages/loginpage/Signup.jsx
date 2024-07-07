@@ -12,26 +12,11 @@ function Signuppage() {
     const [phone, setPhone] = useState("")
     const [terms, setTerms] = useState(false)
     const [error, setError] = useState(Array(6).fill(null));
-    const {api} = useContext(StoreContext)
     const [status, setStatus] = useState("")
     const [message, setMessage] = useState("")
 
     const handleSubmit = (event) => {
-        event.preventDefault()
-        if (validate()) {
-            axios.post(`${api}/register`, {
-                username: name,
-                email: email,
-                phone: phone,
-                password: password
-            }).then((response) => {
-                setStatus("success")
-            }).catch((error) => {
-                setStatus("error")
-                setMessage(error.response.data.error)
-                console.log(error.response.data.error)
-            })
-        }
+        
     }
     const validate = () => {
         let error = Array(6).fill(null)

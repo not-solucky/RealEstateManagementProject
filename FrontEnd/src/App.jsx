@@ -15,7 +15,7 @@ import UserVerification from './Dashboard/Pages/UserVerification'
 
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { StoreContext } from './context/StoreContext'
-import {Protectedapi} from './api/Api'
+
 import { jwtDecode } from 'jwt-decode'
 
 

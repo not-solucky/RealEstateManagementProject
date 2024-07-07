@@ -1,7 +1,6 @@
 
 import {useState, useEffect, useContext} from 'react';
 import {StoreContext} from '../../../context/StoreContext';
-import { Allapi, GetStaticProfileImage, formatDate } from '../../../api/Api';
 import { PhoneIcon, MailIcon, TickFilledIcon, CrossFilledIcon } from '../../../components/icons';
 import './UserProfile.scss';
 import { jwtDecode } from 'jwt-decode';
@@ -24,6 +23,7 @@ function UserProfile() {
     const {userInfo, setUserInfo, token, loading} = useContext(StoreContext);
     const [error, setError] = useState(null);
     const [fetching, setFetching] = useState(false);
+
 
 
     return (
