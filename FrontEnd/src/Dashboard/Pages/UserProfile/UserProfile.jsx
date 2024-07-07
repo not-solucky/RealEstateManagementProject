@@ -25,41 +25,7 @@ function UserProfile() {
     const [error, setError] = useState(null);
     const [fetching, setFetching] = useState(false);
 
-    const fetchUser = async () => {
-        const Token = localStorage.getItem("nestnavigatortoken");
-        const uid = jwtDecode(Token).userID;
-        console.log("Fetching user data");
-        const response = await Allapi.get(`/users/${uid}`,{headers: {Authorization: `Bearer ${token}`}});
-        if (response.status === 200) {
-            setUserInfo(response.data);
-            console.log("User data fetched");
-        }
-        else {
-            console.log("Error fetching user data");
 
-        }
-    }
-
-    useEffect(() => {
-        console.log("UserProfile running");
-        setFetching(true);
-        
-        if (!token && !loading) {
-            window.location.href = '/signin';
-            
-        } else if (token && !loading){
-            try{
-                fetchUser();
-            } catch (error) {
-                console.log("Error fetching user data");
-                setError("Error fetching user data");
-            }
-        }
-
-        setFetching(false);
-        
-
-    },[loading, token]);
     return (
         <>
             {loading || fetching ?

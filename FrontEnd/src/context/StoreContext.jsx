@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
 import {jwtDecode} from 'jwt-decode';
-import {Protectedapi} from '../api/Api';
+import {Protectedapi} from '../api/image';
 
 // Create the context
 export const StoreContext = createContext(null);

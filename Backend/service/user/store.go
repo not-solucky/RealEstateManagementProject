@@ -18,9 +18,10 @@ func NewStore(db *sql.DB) *Store {
 }
 
 func (s *Store) GetUserByEmail(email string) (*types.User, error) {
-	rows, err := s.DB.Query("SELECT * FROM users WHERE email = ?", email)
+	rows, err := s.DB.Query("SELECT * FROM users where email = ?", email)
 	log.Println("Querying user")
-
+	log.Println("Rows", rows)
+	log.Println(email)
 	if err != nil {
 		log.Println("Error querying user")
 		return nil, err
@@ -74,6 +75,7 @@ func (s *Store) CreateUser(user *types.User) error {
 }
 
 func scanRowtoUser(rows *sql.Rows) (*types.User, error) {
+	log.Println(rows)
 	user := new(types.User)
 	err := rows.Scan(
 		&user.ID,
