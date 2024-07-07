@@ -1,15 +1,20 @@
 import "./login.css"
 import { NavLink, useNavigate } from "react-router-dom"
 import { useState, useCallback, useEffect } from "react"
+
 import { UserApi } from "../../api/user"
 import Alert from "../../components/Alert/Alert"
-function Signinpage() {
+import Loader from "../../components/Loader/Loader"
+
+function Signinpage({loggedin}) {
+    
     const navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState(false)
     const [loading, setLoading] = useState(false)
     const [alert, setAlert] = useState(false)
+
     const handleSubmit = useCallback( async () => {
         if (validate()) {
             setLoading(true)
@@ -21,13 +26,13 @@ function Signinpage() {
 
             setLoading(false)
             if (statusCode === 200) {
+                loggedin(true)
                 navigate("/properties")
             } else {
                 console.log(data)
                 setAlert(data.error)
             }
         }
-
     }
         
     );
@@ -63,14 +68,14 @@ function Signinpage() {
         if (!isValid){
             setErrorAndClear(error)
         }
+        console.log(error)
         return isValid
     }
     return (
         <>
-            {alert && <Alert payload={alert} func= {setAlert} />}
             <section className="login-section">
                 <div className="container">
-                    <div className="image-content">
+                    <div className="image-content sign-in-image">
                         <img src="/pexels-samarth-1010079.jpg" alt="Building Image"></img>
                     </div>
                     <div className="login-content">
@@ -79,6 +84,11 @@ function Signinpage() {
                             <p>Continue where you left off.</p>
                         </div>
                         
+                        {loading ? 
+                        <Loader /> 
+                        : alert ? 
+                        <Alert payload={alert} func={setAlert} /> 
+                        : 
                         <div className="login-form">
                             <div className="form">
                                 <div className="form-group">
@@ -110,6 +120,7 @@ function Signinpage() {
                                 </div>
                             </div>
                         </div>
+                        }
                     </div>
                 </div>
             </section>

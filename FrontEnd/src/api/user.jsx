@@ -1,6 +1,6 @@
 import { config } from "../utils/config";
 import { getToken, setToken } from "../utils/localstorage";
-import axios from "axios";
+import { getID } from "../utils/localstorage";
 
 const Login = async (payload) => {
     try {
@@ -41,9 +41,30 @@ const Register = async (payload) => {
 }
 
 const getProfile = async () => {
+    try {
+        const id = getID();
+        const token = getToken();
+        const response = await fetch(`${config.baseURL}/users/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
 
+        const data = await response.json();
+        return {statusCode: response.status, data: data};
+        
+    } catch (error) {
+        console.error(error);
+        return {statusCode: 500, data: {error: "Error Connecting to Server"}};
+
+    }
 }
+
+
 export const UserApi = {
     Login,
     Register,
+    getProfile
 };

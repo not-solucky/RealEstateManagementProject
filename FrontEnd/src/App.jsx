@@ -1,5 +1,6 @@
-import { useState, useEffect,useContext } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
+
 import Navbar from './components/Navbar/Navbar'
 import Homepage from './pages/homepage/Home'
 import Aboutpage from './pages/aboutpage/About'
@@ -12,28 +13,49 @@ import AdminPanel from './Dashboard/Admin/Dashboard'
 import AllUser from './Dashboard/Pages/AllUser'
 import UserProfile from './Dashboard/Pages/UserProfile/UserProfile'
 import UserVerification from './Dashboard/Pages/UserVerification'
-
+import { getID, setProfile } from './utils/localstorage'
 import { Routes, Route, useLocation } from 'react-router-dom'
-import { StoreContext } from './context/StoreContext'
 
-import { jwtDecode } from 'jwt-decode'
 
+import { UserApi } from './api/user'
 
 
 function App() {
     const location = useLocation();
-    const { token, userInfo } = useContext(StoreContext);
-    
+    const [loading, setLoading] = useState(true);
+    const [isloggedin, setIsloggedin] = useState(false);
+    useEffect(() => {
+        // Fetch user profile or any other initial data if needed
+        // This is just an example, adjust according to your needs
+        const fetchUserProfile = async () => {
+            setLoading(true);
+
+            try {
+                const userId = getID();
+                if (userId) {
+                    const { statusCode, data } = await UserApi.getProfile();
+                    if (statusCode === 200) {
+                        setProfile(data); // Ensure setProfile is properly defined
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching user profile", error);
+            }
+            setLoading(false);
+
+        };
+        fetchUserProfile();
+    }, [isloggedin]);
         
     return (
         <>
-            {!location.pathname.startsWith('/dashboard') && <Navbar />}
+            {!location.pathname.startsWith('/dashboard') && <Navbar loading = {loading}/>}
             <Routes>
                 <Route path="/" element={<Homepage />} />
                 <Route path="/about" element={<Aboutpage />} />
                 <Route path="/properties" element={<Propertiespage />} />
                 <Route path="/services" element={<Servicespage />} />
-                <Route path="/signin" element={<Signinpage />} />
+                <Route path="/signin" element={<Signinpage loggedin = {setIsloggedin}/>} />
                 <Route path="/signup" element={<Signuppage />} />
 
                 <Route path="/dashboard" element={<AdminPanel />} >

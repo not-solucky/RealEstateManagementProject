@@ -4,9 +4,25 @@ import "./navbar.scss";
 import { NavLink } from "react-router-dom";
 import {jwtDecode} from 'jwt-decode'
 import { ExpandMoreIcon } from "../icons";
+import { ImageApi } from "../../api/image";
+import { logout, isLogin,getProfile } from "../../utils/localstorage";
+import UserProfile from './../../Dashboard/Pages/UserProfile/UserProfile';
 
-function Navbar() {
+
+function Navbar({ loading }) {
     const [profileExpanded, setProfileExpanded] = useState(false);
+    const [loggedin, setLoggedin] = useState(false);
+    const [profile, setProfile] = useState(false);
+
+    useEffect(() => {
+        setLoggedin(isLogin());
+        if (isLogin()) {
+            setProfile(getProfile());
+            console.log(profile)
+        }
+    }, [loading]);
+
+    
     // decode token to get user information
     
     const handleSidebar = () => {
@@ -48,17 +64,20 @@ function Navbar() {
                         </ul>
                     </nav>
                     <div className="sign-up">
-                        {false ? 
+                        {loggedin ? 
                         <div className="user-profile-container">
                             <div className="image-content">
-                                <img src={profile.photo === "null"? "/profile.png": GetStaticProfileImage(profile.photo)} alt="profile" />
+                                <img src={profile.image === "null"? "/profile.png": ImageApi.GetStaticProfileImage(profile.image)} alt="profile" />
                             </div>
                             
                             <div className="dropdown-content">
-                                <p>{profile.name}</p>
+                                <p>{profile.username}</p>
                                 <NavLink to= "/dashboard/userprofile">Profile</NavLink>
                                 <NavLink to= "/dashboard">Dashboard</NavLink>
-                                <a onClick={signout}>Sign Out</a>
+                                <a onClick={() =>{
+                                    logout()
+                                    window.location.reload()
+                                }}>Sign Out</a>
                             </div>
                             
                         </div> : 
@@ -67,12 +86,12 @@ function Navbar() {
                     </div>
 
                     <div id="sidebar" className="sidebar" aria-expanded="false">
-                        {/* <div className="user-profile-container">
+                        <div className="user-profile-container">
                             <div className="main-container"
                                 onClick={() => setProfileExpanded(!profileExpanded)}>
                             
                                 <div className="image-content">
-                                    <img src={profile.photo === "null"? "/profile.png": GetStaticProfileImage(profile.photo)} alt="profile" />
+                                    <img src={profile.image === "null"? "/profile.png": ImageApi.GetStaticProfileImage(profile.image)} alt="profile" />
                                 </div>
                                 <div className="menu-content" >
                                     <p>My account</p>
@@ -96,14 +115,14 @@ function Navbar() {
                                     </ul>
                                 </div>
                             </div>
-                        </div> */}
+                        </div>
                         <div className="line"></div>
                         <ul className="sidebar-navigation" id="sidebar-links">
                             <li className="sidebar-item"><NavLink to={"/"}>Home</NavLink></li>
                             <li className="sidebar-item"><NavLink to={"/about"}>About Us</NavLink></li>
                             <li className="sidebar-item"><NavLink to={"/properties"}>Properties</NavLink></li>
                             <li className="sidebar-item"><NavLink to={"/services"}>Services</NavLink></li>
-                            {!false && <li className="sidebar-item"><NavLink to={"/signin"}>Sign In</NavLink></li>}
+                            {!loggedin && <li className="sidebar-item"><NavLink to={"/signin"}>Sign In</NavLink></li>}
                         </ul>
                     </div>
                 </div>

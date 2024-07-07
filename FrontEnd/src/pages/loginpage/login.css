@@ -27,6 +27,9 @@
   justify-content: center;
   align-items: center;
 }
+.login-section .container .sign-in-image{
+    height: 900px;
+}
 .login-section .container .login-content .success-container {
   display: flex;
   flex-direction: column;
