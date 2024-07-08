@@ -14,9 +14,10 @@ function UserRow({ user }) {
 }
 
 function AllUser() {
+    
     return (
         <>
-            <div>All user section</div>
+            all users
         </>
     );
 }

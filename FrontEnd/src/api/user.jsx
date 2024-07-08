@@ -74,7 +74,9 @@ const getAllUsers = async () => {
         });
 
         const data = await response.json();
-        return {statusCode: response.status, data: data};
+        return {statusCode: response.status, data: data}; 
+        // data{[user1, user2, user3, ...]} where user1 = {username, email, phone, is_verified, image, created_at,role ...} and so on
+        
     
     } catch (error) {
         console.error(error);
