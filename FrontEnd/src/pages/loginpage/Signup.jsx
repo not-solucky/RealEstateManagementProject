@@ -1,8 +1,7 @@
 import "./login.css"
-import { useState,useContext } from "react"
+import { useState } from "react"
 import { NavLink } from "react-router-dom"
-import StoreContext from "../../context/StoreContext"
-import axios from "axios"
+import { UserApi } from "../../api/user"
 
 function Signuppage() {
     const [name, setName] = useState("")
@@ -16,6 +15,22 @@ function Signuppage() {
     const [message, setMessage] = useState("")
 
     const handleSubmit = (event) => {
+        event.preventDefault()
+        if (!validate()) {
+            return
+        }
+        const {statusCode, data} = UserApi.Register({
+            username: name,
+            email: email,
+            password: password,
+            phone: phone
+        })
+        if (statusCode === 201) {
+            setStatus("success")
+        } else {
+            setStatus("error")
+            setMessage(data.error)
+        }
         
     }
     const validate = () => {

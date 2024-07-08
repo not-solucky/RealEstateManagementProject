@@ -25,7 +25,7 @@ const Login = async (payload) => {
 
 const Register = async (payload) => {
     try {
-        const response = await fetch(`${config.baseURL}/user/register`, {
+        const response = await fetch(`${config.baseURL}/register`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

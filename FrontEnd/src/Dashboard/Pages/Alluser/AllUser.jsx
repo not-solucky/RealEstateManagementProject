@@ -8,7 +8,7 @@ function UserRow({ user }) {
             <div className="user-row-item">{user.username}</div>
             <div className="user-row-item">{user.email}</div>
             <div className="user-row-item">{user.phone}</div>
-            <div className="user-row-item">{user.verified ? "Verified" : "Not Verified"}</div>
+            <div className="user-row-item">{user.is_verified ? "Verified" : "Not Verified"}</div>
         </div>
     );
 }
@@ -16,27 +16,38 @@ function UserRow({ user }) {
 function AllUser() {
     const [users, setUsers] = useState([]);
     const [error, setError] = useState(null);
-    
+    const [loading, setLoading] = useState(true);
+
+
     useEffect(() => {
         const fetchUsers = async () => {
-        const response = await UserApi.getAllUsers();
-        if (response.statusCode === 200) {
-            setUsers(response.data);
-        } else {
-            setError(response.data.error);
-        }
+
+            setLoading(true);
+            const response = await UserApi.getAllUsers();
+            if (response.statusCode === 200) {
+                setUsers(response.data);
+            } else {
+                setError(response.data.error);
+            }
+            setLoading(false);
         };
-    
+
         fetchUsers();
     }, []);
-    
+
+    if (loading) {
+        return <Loader />;
+    }
+
     if (error) {
         return <div>Error: {error}</div>;
     }
-    
+
     return (
         <>
-            all users
+            {users.map((user) => (
+                <UserRow key={user.id} user={user} />
+            ))}
         </>
     );
 }
