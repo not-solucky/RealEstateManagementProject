@@ -10,7 +10,7 @@ import Signinpage from './pages/loginpage/Signin'
 import Signuppage from './pages/loginpage/Signup'
 import AdminPanel from './Dashboard/Admin/Dashboard'
 
-import AllUser from './Dashboard/Pages/AllUser'
+import AllUser from './Dashboard/Pages/Alluser/AllUser'
 import UserProfile from './Dashboard/Pages/UserProfile/UserProfile'
 import UserVerification from './Dashboard/Pages/UserVerification'
 import { getID, setProfile } from './utils/localstorage'
@@ -58,7 +58,7 @@ function App() {
                 <Route path="/signin" element={<Signinpage loggedin = {setIsloggedin}/>} />
                 <Route path="/signup" element={<Signuppage />} />
 
-                <Route path="/dashboard" element={<AdminPanel />} >
+                <Route path="/dashboard" element={<AdminPanel loading={loading}/>} >
                     <Route path="alluser" element={<AllUser />} />
                     <Route path="userprofile" element={<UserProfile />} />
                     <Route path="userverification" element={<UserVerification />} />

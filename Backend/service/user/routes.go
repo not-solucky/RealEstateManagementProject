@@ -28,7 +28,26 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/login", h.handleLogin).Methods("POST")
 	router.HandleFunc("/register", h.handleRegister).Methods("POST")
 	router.HandleFunc("/users/{id}", auth.WithJWTAuth(h.handleGetUser, h.store)).Methods(http.MethodGet)
+	router.HandleFunc("admin/users", auth.WithJWTAuth(h.handleGetAllUsers, h.store)).Methods(http.MethodGet)
 }
+// admin privilages
+func (h *Handler) handleGetAllUsers(w http.ResponseWriter, r *http.Request) {
+	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
+	userRole := contextValues.Role
+
+	if userRole != "admin" {
+		utils.WriteError(w, http.StatusForbidden, fmt.Errorf("forbidden"))
+		return
+	}
+	users, err := h.store.GetAllUsers()
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+	utils.WriteJSON(w, http.StatusOK, users)
+}
+
+
 func (h *Handler) handleGetUser(w http.ResponseWriter, r *http.Request) {
 	// decode token and get user id
 

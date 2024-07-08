@@ -1,6 +1,12 @@
 .profile-container{
     padding: 36px 36px 12px  36px;
-    
+    .title{
+        h2{
+            font-size: var(--big);
+            margin-bottom: 20px;
+        
+        }
+    }
     .subcontainer{
         .profile{
             display: flex;

@@ -62,9 +62,31 @@ const getProfile = async () => {
     }
 }
 
+const getAllUsers = async () => {
+    try{
+        const token = getToken();
+        const response = await fetch(`${config.baseURL}/admin/users`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+        return {statusCode: response.status, data: data};
+    
+    } catch (error) {
+        console.error(error);
+        return {statusCode: 500, data: {error: "Error Connecting to Server"}};
+
+    }
+}
+
 
 export const UserApi = {
     Login,
     Register,
-    getProfile
+    getProfile,
+    getAllUsers
 };

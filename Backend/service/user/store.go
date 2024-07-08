@@ -16,12 +16,28 @@ func NewStore(db *sql.DB) *Store {
 		DB: db,
 	}
 }
+func (s *Store) GetAllUsers() ([]*types.User, error) {
+	rows, err := s.DB.Query("SELECT * FROM users")
+	if err != nil {
+		log.Println("Error querying users")
+		return nil, err
+	}
+
+	users := make([]*types.User, 0)
+
+	for rows.Next() {
+		u, err := scanRowtoUser(rows)
+		if err != nil {
+			log.Println("Error scanning row")
+			return nil, err
+		}
+		users = append(users, u)
+	}
+	return users, nil
+}
 
 func (s *Store) GetUserByEmail(email string) (*types.User, error) {
 	rows, err := s.DB.Query("SELECT * FROM users where email = ?", email)
-	log.Println("Querying user")
-	log.Println("Rows", rows)
-	log.Println(email)
 	if err != nil {
 		log.Println("Error querying user")
 		return nil, err
@@ -66,7 +82,6 @@ func (s *Store) GetUserByID(id int) (*types.User, error) {
 }
 
 func (s *Store) CreateUser(user *types.User) error {
-	log.Printf("Creating user")
 	_, err := s.DB.Exec("INSERT INTO users (email, username, password, role, phone_number, image) VALUES (?, ?, ?, ?, ?, ?)", user.Email, user.Name, user.Password, user.Role, user.Phone, user.ImagePath)
 	if err != nil {
 		return err
@@ -75,7 +90,6 @@ func (s *Store) CreateUser(user *types.User) error {
 }
 
 func scanRowtoUser(rows *sql.Rows) (*types.User, error) {
-	log.Println(rows)
 	user := new(types.User)
 	err := rows.Scan(
 		&user.ID,

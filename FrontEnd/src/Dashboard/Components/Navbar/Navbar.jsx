@@ -1,14 +1,17 @@
-import {NavLink} from 'react-router-dom';
 import './stylesheets/Navbar.scss';
-import { useState, useContext, useEffect } from 'react';
-import { StoreContext } from '../../../context/StoreContext';
+import { useState, useEffect } from 'react';
+import { isLogin, getProfile } from '../../../utils/localstorage';
+import { ImageApi } from '../../../api/image';
 
-function DashboardNavbar() {
-    const { userInfo, token, loading, setToken } = useContext(StoreContext);
-    const [profile, setProfile] = useState({
-        name: "John Doe",
-        photo: "null",
-    });
+function DashboardNavbar({loading}) {
+    const [profile, setProfile] = useState(false);
+
+    useEffect(() => {
+        
+        if (isLogin()) {
+            setProfile(getProfile());
+        }
+    }, [loading]);
 
 
     return (
@@ -22,10 +25,10 @@ function DashboardNavbar() {
                 </div>
                 <div className="navbar-right">
                     <div className="profile-name">
-                        <h4>{profile.name}</h4>
+                        <h4>{profile.username}</h4>
                     </div>
                     <div className="profile-photo">
-                        <img src={profile.photo === "null"? "/profile.png": GetStaticProfileImage(profile.photo)} alt="profile" />
+                        <img src={profile.image === "null"? "/profile.png": ImageApi.GetStaticProfileImage(profile.image)} alt="profile" />
                     </div>
                     
                 </div>

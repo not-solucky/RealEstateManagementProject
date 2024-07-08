@@ -6,6 +6,7 @@ type UserStore interface {
 	GetUserByEmail(email string) (*User, error)
 	GetUserByID(id int) (*User, error)
 	CreateUser(u *User) error
+	GetAllUsers() ([]*User, error)
 }
 type ImageStore interface {
 	SaveImageInfo(filename, filepath string) error
