@@ -1,3 +1,4 @@
+import React from 'react'
 import { useState, useEffect } from 'react'
 import './App.css'
 
@@ -9,12 +10,14 @@ import Servicespage from './pages/servicespage/Service'
 import Signinpage from './pages/loginpage/Signin'
 import Signuppage from './pages/loginpage/Signup'
 import AdminPanel from './Dashboard/Admin/Dashboard'
+import AllUsers from './pages/AllUsers/AllUsers'
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 import AllUser from './Dashboard/Pages/Alluser/AllUser'
 import UserProfile from './Dashboard/Pages/UserProfile/UserProfile'
 import UserVerification from './Dashboard/Pages/UserVerification'
 import { getID, setProfile } from './utils/localstorage'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 
 import { UserApi } from './api/user'
@@ -54,6 +57,7 @@ function App() {
                 <Route path="/services" element={<Servicespage />} />
                 <Route path="/signin" element={<Signinpage loggedin = {setIsloggedin}/>} />
                 <Route path="/signup" element={<Signuppage />} />
+
 
                 <Route path="/dashboard" element={<AdminPanel loading={loading}/>} >
                     <Route path="alluser" element={<AllUser />} />

@@ -14,6 +14,25 @@ function UserRow({ user }) {
 }
 
 function AllUser() {
+    const [users, setUsers] = useState([]);
+    const [error, setError] = useState(null);
+    
+    useEffect(() => {
+        const fetchUsers = async () => {
+        const response = await UserApi.getAllUsers();
+        if (response.statusCode === 200) {
+            setUsers(response.data);
+        } else {
+            setError(response.data.error);
+        }
+        };
+    
+        fetchUsers();
+    }, []);
+    
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
     
     return (
         <>
