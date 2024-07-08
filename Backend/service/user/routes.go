@@ -46,8 +46,7 @@ func (h *Handler) handleGetAllUsers(w http.ResponseWriter, r *http.Request) {
 	}
 	utils.WriteJSON(w, http.StatusOK, users)
 }
-
-
+// user privilages
 func (h *Handler) handleGetUser(w http.ResponseWriter, r *http.Request) {
 	// decode token and get user id
 
@@ -116,6 +115,7 @@ func (h *Handler) handleLogin (w http.ResponseWriter, r *http.Request) {
 	
 	log.Println("Login handler")
 }
+
 func (h *Handler) handleRegister (w http.ResponseWriter, r *http.Request) {
 	// Get json payload
 	var user types.RegisterUserPayload

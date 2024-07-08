@@ -25,11 +25,8 @@ function App() {
     const [loading, setLoading] = useState(true);
     const [isloggedin, setIsloggedin] = useState(false);
     useEffect(() => {
-        // Fetch user profile or any other initial data if needed
-        // This is just an example, adjust according to your needs
         const fetchUserProfile = async () => {
             setLoading(true);
-
             try {
                 const userId = getID();
                 if (userId) {
