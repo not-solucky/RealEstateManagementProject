@@ -7,8 +7,30 @@
     font-family: "Urbanist", sans-serif;
     color: white;
     transition: all 0.3s ease-in-out;
+    
+    
 
 }
+*::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+*::-webkit-scrollbar-track {
+    background: var(--purple-90);
+
+}
+
+/* Handle */
+*::-webkit-scrollbar-thumb {
+    background: var(--purple-60);
+}
+
+/* Handle on hover */
+*::-webkit-scrollbar-thumb:hover {
+    background: var(--purple-70);
+}
+
 
 body {
     display: block;
