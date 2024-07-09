@@ -14,18 +14,20 @@ function Signuppage() {
     const [status, setStatus] = useState("")
     const [message, setMessage] = useState("")
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
         if (!validate()) {
             return
         }
-        const {statusCode, data} = UserApi.Register({
+        const {statusCode, data} = await UserApi.Register({
             username: name,
             email: email,
             password: password,
             phone: phone
         })
+        console.log(statusCode)
         if (statusCode === 201) {
+
             setStatus("success")
         } else {
             setStatus("error")

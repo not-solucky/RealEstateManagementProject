@@ -8,6 +8,7 @@
     .dashboard-content{
         display: flex;
         height: 100%;
+        overflow: hidden;
         .sidebar{
             height: 100%;
             width: 256px;
@@ -18,6 +19,8 @@
             width: 100%;
             height: 100%;
             flex: 1;
+            overflow-y: auto;
+            
         }
     }
 }

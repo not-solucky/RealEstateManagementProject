@@ -1,0 +1,66 @@
+.allUser-container{
+    padding: 36px 36px 12px  36px;
+    .title{
+        h2{
+            font-size: var(--big);
+            margin-bottom: 20px;
+        
+        }
+    }
+    .subcontainer{
+        .user-list{
+            padding: 24px;
+            background-color: var(--gray-10);
+            .header{
+                display:grid;
+                grid-template-columns: 1fr 3fr 3fr 2fr 2fr 0.5fr;
+                .header-item{
+                    font-size: var(--extra-small);
+                    font-weight: var(--font-weight-medium);
+                    color: var(--gray-50);
+                    
+                }
+            }
+            .line{
+                width: 100%;
+                height: 2px;
+                border-radius: 1px;
+                background-color: var(--gray-15);
+                margin: 20px 0;
+            }
+            .user-items{
+                max-height: 500px;
+                .user-row{
+                    display:grid;
+                    grid-template-columns: 1fr 3fr 3fr 2fr 2fr 0.5fr;
+                    padding: 10px;
+                    position: relative;
+
+                    &:not(:last-child){
+                        border-bottom: 1px solid var(--gray-15);
+                    }
+                    &:hover{
+                        .user-row-item{
+                            color: white;
+                        }
+                    }
+                    &:hover:before{
+                        content: '';
+                        position: absolute;
+                        width: 4px;
+                        height: 100%;
+                        background-color: var(--purple-70);
+                    }
+                    &:nth-child(odd){
+                        background-color: var(--gray-15);
+                    }
+                    .user-row-item{
+                        font-size: var(--extra-small);
+                        font-weight: var(--font-weight-medium);
+                        color: var(--gray-50);
+                    }
+                }
+            }
+        }
+    }
+}
