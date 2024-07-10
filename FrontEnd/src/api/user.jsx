@@ -85,10 +85,36 @@ const getAllUsers = async () => {
     }
 }
 
+// update profile
+
+const updateUsername = async (payload) => {
+    try {
+        const id = getID();
+        const token = getToken();
+        const response = await fetch(`${config.baseURL}/update/username`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        return {statusCode: response.status, data: data};
+        
+    } catch (error) {
+        console.error(error);
+        return {statusCode: 500, data: {error: "Error Connecting to Server"}};
+
+    }
+}
+
 
 export const UserApi = {
     Login,
     Register,
     getProfile,
-    getAllUsers
+    getAllUsers,
+    updateUsername
 };

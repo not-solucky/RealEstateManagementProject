@@ -8,14 +8,180 @@ import { getID, setProfile } from '../../../utils/localstorage';
 import Loader from '../../../components/Loader/Loader';
 import './UserProfile.scss';
 
+function EditPassword() {
+    const [email, setEmail] = useState("");
+    const [currentpassword, setCurrentPassword] = useState("");
+    const [status, setStatus] = useState("");
+    const [message, setMessage] = useState("");
+
+    const handleSubmit = async (e) => {
+        
+        e.preventDefault();
+
+        setStatus("loading");
+        const ID = getID();
+
+        const {statusCode, data} = await UserApi.updateUsername({
+            id: parseInt(ID),
+            email: email,
+            password: currentpassword
+        });
+
+        if (statusCode === 200) {
+            setStatus("success");
+            setMessage("Email updated successfully");
+        }
+        else {
+            setStatus("error");
+            setMessage(data.error);
+        }
+    }
+    return (
+        <>
+            <div className="updateItem">
+                <h3>Update Password</h3>
+                <div className="form-input">
+                    <label htmlFor="email">Email</label>
+                    <input type="text" id="email" name="email" placeholder="Email" 
+                    onChange={(event) => setUsername(event.target.value)}/>
+                </div>
+                <div className="form-input">
+                    <label htmlFor = "currentpassword">Current Password</label>
+                    <input type="password" id="currentpassword" name="currentpassword" placeholder="Current Password"
+                    onChange={(event) => setCurrentPassword(event.target.value)} />
+                </div>
+                <div className="button">
+                    <button onClick={handleSubmit}>Submit</button>
+                    {status === "loading" &&  <p>Loading...</p> }
+                    {status === "success" && <p className="success">{message}</p>}
+                    {status === "error" && <p className="error">{message}</p>}
+                </div>
+                
+
+            </div>
+        </>
+    );
+}
+
+function EditEmail() {
+    const [email, setEmail] = useState("");
+    const [currentpassword, setCurrentPassword] = useState("");
+    const [status, setStatus] = useState("");
+    const [message, setMessage] = useState("");
+
+    const handleSubmit = async (e) => {
+        
+        e.preventDefault();
+
+        setStatus("loading");
+        const ID = getID();
+
+        const {statusCode, data} = await UserApi.updateUsername({
+            id: parseInt(ID),
+            email: email,
+            password: currentpassword
+        });
+
+        if (statusCode === 200) {
+            setStatus("success");
+            setMessage("Email updated successfully");
+        }
+        else {
+            setStatus("error");
+            setMessage(data.error);
+        }
+    }
+    return (
+        <>
+            <div className="updateItem">
+                <h3>Update Email</h3>
+                <div className="form-input">
+                    <label htmlFor="email">Email</label>
+                    <input type="text" id="email" name="email" placeholder="Email" 
+                    onChange={(event) => setUsername(event.target.value)}/>
+                </div>
+                <div className="form-input">
+                    <label htmlFor = "currentpassword">Current Password</label>
+                    <input type="password" id="currentpassword" name="currentpassword" placeholder="Current Password"
+                    onChange={(event) => setCurrentPassword(event.target.value)} />
+                </div>
+                <div className="button">
+                    <button onClick={handleSubmit}>Submit</button>
+                    {status === "loading" &&  <p>Loading...</p> }
+                    {status === "success" && <p className="success">{message}</p>}
+                    {status === "error" && <p className="error">{message}</p>}
+                </div>
+                
+
+            </div>
+        </>
+    );
+}
+function EditName() {
+    const [username, setUsername] = useState("");
+    const [currentpassword, setCurrentPassword] = useState("");
+    const [status, setStatus] = useState("");
+    const [message, setMessage] = useState("");
+
+    const handleSubmit = async (e) => {
+        
+        e.preventDefault();
+
+        setStatus("loading");
+        const ID = getID();
+
+        const {statusCode, data} = await UserApi.updateUsername({
+            id: parseInt(ID),
+            username: username,
+            password: currentpassword
+        });
+
+        if (statusCode === 200) {
+            setStatus("success");
+            setMessage("Username updated successfully");
+        }
+        else {
+            setStatus("error");
+            setMessage(data.error);
+        }
+    }
+    return (
+        <>
+            <div className="updateItem">
+                <h3>Update Name</h3>
+                <div className="form-input">
+                    <label htmlFor="username">Name</label>
+                    <input type="text" id="username" name="username" placeholder="Name" 
+                    onChange={(event) => setUsername(event.target.value)}/>
+                </div>
+                <div className="form-input">
+                    <label htmlFor = "currentpassword">Current Password</label>
+                    <input type="password" id="currentpassword" name="currentpassword" placeholder="Current Password"
+                    onChange={(event) => setCurrentPassword(event.target.value)} />
+                </div>
+                <div className="button">
+                    <button onClick={handleSubmit}>Submit</button>
+                    {status === "loading" &&  <p>Loading...</p> }
+                    {status === "success" && <p className="success">{message}</p>}
+                    {status === "error" && <p className="error">{message}</p>}
+                </div>
+                
+
+            </div>
+        </>
+    );
+}
 
 function EditForm() {
-    
-
-    
 
     return (
         <>
+            <div className="editForm-container">
+                <EditName />
+                <EditEmail />
+                <EditPassword />
+                
+            </div>
         </>
     );
 }

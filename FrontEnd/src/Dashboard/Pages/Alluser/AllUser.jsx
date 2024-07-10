@@ -1,4 +1,5 @@
 import Loader from "../../../components/Loader/Loader";
+import ErrorComponent from "../../../components/Error/Error";
 import { UserApi } from "../../../api/user";
 import { useEffect, useState } from "react";
 import "./AllUser.scss";
@@ -11,9 +12,18 @@ function UserRow({ user }) {
             <div className="user-row-item">{user.email}</div>
             <div className="user-row-item">{user.phone_number}</div>
             <div className="user-row-item">{user.is_verified ? "Verified" : "Not Verified"}</div>
-            <div className="user-row-item">expand</div>
+            <div className="user-row-item">Delete</div>
         </div>
     );
+}
+function MapUser({ users }) {
+    return(
+        <>
+            {users.map((user) => (
+                <UserRow key={user.user_id} user={user} />
+            ))}
+        </>
+    )
 }
 
 function AllUser() {
@@ -38,14 +48,6 @@ function AllUser() {
         fetchUsers();
     }, []);
 
-    if (loading) {
-        return <Loader />;
-    }
-
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
-
     return (
         <>
             <div className="allUser-container">
@@ -65,9 +67,16 @@ function AllUser() {
                         </div>
                         <div className="line"></div>
                         <div className="user-items">
-                            {users.map((user) => (
-                                <UserRow key={user.user_id} user={user} />
-                            ))}
+
+                            {loading ? (
+                                <Loader />
+                            ) : error ? (
+                                <ErrorComponent error={error} />
+                            ) : (
+                                <MapUser users={users} />
+                            )}
+                            
+
                         </div>
                     </div>
                 </div>

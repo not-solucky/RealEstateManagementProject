@@ -28,8 +28,60 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/login", h.handleLogin).Methods("POST")
 	router.HandleFunc("/register", h.handleRegister).Methods("POST")
 	router.HandleFunc("/users/{id}", auth.WithJWTAuth(h.handleGetUser, h.store)).Methods(http.MethodGet)
+
+	router.HandleFunc("/update/username", auth.WithJWTAuth(h.handleUpdateUserName, h.store)).Methods(http.MethodPut)
 	router.HandleFunc("/admin/users", auth.WithJWTAuth(h.handleGetAllUsers, h.store)).Methods(http.MethodGet)
 }
+
+// update user
+func (h *Handler) handleUpdateUserName(w http.ResponseWriter, r *http.Request) {
+    contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
+    userID := contextValues.ID
+    userRole := contextValues.Role
+
+    var user types.UpdateUserNamePayload
+
+    if err := utils.ParseJSON(r, &user); err != nil {
+        utils.WriteError(w, http.StatusBadRequest, err)
+        return
+    }
+
+    // Fetch user from store to check existing data and for validation
+    u, err := h.store.GetUserByID(user.ID)
+    if err != nil {
+        utils.WriteError(w, http.StatusNotFound, err)
+        return
+    }
+
+    // Validate payload structure
+    if err := utils.Validate.Struct(user); err != nil {
+        errors := err.(validator.ValidationErrors)
+        utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid payload: %v", errors))
+        return
+    }
+
+    // Ensure the user performing the update is authorized
+    if user.ID != userID {
+        if userRole != "admin" {
+            utils.WriteError(w, http.StatusForbidden, fmt.Errorf("forbidden"))
+            return
+        } else if !auth.ComparePasswords(u.Password, user.Password) {
+            utils.WriteError(w, http.StatusUnauthorized, fmt.Errorf("invalid password"))
+            return
+        }
+    }
+
+    // Update the user's name
+    err = h.store.UpdateUserName(user.ID, user.Name)
+    if err != nil {
+        utils.WriteError(w, http.StatusInternalServerError, err)
+        return
+    }
+
+    utils.WriteJSON(w, http.StatusOK, nil)
+}
+
+
 // admin privilages
 func (h *Handler) handleGetAllUsers(w http.ResponseWriter, r *http.Request) {
 	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
@@ -47,6 +99,8 @@ func (h *Handler) handleGetAllUsers(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusOK, users)
 }
 // user privilages
+
+
 func (h *Handler) handleGetUser(w http.ResponseWriter, r *http.Request) {
 	// decode token and get user id
 

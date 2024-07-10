@@ -16,6 +16,49 @@ func NewStore(db *sql.DB) *Store {
 		DB: db,
 	}
 }
+
+func (s *Store) UpdateUserName(id int, name string) error {
+	_, err := s.DB.Exec("UPDATE users SET username = ? WHERE user_id = ?", name, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *Store) UpdateUserPhone(id int, phone string) error {
+	_, err := s.DB.Exec("UPDATE users SET phone_number = ? WHERE user_id = ?", phone, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *Store) UpdateUserPassword(id int, password string) error {
+	_, err := s.DB.Exec("UPDATE users SET password = ? WHERE user_id = ?", password, id)
+	if err != nil {
+		return err
+	}
+	
+	return nil
+}
+
+func (s *Store) UpdateUserRole(id int, role string) error {
+	_, err := s.DB.Exec("UPDATE users SET role = ? WHERE user_id = ?", role, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *Store) VerifyUser(id int) error {
+	_, err := s.DB.Exec("UPDATE users SET is_verified = true WHERE user_id = ?", id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *Store) GetAllUsers() ([]*types.User, error) {
 	rows, err := s.DB.Query("SELECT * FROM users")
 	if err != nil {

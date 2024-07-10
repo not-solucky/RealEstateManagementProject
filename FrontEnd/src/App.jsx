@@ -10,7 +10,8 @@ import Servicespage from './pages/servicespage/Service'
 import Signinpage from './pages/loginpage/Signin'
 import Signuppage from './pages/loginpage/Signup'
 import AdminPanel from './Dashboard/Admin/Dashboard'
-import AllUsers from './pages/AllUsers/AllUsers'
+import AddUserPage from './Dashboard/Pages/Adduser/AddUser'
+import VerifyUserPage from './Dashboard/Pages/VerifyUser/VerifyUser'
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 import AllUser from './Dashboard/Pages/Alluser/AllUser'
@@ -63,6 +64,8 @@ function App() {
                     <Route path="alluser" element={<AllUser />} />
                     <Route path="userprofile" element={<UserProfile />} />
                     <Route path="userverification" element={<UserVerification />} />
+                    <Route path='adduser' element={<AddUserPage />} />
+                    <Route path='verifyuser' element={<VerifyUserPage />} />
                 </Route>
             </Routes>
         </>
