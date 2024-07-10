@@ -11,20 +11,7 @@ CREATE TABLE Users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- CREATE TABLE Roles (
---     role_id INT PRIMARY KEY AUTO_INCREMENT,
---     role_name ENUM('buyer', 'seller', 'admin') NOT NULL
--- )
-
--- INSERT INTO Roles (role_name) VALUES ('buyer'), ('seller'), ('admin')
-
--- CREATE TABLE UserRoles (
---     user_id INT NOT NULL,
---     role_id INT NOT NULL,
---     PRIMARY KEY (user_id, role_id),
---     FOREIGN KEY (user_id) REFERENCES Users(user_id),
---     FOREIGN KEY (role_id) REFERENCES Roles(role_id)
--- )
+INSERT INTO Users (username, email, password, phone_number, role, is_verified, image) VALUES ('NestNavigator Admin', 'admin@nestnavigator.com', 'admin123', '1234567890', 'admin', TRUE, "null");
 
 CREATE TABLE UserDocuments (
     document_id INT PRIMARY KEY AUTO_INCREMENT,

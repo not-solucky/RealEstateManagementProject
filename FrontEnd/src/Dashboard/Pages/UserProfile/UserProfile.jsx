@@ -1,104 +1,257 @@
 
-import {useState, useEffect, useContext} from 'react';
-import {StoreContext} from '../../../context/StoreContext';
-import { Allapi, GetStaticProfileImage, formatDate } from '../../../api/Api';
+import {useState, useEffect} from 'react';
 import { PhoneIcon, MailIcon, TickFilledIcon, CrossFilledIcon } from '../../../components/icons';
+import { ImageApi } from '../../../api/image';
+import { UserApi } from '../../../api/user';
+import { Utility } from '../../../utils/utility';
+import { getID, setProfile } from '../../../utils/localstorage';
+import Loader from '../../../components/Loader/Loader';
 import './UserProfile.scss';
-import { jwtDecode } from 'jwt-decode';
+
+function EditPassword() {
+    const [email, setEmail] = useState("");
+    const [currentpassword, setCurrentPassword] = useState("");
+    const [status, setStatus] = useState("");
+    const [message, setMessage] = useState("");
+
+    const handleSubmit = async (e) => {
+        
+        e.preventDefault();
+
+        setStatus("loading");
+        const ID = getID();
+
+        const {statusCode, data} = await UserApi.updateUsername({
+            id: parseInt(ID),
+            email: email,
+            password: currentpassword
+        });
+
+        if (statusCode === 200) {
+            setStatus("success");
+            setMessage("Email updated successfully");
+        }
+        else {
+            setStatus("error");
+            setMessage(data.error);
+        }
+    }
+    return (
+        <>
+            <div className="updateItem">
+                <h3>Update Password</h3>
+                <div className="form-input">
+                    <label htmlFor="email">Email</label>
+                    <input type="text" id="email" name="email" placeholder="Email" 
+                    onChange={(event) => setUsername(event.target.value)}/>
+                </div>
+                <div className="form-input">
+                    <label htmlFor = "currentpassword">Current Password</label>
+                    <input type="password" id="currentpassword" name="currentpassword" placeholder="Current Password"
+                    onChange={(event) => setCurrentPassword(event.target.value)} />
+                </div>
+                <div className="button">
+                    <button onClick={handleSubmit}>Submit</button>
+                    {status === "loading" &&  <p>Loading...</p> }
+                    {status === "success" && <p className="success">{message}</p>}
+                    {status === "error" && <p className="error">{message}</p>}
+                </div>
+                
+
+            </div>
+        </>
+    );
+}
+
+function EditEmail() {
+    const [email, setEmail] = useState("");
+    const [currentpassword, setCurrentPassword] = useState("");
+    const [status, setStatus] = useState("");
+    const [message, setMessage] = useState("");
+
+    const handleSubmit = async (e) => {
+        
+        e.preventDefault();
+
+        setStatus("loading");
+        const ID = getID();
+
+        const {statusCode, data} = await UserApi.updateUsername({
+            id: parseInt(ID),
+            email: email,
+            password: currentpassword
+        });
+
+        if (statusCode === 200) {
+            setStatus("success");
+            setMessage("Email updated successfully");
+        }
+        else {
+            setStatus("error");
+            setMessage(data.error);
+        }
+    }
+    return (
+        <>
+            <div className="updateItem">
+                <h3>Update Email</h3>
+                <div className="form-input">
+                    <label htmlFor="email">Email</label>
+                    <input type="text" id="email" name="email" placeholder="Email" 
+                    onChange={(event) => setUsername(event.target.value)}/>
+                </div>
+                <div className="form-input">
+                    <label htmlFor = "currentpassword">Current Password</label>
+                    <input type="password" id="currentpassword" name="currentpassword" placeholder="Current Password"
+                    onChange={(event) => setCurrentPassword(event.target.value)} />
+                </div>
+                <div className="button">
+                    <button onClick={handleSubmit}>Submit</button>
+                    {status === "loading" &&  <p>Loading...</p> }
+                    {status === "success" && <p className="success">{message}</p>}
+                    {status === "error" && <p className="error">{message}</p>}
+                </div>
+                
+
+            </div>
+        </>
+    );
+}
+function EditName() {
+    const [username, setUsername] = useState("");
+    const [currentpassword, setCurrentPassword] = useState("");
+    const [status, setStatus] = useState("");
+    const [message, setMessage] = useState("");
+
+    const handleSubmit = async (e) => {
+        
+        e.preventDefault();
+
+        setStatus("loading");
+        const ID = getID();
+
+        const {statusCode, data} = await UserApi.updateUsername({
+            id: parseInt(ID),
+            username: username,
+            password: currentpassword
+        });
+
+        if (statusCode === 200) {
+            setStatus("success");
+            setMessage("Username updated successfully");
+        }
+        else {
+            setStatus("error");
+            setMessage(data.error);
+        }
+    }
+    return (
+        <>
+            <div className="updateItem">
+                <h3>Update Name</h3>
+                <div className="form-input">
+                    <label htmlFor="username">Name</label>
+                    <input type="text" id="username" name="username" placeholder="Name" 
+                    onChange={(event) => setUsername(event.target.value)}/>
+                </div>
+                <div className="form-input">
+                    <label htmlFor = "currentpassword">Current Password</label>
+                    <input type="password" id="currentpassword" name="currentpassword" placeholder="Current Password"
+                    onChange={(event) => setCurrentPassword(event.target.value)} />
+                </div>
+                <div className="button">
+                    <button onClick={handleSubmit}>Submit</button>
+                    {status === "loading" &&  <p>Loading...</p> }
+                    {status === "success" && <p className="success">{message}</p>}
+                    {status === "error" && <p className="error">{message}</p>}
+                </div>
+                
+
+            </div>
+        </>
+    );
+}
 
 function EditForm() {
-    const {userInfo, setUserInfo} = useContext(StoreContext);
-    const [username, setUsername] = useState(userInfo.username);
-    const [email, setEmail] = useState(userInfo.email);
-    const [error, setError] = useState(null);
-    const [password, setPassword] = useState("");
-
 
     return (
         <>
+            <div className="editForm-container">
+                <EditName />
+                <EditEmail />
+                <EditPassword />
+                
+            </div>
         </>
     );
 }
 
 function UserProfile() {
-    const {userInfo, setUserInfo, token, loading} = useContext(StoreContext);
-    const [error, setError] = useState(null);
-    const [fetching, setFetching] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [userInfo, setUserInfo] = useState(null);
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            setLoading(true);
 
-    const fetchUser = async () => {
-        const Token = localStorage.getItem("nestnavigatortoken");
-        const uid = jwtDecode(Token).userID;
-        console.log("Fetching user data");
-        const response = await Allapi.get(`/users/${uid}`,{headers: {Authorization: `Bearer ${token}`}});
-        if (response.status === 200) {
-            setUserInfo(response.data);
-            console.log("User data fetched");
-        }
-        else {
-            console.log("Error fetching user data");
+            try {
+                const userId = getID();
+                if (userId) {
+                    const { statusCode, data } = await UserApi.getProfile();
+                    if (statusCode === 200) {
+                        setProfile(data); // Ensure setProfile is properly defined
+                        setUserInfo(data);
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching user profile", error);
+            }
+            setLoading(false);
 
-        }
+        };
+        fetchUserProfile();
+    }, []);
+
+    if (loading) {
+        return <Loader />;
     }
 
-    useEffect(() => {
-        console.log("UserProfile running");
-        setFetching(true);
-        
-        if (!token && !loading) {
-            window.location.href = '/signin';
-            
-        } else if (token && !loading){
-            try{
-                fetchUser();
-            } catch (error) {
-                console.log("Error fetching user data");
-                setError("Error fetching user data");
-            }
-        }
-
-        setFetching(false);
-        
-
-    },[loading, token]);
+    if (!userInfo) {
+        return <div>Error loading profile. Please try again later.</div>;
+    }
     return (
         <>
-            {loading || fetching ?
-                <div className="loading">
-                    <div className="loader">loading</div>
+            <div className="profile-container">
+                <div className="title">
+                    <h2>User Profile</h2>
                 </div>
-                : 
-                <div className="profile-container">
-                    {/* <div className="title">
-                        <h2>User Profile</h2>
-                    </div> */}
-                    <div className="subcontainer">
-                        <div className="profile">
-                            <div className="profile-image">
-                                <img src={userInfo.image === "null"? "/profile.png": GetStaticProfileImage(userInfo.image)} alt="Profile" />
-                            </div>
-                            <div className="profile-info">
-                                <h3>{userInfo.username}</h3>
-                                <p className='joined'>{formatDate(userInfo.created_at)}</p>
-                                <div className='email'>
-                                    <MailIcon />
-                                    <p>{userInfo.email}</p>
-                                </div>
-                                <div className='phone'>
-                                    <PhoneIcon />
-                                    <p>{userInfo.phone_number}</p>
-                                </div>
-                                <div className={userInfo.is_verified ? "verified": "unverified"}>
-                                    {userInfo.is_verified?<TickFilledIcon /> : <CrossFilledIcon />}
-                                    <p>{userInfo.is_verified?"Verified":"Unverified"}</p>
-                                </div>
-
-                            </div>
-                            
+                <div className="subcontainer">
+                    <div className="profile">
+                        <div className="profile-image">
+                            <img src={userInfo.image === "null"? "/profile.png": ImageApi.GetStaticProfileImage(userInfo.image)} alt="Profile" />
                         </div>
-                        <EditForm />
+                        <div className="profile-info">
+                            <h3>{userInfo.username}</h3>
+                            <p className='joined'>{Utility.formatDate(userInfo.created_at)}</p>
+                            <div className='email'>
+                                <MailIcon />
+                                <p>{userInfo.email}</p>
+                            </div>
+                            <div className='phone'>
+                                <PhoneIcon />
+                                <p>{userInfo.phone_number}</p>
+                            </div>
+                            <div className={userInfo.is_verified ? "verified": "unverified"}>
+                                {userInfo.is_verified?<TickFilledIcon /> : <CrossFilledIcon />}
+                                <p>{userInfo.is_verified?"Verified":"Unverified"}</p>
+                            </div>
+
+                        </div>
+                        
                     </div>
+                    <EditForm />
                 </div>
-            }
+            </div>
+            
         </>
     );
 }

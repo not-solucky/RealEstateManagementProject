@@ -1,8 +1,7 @@
 import "./login.css"
-import { useState,useContext } from "react"
+import { useState } from "react"
 import { NavLink } from "react-router-dom"
-import StoreContext from "../../context/StoreContext"
-import axios from "axios"
+import { UserApi } from "../../api/user"
 
 function Signuppage() {
     const [name, setName] = useState("")
@@ -12,26 +11,29 @@ function Signuppage() {
     const [phone, setPhone] = useState("")
     const [terms, setTerms] = useState(false)
     const [error, setError] = useState(Array(6).fill(null));
-    const {api} = useContext(StoreContext)
     const [status, setStatus] = useState("")
     const [message, setMessage] = useState("")
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
-        if (validate()) {
-            axios.post(`${api}/register`, {
-                username: name,
-                email: email,
-                phone: phone,
-                password: password
-            }).then((response) => {
-                setStatus("success")
-            }).catch((error) => {
-                setStatus("error")
-                setMessage(error.response.data.error)
-                console.log(error.response.data.error)
-            })
+        if (!validate()) {
+            return
         }
+        const {statusCode, data} = await UserApi.Register({
+            username: name,
+            email: email,
+            password: password,
+            phone: phone
+        })
+        console.log(statusCode)
+        if (statusCode === 201) {
+
+            setStatus("success")
+        } else {
+            setStatus("error")
+            setMessage(data.error)
+        }
+        
     }
     const validate = () => {
         let error = Array(6).fill(null)

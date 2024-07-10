@@ -1,17 +1,15 @@
 import { Routes, Route, useLocation, Outlet } from 'react-router-dom'
 import DashboardNavbar from '../Components/Navbar/Navbar';
-import UserProfile from '../Pages/UserProfile/UserProfile';
-import AllUser from '../Pages/AllUser';
-import UserVerification from '../Pages/UserVerification';
 
 import './stylesheets/Dashboard.scss';
 import DashboardSidebar from '../Components/Sidebar/Sidebar';
 
-function AdminPanel() {
+function AdminPanel({loading}) {
+
     return (
         <>
             <div className="dashboard-layout">
-                <DashboardNavbar />
+                <DashboardNavbar loading={loading}/>
                 <div className="dashboard-content">
                     <div className="sidebar">
                         <DashboardSidebar />

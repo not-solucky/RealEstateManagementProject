@@ -4,25 +4,25 @@ import "./navbar.scss";
 import { NavLink } from "react-router-dom";
 import {jwtDecode} from 'jwt-decode'
 import { ExpandMoreIcon } from "../icons";
-import { GetStaticProfileImage } from "../../api/Api";
+import { ImageApi } from "../../api/image";
+import { logout, isLogin,getProfile } from "../../utils/localstorage";
+import UserProfile from './../../Dashboard/Pages/UserProfile/UserProfile';
 
-function Navbar() {
+
+function Navbar({ loading }) {
     const [profileExpanded, setProfileExpanded] = useState(false);
-    const { userInfo, token, loading, setToken } = useContext(StoreContext);
-    const [profile, setProfile] = useState({
-        name: "John Doe",
-        photo: "/profile.png",
-    });
+    const [loggedin, setLoggedin] = useState(false);
+    const [profile, setProfile] = useState(false);
 
     useEffect(() => {
-        if (userInfo) {
-            setProfile({
-                name: userInfo.username,
-                photo: userInfo.image,
-            });
+        setLoggedin(isLogin());
+        if (isLogin()) {
+            setProfile(getProfile());
+            console.log(profile)
         }
-    }, [userInfo]);
+    }, [loading]);
 
+    
     // decode token to get user information
     
     const handleSidebar = () => {
@@ -38,11 +38,7 @@ function Navbar() {
         }
     }
 
-    const signout = () => {
-        localStorage.removeItem("nestnavigatortoken");
-        setToken(null);
-        window.location.reload();
-    }
+    
 
     return (
         <>
@@ -68,17 +64,20 @@ function Navbar() {
                         </ul>
                     </nav>
                     <div className="sign-up">
-                        {token ? 
+                        {loggedin ? 
                         <div className="user-profile-container">
                             <div className="image-content">
-                                <img src={profile.photo === "null"? "/profile.png": GetStaticProfileImage(profile.photo)} alt="profile" />
+                                <img src={profile.image === "null"? "/profile.png": ImageApi.GetStaticProfileImage(profile.image)} alt="profile" />
                             </div>
                             
                             <div className="dropdown-content">
-                                <p>{profile.name}</p>
+                                <p>{profile.username}</p>
                                 <NavLink to= "/dashboard/userprofile">Profile</NavLink>
                                 <NavLink to= "/dashboard">Dashboard</NavLink>
-                                <a onClick={signout}>Sign Out</a>
+                                <a onClick={() =>{
+                                    logout()
+                                    window.location.reload()
+                                }}>Sign Out</a>
                             </div>
                             
                         </div> : 
@@ -92,7 +91,7 @@ function Navbar() {
                                 onClick={() => setProfileExpanded(!profileExpanded)}>
                             
                                 <div className="image-content">
-                                    <img src={profile.photo === "null"? "/profile.png": GetStaticProfileImage(profile.photo)} alt="profile" />
+                                    <img src={profile.image === "null"? "/profile.png": ImageApi.GetStaticProfileImage(profile.image)} alt="profile" />
                                 </div>
                                 <div className="menu-content" >
                                     <p>My account</p>
@@ -111,7 +110,7 @@ function Navbar() {
                                             <NavLink to="/dashboard">Dashboard</NavLink>
                                         </li>
                                         <li>
-                                            <a onClick={signout}>Sign Out</a>
+                                            <a onClick={null}>Sign Out</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -123,7 +122,7 @@ function Navbar() {
                             <li className="sidebar-item"><NavLink to={"/about"}>About Us</NavLink></li>
                             <li className="sidebar-item"><NavLink to={"/properties"}>Properties</NavLink></li>
                             <li className="sidebar-item"><NavLink to={"/services"}>Services</NavLink></li>
-                            {!token && <li className="sidebar-item"><NavLink to={"/signin"}>Sign In</NavLink></li>}
+                            {!loggedin && <li className="sidebar-item"><NavLink to={"/signin"}>Sign In</NavLink></li>}
                         </ul>
                     </div>
                 </div>

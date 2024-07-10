@@ -1,6 +1,12 @@
 .profile-container{
     padding: 36px 36px 12px  36px;
-    
+    .title{
+        h2{
+            font-size: var(--big);
+            margin-bottom: 20px;
+        
+        }
+    }
     .subcontainer{
         .profile{
             display: flex;
@@ -8,6 +14,7 @@
             gap: 30px;
             padding: 24px;
             background-color: var(--gray-10);
+            margin-bottom: 30px;
             .profile-image{
                 aspect-ratio: 1/1;
                 border-radius: 6px;
@@ -90,6 +97,74 @@
                 }
             }
             
+        }
+        .editForm-container{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            .updateItem{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                border: 1px solid var(--gray-15);
+                border-radius: 8px;
+                
+                padding: 30px;
+
+                h3{
+                    font-size: var(--medium);
+                    margin-bottom: 30px;
+                }
+                .form-input{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    margin-bottom: 20px;
+                    label {
+                        font-size: var(--extra-small);
+                        font-weight: var(--font-weight-medium);
+                        color: white;
+                    }
+
+                    input {
+                        padding: 20px 24px;
+                        border-radius: 6px;
+                        border: 1px solid var(--gray-15);
+                        background-color: var(--gray-08);
+                        color: white;
+                        font-size: var(--extra-small);
+                    }
+                    input[type="password"] {
+                        font-family: Verdana, sans-serif; /* Example font */
+                    }
+                    input[type="password"]::placeholder {
+                        font-family: 'Urbanist', sans-serif; /* Example font */
+                    }
+                }
+                .button{
+                    margin-top: 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    p{
+                        font-size: var(--extra-small);
+                        color: var(--gray-50);
+                    }
+                    button{
+                        padding: 14px 24px;
+                        border-radius: 8px;
+                        color: white;
+                        font-size: var(--extra-small);
+                        background-color: var(--purple-60);
+                        border: none;
+                        cursor: pointer;
+                        transition: 0.3s;
+                    }
+                }
+                
+                
+            }
+
         }
     }
 }

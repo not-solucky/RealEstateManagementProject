@@ -6,6 +6,14 @@ type UserStore interface {
 	GetUserByEmail(email string) (*User, error)
 	GetUserByID(id int) (*User, error)
 	CreateUser(u *User) error
+	GetAllUsers() ([]*User, error)
+	UpdateUserName(id int , name string) error
+	UpdateUserPhone(id int , phone string) error
+	UpdateUserPassword(id int , password string) error
+	UpdateUserRole(id int , role string) error
+	VerifyUser(id int) error
+	
+
 }
 type ImageStore interface {
 	SaveImageInfo(filename, filepath string) error
@@ -39,7 +47,39 @@ type LoginUserPayload struct {
 	Password string `json:"password" validate:"required"`
 }
 
+type UpdateUserNamePayload struct {
+	ID   	 int   `json:"id"`
+	Name 	 string `json:"username" validate:"required"`
+	Password string `json:"password" validate:"required"`
+}
+
+type UpdateUserPhonePayload struct {
+	ID       int    `json:"id"`
+	Phone    string `json:"phone" validate:"required"`
+	Password string `json:"password" validate:"required"`
+}
+
+type UpdateUserPasswordPayload struct {
+	ID          int    `json:"id"`
+	OldPassword string `json:"old_password" validate:"required"`
+	NewPassword string `json:"new_password" validate:"required,min=6,max=100"`
+}
+
+
+// admin user types
+
+type UpdateUserRolePayload struct {
+	ID   int    `json:"id"`
+	Role string `json:"role" validate:"required"`
+}
+
+type VerifyUserPayload struct {
+	ID int `json:"id"`
+}
+
 // Define Prperty type
+
+
 type Property struct {
 	ID int `json:"id"`
 }
