@@ -72,3 +72,4 @@ func initStorage(db *sql.DB) {
 	}
 	log.Println("Database connected")
 }
+
