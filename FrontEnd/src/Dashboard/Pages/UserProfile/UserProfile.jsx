@@ -9,7 +9,7 @@ import Loader from '../../../components/Loader/Loader';
 import './UserProfile.scss';
 
 function EditPassword() {
-    const [email, setEmail] = useState("");
+    const [newpassword, setNewpassword] = useState("");
     const [currentpassword, setCurrentPassword] = useState("");
     const [status, setStatus] = useState("");
     const [message, setMessage] = useState("");
@@ -21,15 +21,15 @@ function EditPassword() {
         setStatus("loading");
         const ID = getID();
 
-        const {statusCode, data} = await UserApi.updateUsername({
+        const {statusCode, data} = await UserApi.updatePassword({
             id: parseInt(ID),
-            email: email,
-            password: currentpassword
+            old_password: currentpassword,
+            new_password: newpassword
         });
 
         if (statusCode === 200) {
             setStatus("success");
-            setMessage("Email updated successfully");
+            setMessage("Password updated successfully");
         }
         else {
             setStatus("error");
@@ -41,9 +41,9 @@ function EditPassword() {
             <div className="updateItem">
                 <h3>Update Password</h3>
                 <div className="form-input">
-                    <label htmlFor="email">Email</label>
-                    <input type="text" id="email" name="email" placeholder="Email" 
-                    onChange={(event) => setUsername(event.target.value)}/>
+                    <label htmlFor="newpassword">New Password</label>
+                    <input type="password" id="newpassword" name="newpassword" placeholder="New Password" 
+                    onChange={(event) => setNewpassword(event.target.value)}/>
                 </div>
                 <div className="form-input">
                     <label htmlFor = "currentpassword">Current Password</label>
@@ -76,7 +76,7 @@ function EditEmail() {
         setStatus("loading");
         const ID = getID();
 
-        const {statusCode, data} = await UserApi.updateUsername({
+        const {statusCode, data} = await UserApi.updateEmail({
             id: parseInt(ID),
             email: email,
             password: currentpassword
@@ -98,7 +98,7 @@ function EditEmail() {
                 <div className="form-input">
                     <label htmlFor="email">Email</label>
                     <input type="text" id="email" name="email" placeholder="Email" 
-                    onChange={(event) => setUsername(event.target.value)}/>
+                    onChange={(event) => setEmail(event.target.value)}/>
                 </div>
                 <div className="form-input">
                     <label htmlFor = "currentpassword">Current Password</label>
@@ -171,7 +171,60 @@ function EditName() {
         </>
     );
 }
+function EditPhone() {
+    const [phone, setPhone] = useState("");
+    const [currentpassword, setCurrentPassword] = useState("");
+    const [status, setStatus] = useState("");
+    const [message, setMessage] = useState("");
 
+    const handleSubmit = async (e) => {
+        
+        e.preventDefault();
+
+        setStatus("loading");
+        const ID = getID();
+
+        const {statusCode, data} = await UserApi.updatePhone({
+            id: parseInt(ID),
+            phone: phone,
+            password: currentpassword
+        });
+
+        if (statusCode === 200) {
+            setStatus("success");
+            setMessage("Phone updated successfully");
+        }
+        else {
+            setStatus("error");
+            setMessage(data.error);
+        }
+    }
+    return (
+        <>
+            <div className="updateItem">
+                <h3>Update Phone Number</h3>
+                <div className="form-input">
+                    <label htmlFor="phone">Phone Number</label>
+                    <input type="text" id="phone" name="phone" placeholder="Phone Number" 
+                    onChange={(event) => setPhone(event.target.value)}/>
+                </div>
+                <div className="form-input">
+                    <label htmlFor = "currentpassword">Current Password</label>
+                    <input type="password" id="currentpassword" name="currentpassword" placeholder="Current Password"
+                    onChange={(event) => setCurrentPassword(event.target.value)} />
+                </div>
+                <div className="button">
+                    <button onClick={handleSubmit}>Submit</button>
+                    {status === "loading" &&  <p>Loading...</p> }
+                    {status === "success" && <p className="success">{message}</p>}
+                    {status === "error" && <p className="error">{message}</p>}
+                </div>
+                
+
+            </div>
+        </>
+    );
+}
 function EditForm() {
 
     return (
@@ -180,6 +233,7 @@ function EditForm() {
                 <EditName />
                 <EditEmail />
                 <EditPassword />
+                <EditPhone />
                 
             </div>
         </>

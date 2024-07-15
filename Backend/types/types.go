@@ -10,6 +10,8 @@ type UserStore interface {
 	UpdateUserName(id int , name string) error
 	UpdateUserPhone(id int , phone string) error
 	UpdateUserPassword(id int , password string) error
+	UpdateUserImage(id int , image string) error
+	UpdateUserEmail(id int , email string) error
 	UpdateUserRole(id int , role string) error
 	VerifyUser(id int) error
 	
@@ -65,6 +67,11 @@ type UpdateUserPasswordPayload struct {
 	NewPassword string `json:"new_password" validate:"required,min=6,max=100"`
 }
 
+type UpdateUserEmailPayload struct {
+	ID       int    `json:"id"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
+}
 
 // admin user types
 
