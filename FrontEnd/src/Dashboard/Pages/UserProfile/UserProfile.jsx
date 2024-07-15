@@ -240,6 +240,52 @@ function EditForm() {
     );
 }
 
+
+function UserImageUploadModal({ onClose, onUpload }) {
+    const [image, setImage] = useState(null);
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setImage(file);
+    };
+
+    const handleUpload = () => {
+        if (image) {
+            onUpload(image);
+        }
+        onClose();
+    };
+
+    const handleCancel = () => {
+        setImage(null);
+        onClose();
+    };
+
+    return (
+        <>
+            <div className="modal">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h2>Upload Profile Image</h2>
+                    </div>
+                    <div className="modal-body">
+                        <div className="image-upload">
+                            <input type="file" id="image" name="image" accept="image/*" onChange={handleFileChange} />
+                            <label htmlFor="image">Choose Image</label>
+                            <div className="preview">
+                                {image && <img src={URL.createObjectURL(image)} alt="Preview" />}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="button-container">
+                        <button onClick={handleUpload}>Upload</button>
+                        <button onClick={handleCancel}>Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}
 function UserProfile() {
     const [loading, setLoading] = useState(true);
     const [userInfo, setUserInfo] = useState(null);
@@ -281,6 +327,9 @@ function UserProfile() {
                 <div className="subcontainer">
                     <div className="profile">
                         <div className="profile-image">
+                            <button className="modal-button">
+                                <span>Edit</span>
+                            </button>
                             <img src={userInfo.image === "null"? "/profile.png": ImageApi.GetStaticProfileImage(userInfo.image)} alt="Profile" />
                         </div>
                         <div className="profile-info">
@@ -303,6 +352,7 @@ function UserProfile() {
                         
                     </div>
                     <EditForm />
+                    <UserImageUploadModal />
                 </div>
             </div>
             
