@@ -1,7 +1,10 @@
 package types
 
-import "time"
-
+import (
+	
+	"time"
+	
+	)
 type UserStore interface {
 	GetUserByEmail(email string) (*User, error)
 	GetUserByID(id int) (*User, error)
@@ -10,7 +13,7 @@ type UserStore interface {
 	UpdateUserName(id int , name string) error
 	UpdateUserPhone(id int , phone string) error
 	UpdateUserPassword(id int , password string) error
-	UpdateUserImage(id int , image string) error
+	UpdateUserImage(id int , image string ) error
 	UpdateUserEmail(id int , email string) error
 	UpdateUserRole(id int , role string) error
 	VerifyUser(id int) error
@@ -47,6 +50,11 @@ type RegisterUserPayload struct {
 type LoginUserPayload struct {
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required"`
+}
+
+type UpdateUserImagePayload struct {
+	ID    int    `json:"id"`
+	Image string `json:"image" validate:"required"`
 }
 
 type UpdateUserNamePayload struct {

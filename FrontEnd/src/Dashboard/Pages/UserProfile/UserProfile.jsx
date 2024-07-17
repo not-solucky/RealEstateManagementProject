@@ -1,11 +1,13 @@
 
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import { PhoneIcon, MailIcon, TickFilledIcon, CrossFilledIcon } from '../../../components/icons';
 import { ImageApi } from '../../../api/image';
 import { UserApi } from '../../../api/user';
 import { Utility } from '../../../utils/utility';
 import { getID, setProfile } from '../../../utils/localstorage';
 import Loader from '../../../components/Loader/Loader';
+import {Cropper} from 'react-advanced-cropper';
+import 'react-advanced-cropper/dist/style.css';
 import './UserProfile.scss';
 
 function EditPassword() {
@@ -68,6 +70,7 @@ function EditEmail() {
     const [currentpassword, setCurrentPassword] = useState("");
     const [status, setStatus] = useState("");
     const [message, setMessage] = useState("");
+
 
     const handleSubmit = async (e) => {
         
@@ -242,18 +245,59 @@ function EditForm() {
 
 
 function UserImageUploadModal({ onClose, onUpload }) {
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState('');
+    const cropperRef = useRef(null);
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState(null);
+    const userId = getID();
+    const [success, setSuccess] = useState(false);
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setImage(file);
+
+    const handleImageChange = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
-    const handleUpload = () => {
-        if (image) {
-            onUpload(image);
+
+    const handleUpload = async () => {
+        setLoading(true);
+        const cropper = cropperRef.current;
+        
+        if (cropper) {
+            const image = cropper.getCanvas().toDataURL(); // Assuming you want the image data URL
+            console.log(image);
+
+            try {
+                
+                const base64Image = image.split(',')[1];
+    
+                // Call the updateImage function from UserApi
+                const { statusCode, data } = await UserApi.updateImage({
+                    id: parseInt(userId),
+                    image: base64Image
+                });
+
+
+                if (statusCode === 200) {
+                    setMessage('Image uploaded successfully');
+                    setSuccess(true);
+                } else {
+                    setMessage(`Failed to upload image: ${data.message || 'Unknown error'}`);
+                }
+            } catch (error) {
+                setMessage(`Error uploading image: ${error.message}`);
+            }
+        } else {
+            setMessage("Please select an image to upload");
         }
-        onClose();
+
+        setLoading(false);
     };
 
     const handleCancel = () => {
@@ -268,18 +312,58 @@ function UserImageUploadModal({ onClose, onUpload }) {
                     <div className="modal-header">
                         <h2>Upload Profile Image</h2>
                     </div>
-                    <div className="modal-body">
-                        <div className="image-upload">
-                            <input type="file" id="image" name="image" accept="image/*" onChange={handleFileChange} />
-                            <label htmlFor="image">Choose Image</label>
-                            <div className="preview">
-                                {image && <img src={URL.createObjectURL(image)} alt="Preview" />}
-                            </div>
+                    
+                    {success ? (
+                        <div className="success">
+                            <p>Image uploaded successfully</p>
                         </div>
-                    </div>
+
+                    ):(
+                        <div className="image-upload">
+                            <div className="input">
+                                <input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
+                                <label htmlFor="image">Choose Image</label>
+                            </div>
+                            <div className="preview">
+                            {image ? (
+                                <div className="image-container">
+                                    <Cropper
+                                        ref={cropperRef}
+                                        src={image}
+                                        className="cropper"
+                                        style={{ height: 300, width: 400 }}
+                                        cropperOptions={{
+                                            aspectRatio: 1, // Set aspect ratio to 1:1 (optional)
+
+                                        }}
+                                        aspectRatio={1/1}
+                                    />
+                                </div>
+                            ) : (
+                                <div className="no-image">
+                                    <p>No image selected</p>
+                                </div>
+                            ) }
+                            </div>
+
+                            {loading && <div className='no-image'><p>Loading...</p></div>}
+                        
+                            {message && <p className="error">{message}</p>}
+                        
+                        </div>
+
+                    )}
+
+                    
                     <div className="button-container">
-                        <button onClick={handleUpload}>Upload</button>
-                        <button onClick={handleCancel}>Cancel</button>
+                        {success ? (
+                            <button onClick={onClose}>Close</button>
+                        ):(
+                            <>
+                                <button onClick={handleUpload}>Upload</button>
+                                <button onClick={handleCancel}>Cancel</button>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
@@ -289,6 +373,17 @@ function UserImageUploadModal({ onClose, onUpload }) {
 function UserProfile() {
     const [loading, setLoading] = useState(true);
     const [userInfo, setUserInfo] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false);
+
+
+    const onClose = () => {
+        setModalOpen(false);
+    };
+
+    const onOpen = () => {
+        setModalOpen(true);
+    };
+
     useEffect(() => {
         const fetchUserProfile = async () => {
             setLoading(true);
@@ -327,7 +422,8 @@ function UserProfile() {
                 <div className="subcontainer">
                     <div className="profile">
                         <div className="profile-image">
-                            <button className="modal-button">
+                            <button className="modal-button"
+                                    onClick={onOpen}>
                                 <span>Edit</span>
                             </button>
                             <img src={userInfo.image === "null"? "/profile.png": ImageApi.GetStaticProfileImage(userInfo.image)} alt="Profile" />
@@ -352,7 +448,8 @@ function UserProfile() {
                         
                     </div>
                     <EditForm />
-                    <UserImageUploadModal />
+
+                    {modalOpen && <UserImageUploadModal onClose={onClose}/>}
                 </div>
             </div>
             

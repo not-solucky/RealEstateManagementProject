@@ -179,6 +179,28 @@ const updatePhone = async (payload) => {
     }
 }
 
+const updateImage = async (payload) => {
+    try {
+        const token = getToken();
+        const response = await fetch(`${config.baseURL}/update/userimage`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        return {statusCode: response.status, data: data};
+        
+    } catch (error) {
+        console.error(error);
+        return {statusCode: 500, data: {error: "Error Connecting to Server"}};
+
+    }
+}
+
 
 export const UserApi = {
     Login,
@@ -188,5 +210,6 @@ export const UserApi = {
     updateUsername,
     updatePassword,
     updateEmail,
-    updatePhone
+    updatePhone,
+    updateImage
 };

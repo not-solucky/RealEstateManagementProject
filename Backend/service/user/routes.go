@@ -9,9 +9,13 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-
+	"time"
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
+	"os"
+	"path/filepath"
+	
+	"encoding/base64"
 )
 
 
@@ -31,11 +35,58 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/update/email", auth.WithJWTAuth(h.handleUpdateEmail, h.store)).Methods(http.MethodPut)
 	router.HandleFunc("/update/username", auth.WithJWTAuth(h.handleUpdateUserName, h.store)).Methods(http.MethodPut)
 	router.HandleFunc("/update/password", auth.WithJWTAuth(h.handleUpdatePassword, h.store)).Methods(http.MethodPut)
+	router.HandleFunc("/update/userimage", auth.WithJWTAuth(h.handleUpdateUserImage, h.store)).Methods(http.MethodPut)
 	router.HandleFunc("/update/phone", auth.WithJWTAuth(h.handleUpdatePhone, h.store)).Methods(http.MethodPut)
 	router.HandleFunc("/admin/users", auth.WithJWTAuth(h.handleGetAllUsers, h.store)).Methods(http.MethodGet)
 }
 
 // update user
+func (h *Handler) handleUpdateUserImage(w http.ResponseWriter, r *http.Request){
+	
+	var payload types.UpdateUserImagePayload
+
+    if err := utils.ParseJSON(r, &payload); err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+
+    // Decode Base64 image data
+    imageBytes, err := base64.StdEncoding.DecodeString(payload.Image)
+
+    if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	uploadDir := "./uploads/profile"
+    err = os.MkdirAll(uploadDir, os.ModePerm)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	currentTime := time.Now().Format("20060102150405")
+    fileName := fmt.Sprintf("%s_%s.png", currentTime, strconv.Itoa(payload.ID))
+    filePath := filepath.Join(uploadDir, fileName)
+
+	// Ensure the upload directory exists
+	err = os.WriteFile(filePath, imageBytes, 0644)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	err = h.store.UpdateUserImage(payload.ID, fileName)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, nil)
+	fmt.Printf("File uploaded successfully: %s\n", filePath)
+
+}
+
 func (h *Handler) handleUpdateUserName(w http.ResponseWriter, r *http.Request) {
     contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
     userID := contextValues.ID
