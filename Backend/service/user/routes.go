@@ -9,13 +9,9 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"time"
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
-	"os"
-	"path/filepath"
 	
-	"encoding/base64"
 )
 
 
@@ -49,30 +45,27 @@ func (h *Handler) handleUpdateUserImage(w http.ResponseWriter, r *http.Request){
 		utils.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
+	
+	dir := "./uploads/profile"
+	user, err := h.store.GetUserByID(payload.ID)
+
+	if err != nil {
+		utils.WriteError(w, http.StatusNotFound, err)
+		return
+	}
+
+	if user.ImagePath != "null" {
+		err = utils.DeleteImage(user.ImagePath, dir)
+		if err != nil {
+			utils.WriteError(w, http.StatusInternalServerError, err)
+			return
+		}
+	}
 
     // Decode Base64 image data
-    imageBytes, err := base64.StdEncoding.DecodeString(payload.Image)
-
-    if err != nil {
-		utils.WriteError(w, http.StatusBadRequest, err)
-		return
-	}
-
-	uploadDir := "./uploads/profile"
-    err = os.MkdirAll(uploadDir, os.ModePerm)
+    fileName, err := utils.SaveImage(payload.Image,dir, payload.ID)
 	if err != nil {
-		utils.WriteError(w, http.StatusInternalServerError, err)
-		return
-	}
-
-	currentTime := time.Now().Format("20060102150405")
-    fileName := fmt.Sprintf("%s_%s.png", currentTime, strconv.Itoa(payload.ID))
-    filePath := filepath.Join(uploadDir, fileName)
-
-	// Ensure the upload directory exists
-	err = os.WriteFile(filePath, imageBytes, 0644)
-	if err != nil {
-		utils.WriteError(w, http.StatusInternalServerError, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -83,7 +76,7 @@ func (h *Handler) handleUpdateUserImage(w http.ResponseWriter, r *http.Request){
 	}
 
 	utils.WriteJSON(w, http.StatusOK, nil)
-	fmt.Printf("File uploaded successfully: %s\n", filePath)
+	fmt.Printf("File uploaded successfully: %s\n", fileName)
 
 }
 

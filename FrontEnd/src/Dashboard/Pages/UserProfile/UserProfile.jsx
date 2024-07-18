@@ -244,7 +244,7 @@ function EditForm() {
 }
 
 
-function UserImageUploadModal({ onClose, onUpload }) {
+function UserImageUploadModal({ onClose}) {
     const [image, setImage] = useState('');
     const cropperRef = useRef(null);
     const [loading, setLoading] = useState(false);
