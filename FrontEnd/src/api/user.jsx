@@ -201,7 +201,6 @@ const updateImage = async (payload) => {
     }
 }
 
-
 export const UserApi = {
     Login,
     Register,

@@ -3,7 +3,6 @@ import { Cropper, StretchableBoundary, ratio } from 'react-advanced-cropper';
 import 'react-advanced-cropper/dist/style.css';
 import './style.css';
 import { makeAspectCrop } from './../../../node_modules/react-image-crop/src/utils';
-
 const ImageUploader = () => {
     const [image, setImage] = useState(
         '',
@@ -32,6 +31,8 @@ const ImageUploader = () => {
     const handleSave = () => {
         if (cropperRef.current) {
             const croppedImage = cropperRef.current.getCanvas().toDataURL();
+
+            console.log(cropperRef.current.getCanvas().toDataURL())
             // Create a temporary anchor element
             setCroppedImage(croppedImage);
 
@@ -66,7 +67,9 @@ const ImageUploader = () => {
                 <button onClick={handleSave}>Save Cropped Image</button>
                 <div className="cropped-image">
                     {croppedImage && (
+                        <>
                         <img src={croppedImage} alt="Cropped" />
+                        </>
                     )}
                 </div>
             </div>

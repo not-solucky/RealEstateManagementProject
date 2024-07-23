@@ -65,6 +65,7 @@ body {
     --medium: 24px;
     --small: 20px;
     --extra-small: 18px;
+    --error: rgb(250, 96, 75);
 }
 
 body {

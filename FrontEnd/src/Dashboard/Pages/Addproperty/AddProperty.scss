@@ -8,5 +8,92 @@
         }
     }
     .subcontainer{
+        .content{
+            padding: 40px;
+            border: 1px solid var(--gray-15);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 700px;
+            h3{
+                font-size: var(--medium);
+            }
+            .error{
+                font-size: 14px;
+                color: var(--error);
+            }
+            .form-input{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 10px;
+                .grid-row{
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 30px;
+                    .grid-item{
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+
+                    }
+                }
+                label{
+                    font-size: var(--extra-small);
+
+                }
+                input{
+                    font-size: var(--extra-small);
+                    background: none;
+                    border: 1px solid var(--gray-15);
+                    padding: 10px 20px;
+
+                }
+                textarea{
+                    background: none;
+                    border: 1px solid var(--gray-15);
+                    padding: 10px 20px;
+                    font-size: var(--extra-small);
+                    width: 100%;
+                    min-height: 200px;
+                }
+                .item-container{
+                    display: flex;
+                    gap: 20px;
+                    .item{
+                        font-size: var(--extra-small);
+                        padding: 10px 20px;
+                        border: 1px solid var(--gray-15);
+                        cursor: pointer;
+                        color: var(--gray-60);
+                    }
+                    .active{
+                        background-color: var(--purple-60);
+                        color: white;
+                    }
+                }
+
+                
+
+            }
+
+            .button-container{
+                margin-top: 10px;
+                display: flex;
+                gap: 20px;
+                button{
+                    border: 1px solid var(--gray-15);
+                    border-radius: 6px;
+                    background: none;
+                    padding: 10px 20px;
+                    font-size: var(--extra-small);
+                    cursor: pointer;
+                }
+                .bck{
+                    background-color: var(--purple-60);
+                    border: none;
+                }
+            }
+        }
     }
 }
