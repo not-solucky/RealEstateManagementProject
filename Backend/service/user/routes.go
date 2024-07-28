@@ -9,7 +9,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 )
@@ -23,7 +22,6 @@ func NewHandler(store types.UserStore) *Handler {
 }
 
 func (h *Handler) RegisterRoutes(router *mux.Router) {
-
 	router.HandleFunc("/login", h.handleLogin).Methods("POST")
 	router.HandleFunc("/register", h.handleRegister).Methods("POST")
 	router.HandleFunc("/users/{id}", auth.WithJWTAuth(h.handleGetUser, h.store)).Methods(http.MethodGet)
@@ -33,27 +31,27 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/update/userimage", auth.WithJWTAuth(h.handleUpdateUserImage, h.store)).Methods(http.MethodPut)
 	router.HandleFunc("/update/phone", auth.WithJWTAuth(h.handleUpdatePhone, h.store)).Methods(http.MethodPut)
 	router.HandleFunc("/admin/users", auth.WithJWTAuth(h.handleGetAllUsers, h.store)).Methods(http.MethodGet)
-	router.HandleFunc("/test", h.handletest).Methods("POST")
+	// router.HandleFunc("/test", h.handletest).Methods("POST")
 
 }
 
-func (h *Handler) handletest(w http.ResponseWriter, r *http.Request) {
-	var payload types.ImagePayload
+// func (h *Handler) handletest(w http.ResponseWriter, r *http.Request) {
+// 	var payload types.ImagePayload
 
-	if err := utils.ParseJSON(r, &payload); err != nil {
-		utils.WriteError(w, http.StatusBadRequest, err)
-		return
-	}
+// 	if err := utils.ParseJSON(r, &payload); err != nil {
+// 		utils.WriteError(w, http.StatusBadRequest, err)
+// 		return
+// 	}
 
-	i := 0
-	arrlen := len(payload.Image)
-	for i < arrlen {
-		fmt.Printf(payload.Image[i] + "\n")
-		i += 1
-	}
+// 	i := 0
+// 	arrlen := len(payload.Image)
+// 	for i < arrlen {
+// 		fmt.Printf(payload.Image[i] + "\n")
+// 		i += 1
+// 	}
 
-	fmt.Print(len(payload.Image))
-}
+// 	fmt.Print(len(payload.Image))
+// }
 
 // update user
 func (h *Handler) handleUpdateUserImage(w http.ResponseWriter, r *http.Request) {

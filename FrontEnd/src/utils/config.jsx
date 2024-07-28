@@ -1,5 +1,5 @@
 const devConfig = {
-    baseURL: "http://192.168.0.100:8080/api/v1",
+    baseURL: "http://192.168.0.105:8080/api/v1",
 };
 
 

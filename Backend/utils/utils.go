@@ -45,8 +45,8 @@ func SaveImage(image string , uploadDir string, id int) (string , error) {
 	}
 
 	currentTime := time.Now().Format("20060102150405")
-    fileName := fmt.Sprintf("%s_%s.png", currentTime, strconv.Itoa(id))
-    filePath := filepath.Join(uploadDir, fileName)
+	fileName := fmt.Sprintf("%s_%s.png", currentTime, strconv.Itoa(id))
+	filePath := filepath.Join(uploadDir, fileName)
 
 	err = os.WriteFile(filePath, imageBytes, 0644)
 	if err != nil {
