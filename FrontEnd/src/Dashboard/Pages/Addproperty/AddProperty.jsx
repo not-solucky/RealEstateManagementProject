@@ -2,6 +2,7 @@ import {useState, useRef, useEffect} from 'react'
 import {Cropper} from 'react-advanced-cropper';
 import { getID } from '../../../utils/localstorage';
 import { PropertyApi } from '../../../api/propery';
+import Loader from '../../../components/Loader/Loader';
 
 import "./AddProperty.scss"
 
@@ -393,11 +394,12 @@ function Page6({images, setImages, setPart}) {
     )
 }
 
-function Page7({primary, location, feature, images, setPart}){
+function Page7({primary, location, feature, images, setPart, setImages}){
     const [image, setImage]=useState([])
     const [prvimg, setPrvimg] = useState([])
-    const [status, setStatus] = useState("Loading..");
-    const [message, setMessage] = useState("Property Added Successfully");
+    const [status, setStatus] = useState("");
+    const [message, setMessage] = useState("");
+    const [submit, setSubmit] = useState(false)
     const HousePayload = {
         "owner_id" : parseInt(getID()),
         "title" : primary.title,
@@ -458,10 +460,34 @@ function Page7({primary, location, feature, images, setPart}){
         "floor_no": feature.floorNo,
         "image": image
     }
+    const handleAddanother = () => {
+        setSubmit(false)
+        setPart(1)
+        setImages([])
+        primary.setSale(null)
+        primary.setPropertytype("")
+        primary.setDescription("")
+        primary.setPrice(null)
+        primary.setTitle("")
+        location.setState("")
+        location.setCity("")
+        location.setPostal("")
+        location.setStreetNo("")
+        location.setStreetName("")
+        location.setHouseNo("")
+        feature.setRoomCount(null)
+        feature.setBathroomCount(null)
+        feature.setBalconyCount(null)
+        feature.setFloorCount(null)
+        feature.setFloorNo(null)
+        feature.setSize(null)
+        feature.setParking(null)
+
+    }
     const handleSubmit = async (e) => {
         
         e.preventDefault();
-
+        setSubmit(true)
         var Payload;
 
         if (primary.propertytype === "house"){
@@ -558,8 +584,17 @@ function Page7({primary, location, feature, images, setPart}){
                         )}
                     </div>
                 </div>
-                {status && <div className='no-image'><p>{status}</p></div>}
-                {message && <p className="error">{message}</p>}
+                {submit &&
+                <div className="submit-container">
+                    {status=== "loading" ?(
+                        <Loader/>
+                    ):(<div className='status'><p>{status}</p></div>)}
+                    {message && <p className="message">{message}</p>}
+                    {status==="Success" && <p className='message'>Now verify your property by visiting the my property section.</p>}
+                    {status === "Success" && <button onClick={()=>handleAddanother()}>Add Another</button>}
+                    {status ==="Failed" && <button onClick={()=>setPart(7)}>Try Again</button>}
+                </div>
+                }
                 <div className="button-container">
 
                     <button onClick={()=>setPart(6)}>Back</button>
@@ -574,12 +609,9 @@ function AddProperty() {
     const [part, setPart] = useState(1)
 
     const [sale, setSale] = useState(null)
-
     const [propertytype,setPropertytype] = useState("")
-
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
-
     const [price, setPrice] = useState(null)
 
     const [state, setState] = useState("")
@@ -599,11 +631,11 @@ function AddProperty() {
     const [images, setImages] = useState([])
 
     const basicInfo = {
-        sale,
-        propertytype,
-        title,
-        description,
-        price
+        sale,setSale,
+        propertytype, setPropertytype,
+        title, setTitle,
+        description,setDescription,
+        price, setPrice
     }
     const location = {
         state, setState,
@@ -650,7 +682,7 @@ function AddProperty() {
                         <Page6   setImages={setImages} images={images} setPart={setPart}/>
                     )}
                     {part ===7 &&(
-                        <Page7 primary={basicInfo} location={location} feature={feature} images={images} setPart = {setPart} />
+                        <Page7 primary={basicInfo} location={location} feature={feature} images={images} setImages={setImages} setPart = {setPart} />
                     )}
                 </div>
             </div>

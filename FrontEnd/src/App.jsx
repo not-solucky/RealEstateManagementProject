@@ -26,6 +26,7 @@ import { useLocation } from 'react-router-dom'
 
 
 import { UserApi } from './api/user'
+import SalePage from './pages/salepage/Salepage';
 
 
 function App() {
@@ -57,6 +58,7 @@ function App() {
             {!location.pathname.startsWith('/dashboard') && <Navbar loading = {loading}/>}
             <Routes>
                 <Route path="/" element={<Homepage />} />
+                <Route path="/buyproperty" element = {<SalePage />} />
                 <Route path="/about" element={<Aboutpage />} />
                 <Route path="/properties" element={<Propertiespage />} />
                 <Route path="/services" element={<Servicespage />} />

@@ -53,6 +53,9 @@ function Navbar({ loading }) {
                                 <NavLink to= "/"  >Home</NavLink>
                             </li>
                             <li>
+                                <NavLink to="/buyproperty">Buy Property</NavLink>
+                            </li>
+                            <li>
                                 <NavLink to="/about">About Us</NavLink>
                             </li>
                             <li>
@@ -119,6 +122,7 @@ function Navbar({ loading }) {
                         <div className="line"></div>
                         <ul className="sidebar-navigation" id="sidebar-links">
                             <li className="sidebar-item"><NavLink to={"/"}>Home</NavLink></li>
+                            <li className="sidebar-item"><NavLink to={"/buyproperty"}>Buy Property</NavLink></li>
                             <li className="sidebar-item"><NavLink to={"/about"}>About Us</NavLink></li>
                             <li className="sidebar-item"><NavLink to={"/properties"}>Properties</NavLink></li>
                             <li className="sidebar-item"><NavLink to={"/services"}>Services</NavLink></li>
