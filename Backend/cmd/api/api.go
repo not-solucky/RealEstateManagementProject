@@ -37,7 +37,7 @@ func (s *APIServer) Run() error {
 	propertyHandler := property.NewHandler(PropertyStore, userStore)
 	propertyHandler.RegisterRoutes(subrouter)
 
-	log.Println("Starting server on", s.addr)
+	log.Println("Starting server", s.addr)
 
 	imageHandler := image.NewHandler()
 	imageHandler.RegisterRoutes(subrouter)

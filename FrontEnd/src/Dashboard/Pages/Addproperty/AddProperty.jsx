@@ -1,7 +1,87 @@
-import {useState} from 'react'
-
+import {useState, useRef, useEffect} from 'react'
+import {Cropper} from 'react-advanced-cropper';
+import { getID } from '../../../utils/localstorage';
+import { PropertyApi } from '../../../api/propery';
 
 import "./AddProperty.scss"
+
+function ImageModal({setShowModal, setImages, images, modalIndex}) {
+    const [image, setImage] = useState('');
+    const cropperRef = useRef(null);
+
+    const handleImageChange = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    const handleConfirm = () => {
+
+        if (image === ""){
+            return
+        }
+
+        if (cropperRef.current) {
+            const croppedImage = cropperRef.current.getCanvas().toDataURL();
+            var new_arr =[ ...images ]
+            new_arr[modalIndex] = (cropperRef.current.getCanvas().toDataURL())
+
+            setImages(new_arr)
+            setShowModal(false)
+        }
+        
+    }
+    const handleCancel = () => {
+        setImage(null);
+        setShowModal(false);
+    };
+
+    return(
+        <div className="modal">
+            <div className="modal-content">
+                <div className="modal-header">
+                    <h2>Upload Profile Image</h2>
+                </div>
+                <div className="image-upload">
+                    <div className="input">
+                        <input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
+                        <label htmlFor="image">Choose Image</label>
+                    </div>
+                    <div className="preview">
+                    {image ? (
+                        <div className="image-container">
+                            <Cropper
+                                ref={cropperRef}
+                                src={image}
+                                className="cropper"
+                                style={{ height: 300, width: 400 }}
+                                cropperOptions={{
+                                    aspectRatio: 72/53, // Set aspect ratio to 1:1 (optional)
+
+                                }}
+                                aspectRatio={72/53}
+                            />
+                        </div>
+                    ) : (
+                        <div className="no-image">
+                            <p>No image selected</p>
+                        </div>
+                    )}
+                        <div className="button-container">
+                            <button onClick={handleConfirm}>Ok</button>
+                            <button onClick={handleCancel}>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 function Page1({setSale,sale, setPart}){
     const [error, setError] = useState("")
     const handleGoNext = () => {
@@ -71,10 +151,10 @@ function Page2({setPropertytype, propertytype, setPart}){
         </div>
     )
 }
-function Page3({setTitle,title, setDescription, description, setPart}){
+function Page3({setTitle,title, setDescription, description, setPart, price, setPrice}){
     const [error, setError] = useState("")
     const handleGoNext = () => {
-        if (title==="" || description ===""){
+        if (title==="" || description ==="" || price === null || price === NaN){
             setError("Please fill up all the following boxes")
         } else {
             setError("")
@@ -93,6 +173,11 @@ function Page3({setTitle,title, setDescription, description, setPart}){
                 <label htmlFor="title">Description</label>
                 <textarea name="description" id="description" maxLength={2000} placeholder='Description' value={description} 
                 onChange={(event) => setDescription(event.target.value)}/>
+            </div>
+            <div className="form-input">
+                <label htmlFor="price">Price</label>
+                <input type="number" min={0} max={1000000000} placeholder='price' id='price'
+                onChange={(event) => setPrice(parseInt(event.target.value))} value={price}/>
             </div>
             {error && <div className='error'>{error}</div>}
             <div className="button-container">
@@ -270,12 +355,221 @@ function Page5({feature, setPart, type}){
     
 }
 function Page6({images, setImages, setPart}) {
+    const [error, setError] = useState("")
+    const [showModal, setShowModal] = useState(false);
+    const [modalIndex, setModalIndex] = useState(0)
+
+    const handleGoNext = () => {
+        console.log(images.length)
+        if (images.length === 0){
+            setError("Please upload atleast one image")
+        } else {
+            setError("")
+            setPart(7)
+        }
+    }
     return(
         <div className="content">
             <h3>Upload few Images</h3>
+            <div className="image-boxes">
+            {Array.from({ length: 8 }).map((_, index) => (
+                <div key={index} className="image-box" onClick={()=>setModalIndex(index)}>
+                    {images[index] ? (
+                        <img src={images[index]} alt="property" />
+                    ) : (
+                        <div className="empty" onClick={() => setShowModal(true)}>Add Image</div>
+                    )}
+                </div>
+            ))}
+            
+            </div>
+            {showModal && <ImageModal setShowModal={setShowModal} setImages={setImages} images={images} modalIndex={modalIndex} />}
+            {error && <div className='error'>{error}</div>}
+            <div className="button-container">
+                <button onClick={()=>setPart(5)}>Back</button>
+                <button className='bck' onClick={()=>handleGoNext()}>Next</button>
+            </div>
         </div>
     )
 }
+
+function Page7({primary, location, feature, images, setPart}){
+    const [image, setImage]=useState([])
+    const [prvimg, setPrvimg] = useState([])
+    const [status, setStatus] = useState("Loading..");
+    const [message, setMessage] = useState("Property Added Successfully");
+    const HousePayload = {
+        "owner_id" : parseInt(getID()),
+        "title" : primary.title,
+        "description" : primary.description,
+        "price" : primary.price,
+        "property_type" : (primary.sale ? "sale" : "rent"),
+        "property_category" : primary.propertytype,
+        "state" : location.state,
+        "city" : location.city,
+        "postal_code": location.postal,
+        "street_no" : parseInt(location.streetNo),
+        "street_name": location.streetName,
+        "house_no" : parseInt(location.houseNo),
+        "room_count" : feature.roomCount,
+        "bathroom_count": feature.bathroomCount,
+        "size": feature.size,
+        "balcony_count": feature.balconyCount,
+        "parking": feature.parking,
+        "floor_count": feature.floorCount,
+        "image": image
+    }
+    const ApartmentPayload = {
+        "owner_id" : parseInt(getID()),
+        "title" : primary.title,
+        "description" : primary.description,
+        "price" : primary.price,
+        "property_type" : (primary.sale ? "sale" : "rent"),
+        "property_category" : primary.propertytype,
+        "state" : location.state,
+        "city" : location.city,
+        "postal_code": location.postal,
+        "street_no" : parseInt(location.streetNo),
+        "street_name": location.streetName,
+        "house_no" : parseInt(location.houseNo),
+        "room_count" : feature.roomCount,
+        "bathroom_count": feature.bathroomCount,
+        "size": feature.size,
+        "balcony_count": feature.balconyCount,
+        "parking": feature.parking,
+        "floor_no": feature.floorNo,
+        "image": image
+    }
+    const CommercialPayload = {
+        "owner_id" : parseInt(getID()),
+        "title" : primary.title,
+        "description" : primary.description,
+        "price" : primary.price,
+        "property_type" : (primary.sale ? "sale" : "rent"),
+        "property_category" : primary.propertytype,
+        "state" : location.state,
+        "city" : location.city,
+        "postal_code": location.postal,
+        "street_no" : parseInt(location.streetNo),
+        "street_name": location.streetName,
+        "house_no" : parseInt(location.houseNo),
+        "size": feature.size,
+        "parking": feature.parking,
+        "floor_no": feature.floorNo,
+        "image": image
+    }
+    const handleSubmit = async (e) => {
+        
+        e.preventDefault();
+
+        var Payload;
+
+        if (primary.propertytype === "house"){
+            Payload = HousePayload
+        } else if (primary.propertytype ==="apartment"){
+            Payload = ApartmentPayload
+        } else if (primary.propertytype === "commercial"){
+            Payload = CommercialPayload
+        } 
+
+        setStatus("loading")
+        console.log(image)
+        const {statusCode, data} = await PropertyApi.AddProperty(Payload);
+
+        if (statusCode === 200) {
+            setStatus("Success");
+            setMessage("Property Added Successfully");
+        }
+        else {
+            setStatus("Failed");
+            setMessage(data.error);
+        }
+    }
+    useEffect(()=>{
+        var arr =[]
+        var prv = []
+        images.map((img)=>{
+            if (img){
+                const base64Image = img.split(',')[1]
+                prv.push(img)
+                arr.push(base64Image)
+            }
+        })
+        setPrvimg(prv)
+        setImage(arr)
+    },[])
+    console.log(images.length)
+    return(
+        <div className="content">
+            <h3>Submit Information</h3>
+            <div className="preview">
+                <div className="title">
+                    <h4>{primary.title}</h4>
+                </div>
+                <div className="image-boxes">
+                    {prvimg.map((img, i) => (
+                        <div className="image-box" key={i}>
+                            <img src={img} alt="" />
+                        </div>
+                    ))}
+                </div>
+                <div className="basic-info">
+                    <div className='type'><p>{primary.propertytype}</p></div>
+                    <div className='sale'><p>{primary.sale ? (`Sale`) : (`Rent`)}</p></div>
+                    <div className="price">
+                        <p> ৳ {primary.price}</p>
+                    </div>
+                    
+                </div>
+                <div className="description">
+                    <p className="dstitle">Description</p>
+                    <p className='dscontent'>{primary.description}</p>
+                </div>
+                <div className="prev-container-1">
+                    <p className="subt">Address</p>
+                    <div className="addrbox">
+                        <p className="bold">Location</p><p className="value">{location.city}, {location.state}</p>
+                        <p className="bold">Zip code</p><p className="value">{location.postal}</p>
+                        <p className="bold">Street</p><p className="value">Road {location.streetNo}, {location.streetName}</p>
+                        <p className="bold">House no</p><p className="value">{location.houseNo}</p>
+                    </div>
+                </div>
+
+                <div className="prev-container-1">
+                    <p className="subt">Features</p>
+                    <div className="addrbox">
+                        <p className="bold">Size of property</p><p className="value">{feature.size} sqft</p>
+                        {primary.propertytype !== "commercial" && (
+                            <>
+                                <p className="bold">No. of rooms</p><p className="value">{feature.roomCount}</p>
+                                <p className="bold">No. of balconies</p><p className="value">{feature.balconyCount}</p>
+                                <p className="bold">No. of bathrooms</p><p className="value">{feature.bathroomCount}</p>
+                            </>
+                        )}
+                        <p className="bold">Parking facility</p><p className="value">{feature.parking ? ("Available") :("Not Available")}</p>
+                        {primary.propertytype === "house" ? (
+                            <>
+                                <p className="bold">Total floors</p><p className="value">{feature.floorCount}</p>
+                            </>
+                        ):(
+                            <>
+                                <p className="bold">Floor number</p><p className="value">{feature.floorNo}</p>
+                            </>
+                        )}
+                    </div>
+                </div>
+                {status && <div className='no-image'><p>{status}</p></div>}
+                {message && <p className="error">{message}</p>}
+                <div className="button-container">
+
+                    <button onClick={()=>setPart(6)}>Back</button>
+                    <button className="bck" onClick={handleSubmit}>Submit</button>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 function AddProperty() {
     const [part, setPart] = useState(1)
 
@@ -302,7 +596,15 @@ function AddProperty() {
     const [floorNo, setFloorNo] = useState(null)
     const [size, setSize] = useState(null)
     const [parking, setParking] = useState(null)
+    const [images, setImages] = useState([])
 
+    const basicInfo = {
+        sale,
+        propertytype,
+        title,
+        description,
+        price
+    }
     const location = {
         state, setState,
         city, setCity,
@@ -336,7 +638,7 @@ function AddProperty() {
                         <Page2 setPropertytype={setPropertytype} propertytype={propertytype} setPart={setPart} />
                     )}
                     {part===3 && (
-                        <Page3  description={description} title={title} setTitle={setTitle} setDescription={setDescription} setPart={setPart} />
+                        <Page3  description={description} title={title} setTitle={setTitle} setDescription={setDescription} setPart={setPart} price={price} setPrice = {setPrice} />
                     )}
                     {part===4 && (
                         <Page4  location = {location} setPart={setPart} />
@@ -345,7 +647,10 @@ function AddProperty() {
                         <Page5  feature = {feature} setPart={setPart} type={propertytype} />
                     )}
                     {part===6 && (
-                        <Page6   setPart={setPart} />
+                        <Page6   setImages={setImages} images={images} setPart={setPart}/>
+                    )}
+                    {part ===7 &&(
+                        <Page7 primary={basicInfo} location={location} feature={feature} images={images} setPart = {setPart} />
                     )}
                 </div>
             </div>

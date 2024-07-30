@@ -1,15 +1,16 @@
 package utils
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/go-playground/validator/v10"
 	"net/http"
-	"encoding/base64"
 	"os"
 	"path/filepath"
-	"strconv"
-	"time"
+
+	"github.com/go-playground/validator/v10"
+
+	"github.com/google/uuid"
 )
 
 var Validate = validator.New()
@@ -33,10 +34,10 @@ func DeleteImage(imagePath string, dir string) error {
 	return nil
 }
 
-func SaveImage(image string , uploadDir string, id int) (string , error) {
+func SaveImage(image string, uploadDir string) (string, error) {
 	imageBytes, err := base64.StdEncoding.DecodeString(image)
 
-    if err != nil {
+	if err != nil {
 		return "", fmt.Errorf("error decoding image: %v", err)
 	}
 	err = os.MkdirAll(uploadDir, os.ModePerm)
@@ -44,8 +45,7 @@ func SaveImage(image string , uploadDir string, id int) (string , error) {
 		return "", fmt.Errorf("error creating upload directory: %v", err)
 	}
 
-	currentTime := time.Now().Format("20060102150405")
-	fileName := fmt.Sprintf("%s_%s.png", currentTime, strconv.Itoa(id))
+	fileName := fmt.Sprintf("%s.png", uuid.New().String())
 	filePath := filepath.Join(uploadDir, fileName)
 
 	err = os.WriteFile(filePath, imageBytes, 0644)
@@ -66,7 +66,7 @@ func ParseJSON(r *http.Request, v any) error {
 func GetTokenFromRequest(r *http.Request) string {
 	tokenAuth := r.Header.Get("Authorization")
 	tokenQuery := r.URL.Query().Get("token")
-	
+
 	if tokenAuth != "" {
 		return tokenAuth
 	}

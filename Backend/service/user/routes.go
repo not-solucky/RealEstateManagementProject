@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 )
@@ -35,25 +36,6 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 
 }
 
-// func (h *Handler) handletest(w http.ResponseWriter, r *http.Request) {
-// 	var payload types.ImagePayload
-
-// 	if err := utils.ParseJSON(r, &payload); err != nil {
-// 		utils.WriteError(w, http.StatusBadRequest, err)
-// 		return
-// 	}
-
-// 	i := 0
-// 	arrlen := len(payload.Image)
-// 	for i < arrlen {
-// 		fmt.Printf(payload.Image[i] + "\n")
-// 		i += 1
-// 	}
-
-// 	fmt.Print(len(payload.Image))
-// }
-
-// update user
 func (h *Handler) handleUpdateUserImage(w http.ResponseWriter, r *http.Request) {
 
 	var payload types.UpdateUserImagePayload
@@ -80,7 +62,7 @@ func (h *Handler) handleUpdateUserImage(w http.ResponseWriter, r *http.Request) 
 	}
 
 	// Decode Base64 image data
-	fileName, err := utils.SaveImage(payload.Image, dir, payload.ID)
+	fileName, err := utils.SaveImage(payload.Image, dir)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
