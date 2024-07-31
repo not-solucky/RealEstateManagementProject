@@ -1,7 +1,7 @@
 import {useState, useRef, useEffect} from 'react'
 import {Cropper} from 'react-advanced-cropper';
 import { getID } from '../../../utils/localstorage';
-import { PropertyApi } from '../../../api/propery';
+import { PropertyApi } from '../../../api/property';
 import Loader from '../../../components/Loader/Loader';
 
 import "./AddProperty.scss"

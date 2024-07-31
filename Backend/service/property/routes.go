@@ -6,6 +6,7 @@ import (
 	"learninggo/types"
 	"learninggo/utils"
 	"net/http"
+	"strconv"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
@@ -27,12 +28,52 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/property/create/house", auth.WithJWTAuth(h.handleCreateHouse, h.Ustore)).Methods("POST")
 	router.HandleFunc("/property/create/apartment", auth.WithJWTAuth(h.handleCreateApartment, h.Ustore)).Methods("POST")
 	router.HandleFunc("/property/create/commercial", auth.WithJWTAuth(h.handleCreateCommercial, h.Ustore)).Methods("POST")
+	router.HandleFunc("/getsaleproperty", h.handleGetSaleProperty).Methods("GET")
 }
 
-// func (h *Handler) eligibilityCheck(w http.ResponseWriter, r *http.Request) (bool){
-// 	return false
-// }
+func parseFilters(r *http.Request) types.PropertyFilters {
+	query := r.URL.Query()
+	filters := types.PropertyFilters{}
 
+	filters.Category = query.Get("category")
+	filters.State = query.Get("state")
+	filters.City = query.Get("city")
+
+	if priceMin, err := strconv.Atoi(query.Get("priceMin")); err == nil {
+		filters.PriceMin = priceMin
+	}
+
+	if priceMax, err := strconv.Atoi(query.Get("priceMax")); err == nil {
+		filters.PriceMax = priceMax
+	}
+
+	filters.Search = query.Get("search")
+
+	if limit, err := strconv.Atoi(query.Get("limit")); err == nil {
+		filters.Limit = limit
+	} else {
+		filters.Limit = 24 // default limit
+	}
+
+	if page, err := strconv.Atoi(query.Get("page")); err == nil {
+		filters.Page = page
+	} else {
+		filters.Page = 1 // default page
+	}
+
+	return filters
+}
+func (h *Handler) handleGetSaleProperty(w http.ResponseWriter, r *http.Request) {
+	filters := parseFilters(r)
+	properties, err := h.store.GetSaleProperty(filters)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, properties)
+
+}
 func (h *Handler) handleCreateHouse(w http.ResponseWriter, r *http.Request) {
 	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
 	userVerified := contextValues.Verified

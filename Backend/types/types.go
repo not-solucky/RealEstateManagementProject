@@ -22,6 +22,7 @@ type PropertyStore interface {
 	CreateHouse(payload PropertyHousePayload) error
 	CreateApartment(payload PropertyApartmentPayload) error
 	CreateCommercial(payload PropertyCommercialPayload) error
+	GetSaleProperty(payload PropertyFilters) ([]*Property, error)
 }
 
 type ImageStore interface {
@@ -90,6 +91,17 @@ type VerifyUserPayload struct {
 }
 
 // Define Prperty type
+
+type PropertyFilters struct {
+	Category string `json:"category"`
+	State    string `json:"state"`
+	City     string `json:"city"`
+	PriceMin int    `json:"priceMin"`
+	PriceMax int    `json:"priceMax"`
+	Search   string `json:"search"`
+	Limit    int    `json:"limit"`
+	Page     int    `json:"page"`
+}
 type Property struct {
 	ID               int     `json:"property_id"`
 	Owner            int     `json:"owner_id"`
@@ -102,6 +114,7 @@ type Property struct {
 	City             string  `json:"city"`
 	Status           string  `json:"status"`
 	Verified         bool    `json:"is_verified"`
+	Image            string  `json:"photo_url"`
 }
 type PropertyHouse struct {
 	ID               int     `json:"property_id"`
