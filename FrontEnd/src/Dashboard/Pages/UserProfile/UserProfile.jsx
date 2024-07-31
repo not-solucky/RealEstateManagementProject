@@ -1,15 +1,17 @@
 
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import { PhoneIcon, MailIcon, TickFilledIcon, CrossFilledIcon } from '../../../components/icons';
 import { ImageApi } from '../../../api/image';
 import { UserApi } from '../../../api/user';
 import { Utility } from '../../../utils/utility';
 import { getID, setProfile } from '../../../utils/localstorage';
 import Loader from '../../../components/Loader/Loader';
+import {Cropper} from 'react-advanced-cropper';
+import 'react-advanced-cropper/dist/style.css';
 import './UserProfile.scss';
 
 function EditPassword() {
-    const [email, setEmail] = useState("");
+    const [newpassword, setNewpassword] = useState("");
     const [currentpassword, setCurrentPassword] = useState("");
     const [status, setStatus] = useState("");
     const [message, setMessage] = useState("");
@@ -21,15 +23,15 @@ function EditPassword() {
         setStatus("loading");
         const ID = getID();
 
-        const {statusCode, data} = await UserApi.updateUsername({
+        const {statusCode, data} = await UserApi.updatePassword({
             id: parseInt(ID),
-            email: email,
-            password: currentpassword
+            old_password: currentpassword,
+            new_password: newpassword
         });
 
         if (statusCode === 200) {
             setStatus("success");
-            setMessage("Email updated successfully");
+            setMessage("Password updated successfully");
         }
         else {
             setStatus("error");
@@ -41,9 +43,9 @@ function EditPassword() {
             <div className="updateItem">
                 <h3>Update Password</h3>
                 <div className="form-input">
-                    <label htmlFor="email">Email</label>
-                    <input type="text" id="email" name="email" placeholder="Email" 
-                    onChange={(event) => setUsername(event.target.value)}/>
+                    <label htmlFor="newpassword">New Password</label>
+                    <input type="password" id="newpassword" name="newpassword" placeholder="New Password" 
+                    onChange={(event) => setNewpassword(event.target.value)}/>
                 </div>
                 <div className="form-input">
                     <label htmlFor = "currentpassword">Current Password</label>
@@ -69,6 +71,7 @@ function EditEmail() {
     const [status, setStatus] = useState("");
     const [message, setMessage] = useState("");
 
+
     const handleSubmit = async (e) => {
         
         e.preventDefault();
@@ -76,7 +79,7 @@ function EditEmail() {
         setStatus("loading");
         const ID = getID();
 
-        const {statusCode, data} = await UserApi.updateUsername({
+        const {statusCode, data} = await UserApi.updateEmail({
             id: parseInt(ID),
             email: email,
             password: currentpassword
@@ -98,7 +101,7 @@ function EditEmail() {
                 <div className="form-input">
                     <label htmlFor="email">Email</label>
                     <input type="text" id="email" name="email" placeholder="Email" 
-                    onChange={(event) => setUsername(event.target.value)}/>
+                    onChange={(event) => setEmail(event.target.value)}/>
                 </div>
                 <div className="form-input">
                     <label htmlFor = "currentpassword">Current Password</label>
@@ -171,7 +174,60 @@ function EditName() {
         </>
     );
 }
+function EditPhone() {
+    const [phone, setPhone] = useState("");
+    const [currentpassword, setCurrentPassword] = useState("");
+    const [status, setStatus] = useState("");
+    const [message, setMessage] = useState("");
 
+    const handleSubmit = async (e) => {
+        
+        e.preventDefault();
+
+        setStatus("loading");
+        const ID = getID();
+
+        const {statusCode, data} = await UserApi.updatePhone({
+            id: parseInt(ID),
+            phone: phone,
+            password: currentpassword
+        });
+
+        if (statusCode === 200) {
+            setStatus("success");
+            setMessage("Phone updated successfully");
+        }
+        else {
+            setStatus("error");
+            setMessage(data.error);
+        }
+    }
+    return (
+        <>
+            <div className="updateItem">
+                <h3>Update Phone Number</h3>
+                <div className="form-input">
+                    <label htmlFor="phone">Phone Number</label>
+                    <input type="text" id="phone" name="phone" placeholder="Phone Number" 
+                    onChange={(event) => setPhone(event.target.value)}/>
+                </div>
+                <div className="form-input">
+                    <label htmlFor = "currentpassword">Current Password</label>
+                    <input type="password" id="currentpassword" name="currentpassword" placeholder="Current Password"
+                    onChange={(event) => setCurrentPassword(event.target.value)} />
+                </div>
+                <div className="button">
+                    <button onClick={handleSubmit}>Submit</button>
+                    {status === "loading" &&  <p>Loading...</p> }
+                    {status === "success" && <p className="success">{message}</p>}
+                    {status === "error" && <p className="error">{message}</p>}
+                </div>
+                
+
+            </div>
+        </>
+    );
+}
 function EditForm() {
 
     return (
@@ -180,15 +236,154 @@ function EditForm() {
                 <EditName />
                 <EditEmail />
                 <EditPassword />
+                <EditPhone />
                 
             </div>
         </>
     );
 }
 
+
+function UserImageUploadModal({ onClose}) {
+    const [image, setImage] = useState('');
+    const cropperRef = useRef(null);
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState(null);
+    const userId = getID();
+    const [success, setSuccess] = useState(false);
+
+
+    const handleImageChange = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+
+    const handleUpload = async () => {
+        setLoading(true);
+        const cropper = cropperRef.current;
+        
+        if (cropper) {
+            const image = cropper.getCanvas().toDataURL(); // Assuming you want the image data URL
+            console.log(image);
+
+            try {
+                
+                const base64Image = image.split(',')[1];
+    
+                // Call the updateImage function from UserApi
+                const { statusCode, data } = await UserApi.updateImage({
+                    id: parseInt(userId),
+                    image: base64Image
+                });
+
+
+                if (statusCode === 200) {
+                    setMessage('Image uploaded successfully');
+                    setSuccess(true);
+                } else {
+                    setMessage(`Failed to upload image: ${data.message || 'Unknown error'}`);
+                }
+            } catch (error) {
+                setMessage(`Error uploading image: ${error.message}`);
+            }
+        } else {
+            setMessage("Please select an image to upload");
+        }
+
+        setLoading(false);
+    };
+
+    const handleCancel = () => {
+        setImage(null);
+        onClose();
+    };
+
+    return (
+        <>
+            <div className="modal">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h2>Upload Profile Image</h2>
+                    </div>
+                    
+                    {success ? (
+                        <div className="success">
+                            <p>Image uploaded successfully</p>
+                        </div>
+
+                    ):(
+                        <div className="image-upload">
+                            <div className="input">
+                                <input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
+                                <label htmlFor="image">Choose Image</label>
+                            </div>
+                            <div className="preview">
+                            {image ? (
+                                <div className="image-container">
+                                    <Cropper
+                                        ref={cropperRef}
+                                        src={image}
+                                        className="cropper"
+                                        style={{ height: 300, width: 400 }}
+                                        cropperOptions={{
+                                            aspectRatio: 1, // Set aspect ratio to 1:1 (optional)
+
+                                        }}
+                                        aspectRatio={1/1}
+                                    />
+                                </div>
+                            ) : (
+                                <div className="no-image">
+                                    <p>No image selected</p>
+                                </div>
+                            ) }
+                            </div>
+
+                            {loading && <div className='no-image'><p>Loading...</p></div>}
+                        
+                            {message && <p className="error">{message}</p>}
+                        
+                        </div>
+
+                    )}
+
+                    
+                    <div className="button-container">
+                        {success ? (
+                            <button onClick={onClose}>Close</button>
+                        ):(
+                            <>
+                                <button onClick={handleUpload}>Upload</button>
+                                <button onClick={handleCancel}>Cancel</button>
+                            </>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}
 function UserProfile() {
     const [loading, setLoading] = useState(true);
     const [userInfo, setUserInfo] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false);
+
+
+    const onClose = () => {
+        setModalOpen(false);
+    };
+
+    const onOpen = () => {
+        setModalOpen(true);
+    };
+
     useEffect(() => {
         const fetchUserProfile = async () => {
             setLoading(true);
@@ -227,6 +422,10 @@ function UserProfile() {
                 <div className="subcontainer">
                     <div className="profile">
                         <div className="profile-image">
+                            <button className="modal-button"
+                                    onClick={onOpen}>
+                                <span>Edit</span>
+                            </button>
                             <img src={userInfo.image === "null"? "/profile.png": ImageApi.GetStaticProfileImage(userInfo.image)} alt="Profile" />
                         </div>
                         <div className="profile-info">
@@ -249,6 +448,8 @@ function UserProfile() {
                         
                     </div>
                     <EditForm />
+
+                    {modalOpen && <UserImageUploadModal onClose={onClose}/>}
                 </div>
             </div>
             

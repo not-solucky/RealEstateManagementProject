@@ -1,9 +1,7 @@
 package image
 
-
 import (
 	"database/sql"
-	
 )
 
 type Store struct {
@@ -31,5 +29,3 @@ func (s *Store) UploadUserDocument(userID int, documentPath string) error {
 	}
 	return nil
 }
-
-

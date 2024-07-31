@@ -60,6 +60,7 @@ func WithJWTAuth(handlerFunc http.HandlerFunc, store types.UserStore) http.Handl
 		userContext := types.UserContext{
 			ID:   u.ID,
 			Role: u.Role,
+			Verified: u.Verified,
 		}
 		
 		// Add the user to the context

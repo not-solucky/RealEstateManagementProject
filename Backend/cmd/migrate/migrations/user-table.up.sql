@@ -1,4 +1,4 @@
-CREATE TABLE Users (
+CREATE TABLE users (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(255) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -11,9 +11,9 @@ CREATE TABLE Users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-INSERT INTO Users (username, email, password, phone_number, role, is_verified, image) VALUES ('NestNavigator Admin', 'admin@nestnavigator.com', 'admin123', '1234567890', 'admin', TRUE, "null");
+INSERT INTO users (username, email, password, phone_number, role, is_verified, image) VALUES ('NestNavigator Admin', 'admin@nestnavigator.com', 'admin123', '1234567890', 'admin', TRUE, "null");
 
-CREATE TABLE UserDocuments (
+CREATE TABLE userdocuments (
     document_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     document_type ENUM('passport', 'driver_license', 'identity_card') NOT NULL,
@@ -21,12 +21,12 @@ CREATE TABLE UserDocuments (
     is_verified BOOLEAN DEFAULT FALSE,
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     verified_at TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 -- Property related tables --
 
-CREATE TABLE Properties (
+CREATE TABLE properties (
     property_id INT PRIMARY KEY AUTO_INCREMENT,
     owner_id INT NOT NULL,
     title VARCHAR(100) NOT NULL,
@@ -54,28 +54,28 @@ CREATE TABLE Properties (
     is_verified BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (owner_id) REFERENCES Users(user_id)
+    FOREIGN KEY (owner_id) REFERENCES users(user_id)
 );
 
-CREATE TABLE PropertyDocuments (
+CREATE TABLE propertydocuments (
     document_id INT PRIMARY KEY AUTO_INCREMENT,
     property_id INT NOT NULL,
     document_url VARCHAR(255) NOT NULL,
     is_verified BOOLEAN DEFAULT FALSE,
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     verified_at TIMESTAMP,
-    FOREIGN KEY (property_id) REFERENCES Properties(property_id)
+    FOREIGN KEY (property_id) REFERENCES properties(property_id)
 );
 
-CREATE TABLE PropertyPhotos (
+CREATE TABLE propertyphotos (
     photo_id INT PRIMARY KEY AUTO_INCREMENT,
     property_id INT NOT NULL,
     photo_url VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (property_id) REFERENCES Properties(property_id)
+    FOREIGN KEY (property_id) REFERENCES properties(property_id)
 );
 
-CREATE TABLE Transactions (
+CREATE TABLE transactions (
     transaction_id INT PRIMARY KEY AUTO_INCREMENT,
     property_id INT NOT NULL,
     buyer_id INT,
@@ -84,35 +84,35 @@ CREATE TABLE Transactions (
     transaction_type ENUM('purchase', 'rent') NOT NULL,
     status ENUM('pending', 'completed', 'cancelled') NOT NULL,
     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (property_id) REFERENCES Properties(property_id),
-    FOREIGN KEY (buyer_id) REFERENCES Users(user_id),
-    FOREIGN KEY (renter_id) REFERENCES Users(user_id)
+    FOREIGN KEY (property_id) REFERENCES properties(property_id),
+    FOREIGN KEY (buyer_id) REFERENCES users(user_id),
+    FOREIGN KEY (renter_id) REFERENCES users(user_id)
 );
 
-CREATE TABLE Payments (
+CREATE TABLE payments (
     payment_id INT PRIMARY KEY AUTO_INCREMENT,
     transaction_id INT NOT NULL,
     payment_method ENUM('credit_card', 'paypal', 'bank_transfer') NOT NULL,
     payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     amount DECIMAL(10, 2) NOT NULL,
     status ENUM('pending', 'completed', 'failed') NOT NULL,
-    FOREIGN KEY (transaction_id) REFERENCES Transactions(transaction_id)
+    FOREIGN KEY (transaction_id) REFERENCES transactions(transaction_id)
 );
 
-CREATE TABLE Reviews (
+CREATE TABLE reviews (
     review_id INT PRIMARY KEY AUTO_INCREMENT,
     property_id INT NOT NULL,
     reviewer_id INT NOT NULL,
     rating INT CHECK (rating >= 1 AND rating <= 5),
     comment TEXT,
     review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (property_id) REFERENCES Properties(property_id),
-    FOREIGN KEY (reviewer_id) REFERENCES Users(user_id)
+    FOREIGN KEY (property_id) REFERENCES properties(property_id),
+    FOREIGN KEY (reviewer_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE featured_properties (
     property_id INT PRIMARY KEY,
-    FOREIGN KEY (property_id) REFERENCES Properties(property_id)
+    FOREIGN KEY (property_id) REFERENCES properties(property_id)
 );
 
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './App.css'
 
 import Navbar from './components/Navbar/Navbar'
@@ -9,19 +10,23 @@ import Propertiespage from './pages/propertiespage/Properties'
 import Servicespage from './pages/servicespage/Service'
 import Signinpage from './pages/loginpage/Signin'
 import Signuppage from './pages/loginpage/Signup'
+
+// admin panel
 import AdminPanel from './Dashboard/Admin/Dashboard'
 import AddUserPage from './Dashboard/Pages/Adduser/AddUser'
 import VerifyUserPage from './Dashboard/Pages/VerifyUser/VerifyUser'
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-
 import AllUser from './Dashboard/Pages/Alluser/AllUser'
 import UserProfile from './Dashboard/Pages/UserProfile/UserProfile'
 import UserVerification from './Dashboard/Pages/UserVerification'
+import AddProperty from './Dashboard/Pages/Addproperty/AddProperty';
+
+
 import { getID, setProfile } from './utils/localstorage'
 import { useLocation } from 'react-router-dom'
 
 
 import { UserApi } from './api/user'
+import SalePage from './pages/salepage/Salepage';
 
 
 function App() {
@@ -53,6 +58,7 @@ function App() {
             {!location.pathname.startsWith('/dashboard') && <Navbar loading = {loading}/>}
             <Routes>
                 <Route path="/" element={<Homepage />} />
+                <Route path="/buyproperty" element = {<SalePage />} />
                 <Route path="/about" element={<Aboutpage />} />
                 <Route path="/properties" element={<Propertiespage />} />
                 <Route path="/services" element={<Servicespage />} />
@@ -66,6 +72,7 @@ function App() {
                     <Route path="userverification" element={<UserVerification />} />
                     <Route path='adduser' element={<AddUserPage />} />
                     <Route path='verifyuser' element={<VerifyUserPage />} />
+                    <Route path='addproperty' element={<AddProperty />} />
                 </Route>
             </Routes>
         </>

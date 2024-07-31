@@ -3,6 +3,7 @@ package api
 import (
 	"database/sql"
 	"learninggo/service/image"
+	"learninggo/service/property"
 	"learninggo/service/user"
 	"log"
 	"net/http"
@@ -31,7 +32,12 @@ func (s *APIServer) Run() error {
 	userStore := user.NewStore(s.db)
 	userHandler := user.NewHandler(userStore)
 	userHandler.RegisterRoutes(subrouter)
-	log.Println("Starting server on", s.addr)
+
+	PropertyStore := property.NewStore(s.db)
+	propertyHandler := property.NewHandler(PropertyStore, userStore)
+	propertyHandler.RegisterRoutes(subrouter)
+
+	log.Println("Starting server", s.addr)
 
 	imageHandler := image.NewHandler()
 	imageHandler.RegisterRoutes(subrouter)

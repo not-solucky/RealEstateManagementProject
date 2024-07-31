@@ -39,7 +39,24 @@ func (s *Store) UpdateUserPassword(id int, password string) error {
 	if err != nil {
 		return err
 	}
-	
+
+	return nil
+}
+
+func (s *Store) UpdateUserImage(id int, image string) error {
+
+	_, err := s.DB.Exec("UPDATE users SET image = ? WHERE user_id = ?", image, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *Store) UpdateUserEmail(id int, email string) error {
+	_, err := s.DB.Exec("UPDATE users SET email = ? WHERE user_id = ?", email, id)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
