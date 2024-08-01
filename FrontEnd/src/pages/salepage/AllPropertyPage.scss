@@ -136,7 +136,9 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 30px;
-            margin-top: 50px;
+            margin: 50px auto;
+
+
             .card{
                 border-radius: 12px;
                 border: 1px solid var(--gray-15);
@@ -182,6 +184,20 @@
                             
                         }
 
+                    }
+                    .address{
+                        display: flex;
+                        gap: 6px;
+                        align-items: center;
+                        p{
+                            font-size: var(--extra-small);
+                            font-weight: var(--font-weight-medium);
+                            color: var(--gray-60);
+
+                            border: 1px solid var(--gray-15);
+                            border-radius: 30px;
+                            padding: 5px 20px;
+                        }
                     }
                     
                     .card-footer{
@@ -271,6 +287,19 @@
                     
                 }
             }
+        }
+        .message{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 40px 0;
+            p{
+                font-size: var(--extra-small);
+                font-weight: var(--font-weight-medium);
+                color: var(--gray-60);
+            }
+            
         }
         
     }

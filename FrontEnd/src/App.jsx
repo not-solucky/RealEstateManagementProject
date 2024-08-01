@@ -27,6 +27,7 @@ import { useLocation } from 'react-router-dom'
 
 import { UserApi } from './api/user'
 import SalePage from './pages/salepage/Salepage';
+import RentPage from './pages/rentpage/Rentpage';
 
 
 function App() {
@@ -59,8 +60,8 @@ function App() {
             <Routes>
                 <Route path="/" element={<Homepage />} />
                 <Route path="/buyproperty" element = {<SalePage />} />
+                <Route path="/rentproperty" element = {<RentPage />} />
                 <Route path="/about" element={<Aboutpage />} />
-                <Route path="/properties" element={<Propertiespage />} />
                 <Route path="/services" element={<Servicespage />} />
                 <Route path="/signin" element={<Signinpage loggedin = {setIsloggedin}/>} />
                 <Route path="/signup" element={<Signuppage />} />

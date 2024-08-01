@@ -14,12 +14,16 @@ function Card ({props}){
                     <h3>{props.title}</h3>
                     <p>{props.description}</p>
                 </div>
+                <div className="address">
+                    <p>{props.city}, {props.state}</p>
+
+                </div>
                 <div className="card-footer">
                     <div className="price-box">
                         <p>Price</p>
                         <h2>{props.price}</h2>
                     </div>
-                    <button>View Property Details</button>
+                    <button>Property Details</button>
                 </div>
             </div>
         </div>
@@ -38,13 +42,31 @@ function SalePage() {
         Limit   : 24,
         page    : 1,
     });
-    const handleFilter = async () => {
-        console.log(filters);
+    const [message, setMessage] = useState("");
+    const [page, setPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(1);
+
+    const GetProperty = async () => {
         const { statusCode, data } = await PropertyApi.GetSaleProperties(filters);
         if (statusCode === 200) {
-            setProperties(data);
-
+            setProperties(data.properties);
+            if (data.length === 0) {
+                setMessage("No Property Found");
+            } else {
+                setMessage("");
+                setTotalPage(Math.ceil(data.count/filters.Limit));
+                
+            }
+        } else {
+            setMessage(data.error);
         }
+    };
+    const handleFilter = () => {
+        setFilters({
+            ...filters,
+            page: 1,
+        });
+        GetProperty();
     };
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -53,6 +75,11 @@ function SalePage() {
             [name]: value,
         });
     };
+
+    useEffect(() => {
+        handleFilter();
+    }
+    , []);
 
 
     return (
@@ -63,7 +90,7 @@ function SalePage() {
                     <div className="search-container">
                         
                         <div className="filter-item">
-                            <h2>Find your Dream Property</h2>
+                            <h2>Buy your Dream Property</h2>
                             <div className="search">
                                 <input 
                                     type="text" 
@@ -144,7 +171,9 @@ function SalePage() {
                         {properties.map((property, index) => {
                             return <Card key={index} props={property} />
                         })}
+                        
                     </div>
+                    {message && <div className="message"><p>{message}</p></div>}
                 </div>
             </div>
         </>
