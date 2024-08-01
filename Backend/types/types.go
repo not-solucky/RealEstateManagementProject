@@ -22,7 +22,7 @@ type PropertyStore interface {
 	CreateHouse(payload PropertyHousePayload) error
 	CreateApartment(payload PropertyApartmentPayload) error
 	CreateCommercial(payload PropertyCommercialPayload) error
-	GetSaleProperty(payload PropertyFilters) ([]*Property, error)
+	GetAllProperty(payload PropertyFilters, ptype string) ([]*Property,int, error)
 }
 
 type ImageStore interface {
@@ -115,6 +115,11 @@ type Property struct {
 	Status           string  `json:"status"`
 	Verified         bool    `json:"is_verified"`
 	Image            string  `json:"photo_url"`
+}
+
+type AllProperty struct {
+	Properties []*Property `json:"properties"`
+	Count      int        `json:"count"`
 }
 type PropertyHouse struct {
 	ID               int     `json:"property_id"`

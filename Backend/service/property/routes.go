@@ -29,6 +29,7 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/property/create/apartment", auth.WithJWTAuth(h.handleCreateApartment, h.Ustore)).Methods("POST")
 	router.HandleFunc("/property/create/commercial", auth.WithJWTAuth(h.handleCreateCommercial, h.Ustore)).Methods("POST")
 	router.HandleFunc("/getsaleproperty", h.handleGetSaleProperty).Methods("GET")
+	router.HandleFunc("/getrentproperty", h.handleGetRentProperty).Methods("GET")
 }
 
 func parseFilters(r *http.Request) types.PropertyFilters {
@@ -63,15 +64,34 @@ func parseFilters(r *http.Request) types.PropertyFilters {
 
 	return filters
 }
-func (h *Handler) handleGetSaleProperty(w http.ResponseWriter, r *http.Request) {
+
+func (h *Handler) handleGetRentProperty(w http.ResponseWriter, r *http.Request) {
 	filters := parseFilters(r)
-	properties, err := h.store.GetSaleProperty(filters)
+	properties,count, err := h.store.GetAllProperty(filters, "rent")
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
 	}
+	output := types.AllProperty{
+		Properties: properties,
+		Count:      count,
+	}
+	utils.WriteJSON(w, http.StatusOK, output)
 
-	utils.WriteJSON(w, http.StatusOK, properties)
+}
+func (h *Handler) handleGetSaleProperty(w http.ResponseWriter, r *http.Request) {
+	filters := parseFilters(r)
+	properties,count, err := h.store.GetAllProperty(filters, "sale")
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+	output := types.AllProperty{
+		Properties: properties,
+		Count:      count,
+	}
+
+	utils.WriteJSON(w, http.StatusOK, output)
 
 }
 func (h *Handler) handleCreateHouse(w http.ResponseWriter, r *http.Request) {
