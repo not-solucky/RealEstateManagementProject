@@ -2,6 +2,7 @@ package property
 
 import (
 	"database/sql"
+	"fmt"
 
 	"learninggo/types"
 	"learninggo/utils"
@@ -100,7 +101,7 @@ func (s *Store) CreateCommercial(payload types.PropertyCommercialPayload) error 
 	return nil
 }
 
-func (s *Store) GetSaleProperty(filters types.PropertyFilters) ([]*types.Property, error) {
+func (s *Store) GetAllProperty(filters types.PropertyFilters, ptype string) ([]*types.Property,int, error) {
 	offset := (filters.Page - 1) * filters.Limit
 	query := `SELECT p.property_id, p.owner_id, p.title, p.description, p.price, p.property_type, p.property_category, p.state, p.city, p.status, p.is_verified, pp.photo_url
 	          FROM properties p
@@ -109,62 +110,96 @@ func (s *Store) GetSaleProperty(filters types.PropertyFilters) ([]*types.Propert
 	              FROM propertyphotos
 	              GROUP BY property_id
 	          ) pp ON p.property_id = pp.property_id
-	          WHERE p.property_type = 'sale' AND p.status = 'available' AND p.is_verified = true`
+	          WHERE p.status = 'available' AND p.is_verified = true`
+
+	countQuery := `SELECT COUNT(*) FROM properties p WHERE p.status = 'available' AND p.is_verified = true`
+
+	if ptype == "rent" {
+		query += " AND p.property_type = 'rent'"
+		countQuery += " AND p.property_type = 'rent'"
+	} else {
+		query += " AND p.property_type = 'sale'"
+		countQuery += " AND p.property_type = 'sale'"
+	}
 
 	args := []interface{}{}
+	countArgs := []interface{}{}
 	if filters.Category != "" && filters.Category != "all" {
 		query += " AND property_category = ?"
+		countQuery += " AND property_category = ?"
 		args = append(args, filters.Category)
+		countArgs = append(countArgs, filters.Category)
 
 	}
 
 	if filters.State != "" {
 		query += " AND state = ?"
+		countQuery += " AND state = ?"
 		args = append(args, filters.State)
+		countArgs = append(countArgs, filters.State)
 
 	}
 
 	if filters.City != "" {
 		query += " AND city = ?"
+		countQuery += " AND city = ?"
 		args = append(args, filters.City)
+		countArgs = append(countArgs, filters.City)
 
 	}
 
 	if filters.PriceMin > 0 {
 		query += " AND price >= ?"
+		countQuery += " AND price >= ?"
 		args = append(args, filters.PriceMin)
+		countArgs = append(countArgs, filters.PriceMin)
 
 	}
 
 	if filters.PriceMax > 0 {
 		query += " AND price <= ?"
+		countQuery += " AND price <= ?"
 		args = append(args, filters.PriceMax)
+		countArgs = append(countArgs, filters.PriceMax)
 
 	}
 
 	if filters.Search != "" {
 		query += " AND (title LIKE ? OR description LIKE ?)"
+		countQuery += " AND (title LIKE ? OR description LIKE ?)"
 		searchTerm := "%" + filters.Search + "%"
 		args = append(args, searchTerm, searchTerm)
+		countArgs = append(countArgs, searchTerm, searchTerm)
 
 	}
 
 	query += " ORDER BY property_id LIMIT ? OFFSET ?"
+
 	args = append(args, filters.Limit, offset)
 	rows, err := s.DB.Query(query, args...)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
+
 	properties := make([]*types.Property, 0)
 
 	for rows.Next() {
 		p, err := s.ScanRowToProperty(rows)
 		if err != nil {
-			return nil, err
+			return nil, 0, err
 		}
 		properties = append(properties, p)
 	}
-	return properties, nil
+
+	countRow := s.DB.QueryRow(countQuery, countArgs...)
+	var count int
+	err = countRow.Scan(&count)
+
+	if err != nil {
+		return nil, 0, err
+	}
+	fmt.Print(count)
+	return properties, count, nil
 
 }
 
