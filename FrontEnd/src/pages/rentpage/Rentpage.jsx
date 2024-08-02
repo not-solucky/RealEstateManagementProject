@@ -46,6 +46,14 @@ function RentPage() {
         page: 1,
     });
 
+    const ScrolltoTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    };
+
+    const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
     const [message, setMessage] = useState("");
     const GetProperty = async () => {
@@ -172,6 +180,46 @@ function RentPage() {
                         {properties.map((property, index) => {
                             return <Card key={index} props={property} />;
                         })}
+                    </div>
+                    <div className="pagination">
+                        <div className="count">
+                            <p>Page {page} of {totalPage}</p>
+                        </div>
+                        <div className="button-container">
+                            <button 
+                                className={`${page !== 1 ? 'enabled' : ''}`}
+                                onClick={() => {
+                                    if (page > 1) {
+                                        setPage(page - 1);
+                                        setFilters({
+                                            ...filters,
+                                            page: page - 1,
+                                        });
+                                        GetProperty();
+                                        ScrolltoTop();
+                                    }
+                                }}
+                            >
+                                Previous
+                            </button>
+                            
+                            <button 
+                                className={`${page !== totalPage ? 'enabled' : ''}`}
+                                onClick={() => {
+                                    if (page < totalPage) {
+                                        setPage(page + 1);
+                                        setFilters({
+                                            ...filters,
+                                            page: page + 1,
+                                        });
+                                        GetProperty();
+                                        ScrolltoTop();
+                                    }
+                                }}
+                            >
+                                Next
+                            </button>
+                        </div>
                     </div>
                     {message && (
                         <div className="message">

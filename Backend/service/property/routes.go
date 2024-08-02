@@ -50,7 +50,7 @@ func parseFilters(r *http.Request) types.PropertyFilters {
 
 	filters.Search = query.Get("search")
 
-	if limit, err := strconv.Atoi(query.Get("limit")); err == nil {
+	if limit, err := strconv.Atoi(query.Get("Limit")); err == nil {
 		filters.Limit = limit
 	} else {
 		filters.Limit = 24 // default limit
