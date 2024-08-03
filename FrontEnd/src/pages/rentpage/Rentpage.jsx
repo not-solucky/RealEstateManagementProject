@@ -44,6 +44,8 @@ function RentPage() {
         search: "",
         Limit: 15,
         page: 1,
+        type: "rent",
+        
     });
 
     const ScrolltoTop = () => {
