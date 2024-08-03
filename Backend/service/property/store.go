@@ -2,10 +2,9 @@ package property
 
 import (
 	"database/sql"
-	"fmt"
-
 	"learninggo/types"
 	"learninggo/utils"
+	"strings"
 	// "log"
 )
 
@@ -55,6 +54,7 @@ func (s *Store) CreateHouse(payload types.PropertyHousePayload) error {
 	}
 	return nil
 }
+
 func (s *Store) CreateApartment(payload types.PropertyApartmentPayload) error {
 
 	result, err := s.DB.Exec("INSERT INTO properties (owner_id, title, description, price, property_type, property_category, state, city, postal_code,street_no, street_name, house_no, room_count, bathroom_count, size, balcony_count, parking_facility, floor_no) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", payload.Owner, payload.Title, payload.Description, payload.Price, payload.PropertyType, payload.PropertyCategory, payload.State, payload.City, payload.Postal, payload.StreetNo, payload.StreetName, payload.HouseNo, payload.RoomCount, payload.BathroomCount, payload.Size, payload.BalconyCount, payload.ParkingFacility, payload.FloorNo)
@@ -101,90 +101,99 @@ func (s *Store) CreateCommercial(payload types.PropertyCommercialPayload) error 
 	return nil
 }
 
-func (s *Store) GetAllProperty(filters types.PropertyFilters, ptype string) ([]*types.Property,int, error) {
+func (s *Store) GetAllProperty(filters types.PropertyFilters, image bool) ([]*types.Property, int, error) {
 	offset := (filters.Page - 1) * filters.Limit
-	query := `SELECT p.property_id, p.owner_id, p.title, p.description, p.price, p.property_type, p.property_category, p.state, p.city, p.status, p.is_verified, pp.photo_url
-	          FROM properties p
-	          LEFT JOIN (
-	              SELECT property_id, MIN(photo_url) as photo_url
-	              FROM propertyphotos
-	              GROUP BY property_id
-	          ) pp ON p.property_id = pp.property_id
-	          WHERE p.status = 'available' AND p.is_verified = true`
 
-	countQuery := `SELECT COUNT(*) FROM properties p WHERE p.status = 'available' AND p.is_verified = true`
-
-	if ptype == "rent" {
-		query += " AND p.property_type = 'rent'"
-		countQuery += " AND p.property_type = 'rent'"
-	} else {
-		query += " AND p.property_type = 'sale'"
-		countQuery += " AND p.property_type = 'sale'"
+	query := `SELECT p.property_id, p.owner_id, p.title, p.description, p.price, p.property_type, p.property_category, p.state, p.city, p.status, p.is_verified`
+	if image {
+		query += `, pp.photo_url`
 	}
 
-	args := []interface{}{}
-	countArgs := []interface{}{}
+	query += ` FROM properties p`
+	if image {
+		query += ` LEFT JOIN (SELECT property_id, MIN(photo_url) as photo_url FROM propertyphotos GROUP BY property_id) pp ON p.property_id = pp.property_id`
+	}
+
+	countQuery := `SELECT COUNT(*) FROM properties p`
+	if image {
+		countQuery += ` LEFT JOIN (SELECT property_id, MIN(photo_url) as photo_url FROM propertyphotos GROUP BY property_id) pp ON p.property_id = pp.property_id`
+	}
+
+	var conditions []string
+	var args []interface{}
+	var countArgs []interface{}
+
+	if filters.Type == "rent" {
+		conditions = append(conditions, "p.property_type = 'rent'")
+	} else if filters.Type == "sale" {
+		conditions = append(conditions, "p.property_type = 'sale'")
+	}
+
+	if filters.Verified == "yes" {
+		conditions = append(conditions, "p.is_verified = true")
+	} else if filters.Verified == "no" {
+		conditions = append(conditions, "p.is_verified = false")
+	}
+
+	if filters.Status != "" && filters.Status != "all" {
+		conditions = append(conditions, "p.status = ?")
+		args = append(args, filters.Status)
+		countArgs = append(countArgs, filters.Status)
+	}
+
 	if filters.Category != "" && filters.Category != "all" {
-		query += " AND property_category = ?"
-		countQuery += " AND property_category = ?"
+		conditions = append(conditions, "p.property_category = ?")
 		args = append(args, filters.Category)
 		countArgs = append(countArgs, filters.Category)
-
 	}
 
 	if filters.State != "" {
-		query += " AND state = ?"
-		countQuery += " AND state = ?"
+		conditions = append(conditions, "p.state = ?")
 		args = append(args, filters.State)
 		countArgs = append(countArgs, filters.State)
-
 	}
 
 	if filters.City != "" {
-		query += " AND city = ?"
-		countQuery += " AND city = ?"
+		conditions = append(conditions, "p.city = ?")
 		args = append(args, filters.City)
 		countArgs = append(countArgs, filters.City)
-
 	}
 
 	if filters.PriceMin > 0 {
-		query += " AND price >= ?"
-		countQuery += " AND price >= ?"
+		conditions = append(conditions, "p.price >= ?")
 		args = append(args, filters.PriceMin)
 		countArgs = append(countArgs, filters.PriceMin)
-
 	}
 
 	if filters.PriceMax > 0 {
-		query += " AND price <= ?"
-		countQuery += " AND price <= ?"
+		conditions = append(conditions, "p.price <= ?")
 		args = append(args, filters.PriceMax)
 		countArgs = append(countArgs, filters.PriceMax)
-
 	}
 
 	if filters.Search != "" {
-		query += " AND (title LIKE ? OR description LIKE ?)"
-		countQuery += " AND (title LIKE ? OR description LIKE ?)"
+		conditions = append(conditions, "(p.title LIKE ? OR p.description LIKE ?)")
 		searchTerm := "%" + filters.Search + "%"
 		args = append(args, searchTerm, searchTerm)
 		countArgs = append(countArgs, searchTerm, searchTerm)
-
 	}
 
-	query += " ORDER BY property_id LIMIT ? OFFSET ?"
+	if len(conditions) > 0 {
+		query += " WHERE " + strings.Join(conditions, " AND ")
+		countQuery += " WHERE " + strings.Join(conditions, " AND ")
+	}
 
+	query += " ORDER BY p.property_id LIMIT ? OFFSET ?"
 	args = append(args, filters.Limit, offset)
 	rows, err := s.DB.Query(query, args...)
 	if err != nil {
 		return nil, 0, err
 	}
+	defer rows.Close()
 
 	properties := make([]*types.Property, 0)
-
 	for rows.Next() {
-		p, err := s.ScanRowToProperty(rows)
+		p, err := s.ScanRowToProperty(rows, image)
 		if err != nil {
 			return nil, 0, err
 		}
@@ -194,33 +203,52 @@ func (s *Store) GetAllProperty(filters types.PropertyFilters, ptype string) ([]*
 	countRow := s.DB.QueryRow(countQuery, countArgs...)
 	var count int
 	err = countRow.Scan(&count)
-
 	if err != nil {
 		return nil, 0, err
 	}
-	fmt.Print(count)
-	return properties, count, nil
 
+	return properties, count, nil
 }
 
-func (s *Store) ScanRowToProperty(row *sql.Rows) (*types.Property, error) {
+func (s *Store) ScanRowToProperty(row *sql.Rows, image bool) (*types.Property, error) {
 	p := new(types.Property)
-	err := row.Scan(
-		&p.ID,
-		&p.Owner,
-		&p.Title,
-		&p.Description,
-		&p.Price,
-		&p.PropertyType,
-		&p.PropertyCategory,
-		&p.State,
-		&p.City,
-		&p.Status,
-		&p.Verified,
-		&p.Image,
-	)
-	if err != nil {
-		return nil, err
+
+	if image {
+		err := row.Scan(
+			&p.ID,
+			&p.Owner,
+			&p.Title,
+			&p.Description,
+			&p.Price,
+			&p.PropertyType,
+			&p.PropertyCategory,
+			&p.State,
+			&p.City,
+			&p.Status,
+			&p.Verified,
+			&p.Image,
+		)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		err := row.Scan(
+			&p.ID,
+			&p.Owner,
+			&p.Title,
+			&p.Description,
+			&p.Price,
+			&p.PropertyType,
+			&p.PropertyCategory,
+			&p.State,
+			&p.City,
+			&p.Status,
+			&p.Verified,
+		)
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	return p, nil
 }
