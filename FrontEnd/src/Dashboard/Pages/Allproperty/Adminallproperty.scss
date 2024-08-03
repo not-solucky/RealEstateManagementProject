@@ -1,0 +1,132 @@
+.allproperty-container{
+    padding: 36px 36px 12px  36px;
+    .title{
+        h2{
+            font-size: var(--big);
+            margin-bottom: 20px;
+        
+        }
+    }
+    .subcontainer{
+        .property-table{
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            .table-header{
+                background-color: var(--purple-60);
+                color: white;
+                th{
+                    padding: 10px;
+                    text-align: left;
+                    font-size: var(--extra-small);
+                }
+            }
+            .table-body{
+                tr{
+                    border-bottom: 1px solid var(--light);
+                    td{
+                        padding: 10px;
+                        font-size: var(--extra-small);
+                    }
+
+                    &:nth-child(even){
+                        background-color: var(--gray-15);
+                    }
+                    &:hover{
+                        background-color: var(--gray-30);
+                    }
+                }
+            }
+        }
+        .filter{
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            
+            .row{
+                display: flex;
+                justify-content: space-between;
+                gap: 20px;
+                .option-groups{
+                    display: flex;
+                    gap: 20px;
+                    border: 1px solid var(--gray-15);
+                    padding: 20px;
+                    .filter-group{
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+                        label{
+                            font-size: var(--extra-small);
+                            margin-right: 10px;
+                            color: var(--gray-50);
+                        }
+                        select{
+                            padding: 5px 10px;
+                            font-size: var(--extra-small);
+                            background-color: var(--gray-15);
+                            border: none;
+                            border-radius: 6px;
+                        }
+                    }
+                    
+                }
+                .field-groups{
+                    display: flex;
+                    gap: 20px;
+                    border: 1px solid var(--gray-15);
+                    padding: 20px;
+                    align-items: center;
+                    justify-content: center;
+                    .field-group{
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+                        flex: 1;
+                        flex-wrap: wrap;
+                        label{
+                            font-size: var(--extra-small);
+                            margin-right: 10px;
+                            color: var(--gray-50);
+                        }
+                        input{
+                            padding: 5px 10px;
+                            font-size: var(--extra-small);
+                            background-color: var(--gray-15);
+                            border: none;
+                            border-radius: 6px;
+                            width: 100%;
+                        }
+                    }
+                }
+
+            }
+            .search-bar{
+                display: flex;
+                gap: 20px;
+                border: 1px solid var(--gray-15);
+                padding: 20px;
+                input{
+                    padding: 5px 10px;
+                    font-size: var(--extra-small);
+                    background-color: var(--gray-15);
+                    border: none;
+                    border-radius: 6px;
+                    width: 100%;
+                    max-width: 400px;
+                }
+                button{
+                    padding: 10px 24px;
+                    font-size: var(--extra-small);
+                    background-color: var(--purple-60);
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                }
+
+            }
+        }
+
+    }
+}

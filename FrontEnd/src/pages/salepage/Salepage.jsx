@@ -39,7 +39,7 @@ function SalePage() {
         priceMin: "",
         priceMax: "",
         search  : "",
-        Limit   : 1,
+        Limit   : 15,
         page    : 1,
     });
     const [message, setMessage] = useState("");
@@ -73,6 +73,7 @@ function SalePage() {
             ...filters,
             page: 1,
         });
+        setPage(1);
         GetProperty();
     };
     const handleInputChange = (e) => {

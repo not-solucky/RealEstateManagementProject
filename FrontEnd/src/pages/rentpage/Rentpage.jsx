@@ -42,7 +42,7 @@ function RentPage() {
         priceMin: "",
         priceMax: "",
         search: "",
-        Limit: 24,
+        Limit: 15,
         page: 1,
     });
 
@@ -75,6 +75,7 @@ function RentPage() {
             ...filters,
             page: 1,
         });
+        setPage(1);
         GetProperty();
     };
     const handleInputChange = (e) => {

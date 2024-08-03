@@ -14,6 +14,8 @@ function DashboardSidebar() {
                     <NavLink to="adduser"> Add User</NavLink>
                     <NavLink to="verifyuser"> Verify User</NavLink>
                     <NavLink to="addproperty">Add Property</NavLink>
+                    <NavLink to="allsaleproperty">All Property for Sale</NavLink>
+                    <NavLink to="allrentproperty">All Property for Rent</NavLink>
                 </div>
                 <div className="dashboard-exit">
                     <div className="line"></div>
