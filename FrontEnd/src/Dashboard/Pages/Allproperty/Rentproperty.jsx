@@ -18,6 +18,7 @@ function Adminrentproperty() {
         city: "",
         search: "",
         page: 1,
+        type: "rent"
 
     });
 
@@ -126,7 +127,7 @@ function Adminrentproperty() {
                             <th>ID</th>
                             <th>Title</th>
                             <th>Type</th>
-                            <th>Price</th>
+                            <th>Rent</th>
                             <th>Status</th>
                             <th>Verified</th>
                         </tr>
