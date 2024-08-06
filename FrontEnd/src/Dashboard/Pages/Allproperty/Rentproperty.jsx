@@ -18,7 +18,8 @@ function Adminrentproperty() {
         city: "",
         search: "",
         page: 1,
-        type: "rent"
+        type: "rent",
+        Limit: 15,
 
     });
 
@@ -30,8 +31,14 @@ function Adminrentproperty() {
         setPage(1);
         GetProperty();
     };
-
+    const ScrolltoTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    };
     const GetProperty = async () => {
+        setMessage("Loading...");
         const { statusCode, data } = await PropertyApi.AdminGetAllProperty(filters);
         if (statusCode === 200) {
             setProperties(data.properties);
@@ -145,6 +152,51 @@ function Adminrentproperty() {
                         ))}
                     </tbody>
                 </table>
+                {message && (
+                    <div className="message">
+                        <p>{message}</p>
+                    </div>
+                )}
+                <div className="pagination">
+                    <div className="count">
+                        <p>Page {page} of {totalPage}</p>
+                    </div>
+                    <div className="button-container">
+                        <button 
+                            className={`${page !== 1 ? 'enabled' : ''}`}
+                            onClick={() => {
+                                if (page > 1) {
+                                    setPage(page - 1);
+                                    setFilters({
+                                        ...filters,
+                                        page: page - 1,
+                                    });
+                                    GetProperty();
+                                    ScrolltoTop();
+                                }
+                            }}
+                        >
+                            Previous
+                        </button>
+                        
+                        <button 
+                            className={`${page !== totalPage ? 'enabled' : ''}`}
+                            onClick={() => {
+                                if (page < totalPage) {
+                                    setPage(page + 1);
+                                    setFilters({
+                                        ...filters,
+                                        page: page + 1,
+                                    });
+                                    GetProperty();
+                                    ScrolltoTop();
+                                }
+                            }}
+                        >
+                            Next
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );

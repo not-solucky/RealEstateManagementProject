@@ -19,6 +19,7 @@ function Adminsaleproperty() {
         search: "",
         page: 1,
         type: "sale",
+        Limit: 15,
 
     });
 
@@ -32,6 +33,7 @@ function Adminsaleproperty() {
     };
 
     const GetProperty = async () => {
+        setMessage("Loading...");
         const { statusCode, data } = await PropertyApi.AdminGetAllProperty(filters);
         if (statusCode === 200) {
             setProperties(data.properties);
@@ -51,6 +53,12 @@ function Adminsaleproperty() {
         setFilters({
             ...filters,
             [name]: value,
+        });
+    };
+    const ScrolltoTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
         });
     };
     useEffect(() => {
@@ -143,8 +151,54 @@ function Adminsaleproperty() {
                                 <td>{property.is_verified ? 'Yes' : 'No'}</td>
                             </tr>
                         ))}
+                        
                     </tbody>
                 </table>
+                {message && (
+                    <div className="message">
+                        <p>{message}</p>
+                    </div>
+                )}
+                <div className="pagination">
+                    <div className="count">
+                        <p>Page {page} of {totalPage}</p>
+                    </div>
+                    <div className="button-container">
+                        <button 
+                            className={`${page !== 1 ? 'enabled' : ''}`}
+                            onClick={() => {
+                                if (page > 1) {
+                                    setPage(page - 1);
+                                    setFilters({
+                                        ...filters,
+                                        page: page - 1,
+                                    });
+                                    GetProperty();
+                                    ScrolltoTop();
+                                }
+                            }}
+                        >
+                            Previous
+                        </button>
+                        
+                        <button 
+                            className={`${page !== totalPage ? 'enabled' : ''}`}
+                            onClick={() => {
+                                if (page < totalPage) {
+                                    setPage(page + 1);
+                                    setFilters({
+                                        ...filters,
+                                        page: page + 1,
+                                    });
+                                    GetProperty();
+                                    ScrolltoTop();
+                                }
+                            }}
+                        >
+                            Next
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );
