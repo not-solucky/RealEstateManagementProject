@@ -31,6 +31,7 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/getsaleproperty", h.handleGetSaleProperty).Methods("GET")
 	router.HandleFunc("/getrentproperty", h.handleGetRentProperty).Methods("GET")
 	router.HandleFunc("/admin/getallproperty", auth.WithJWTAuth(h.handleGetAllProperty, h.Ustore)).Methods("GET")
+	router.HandleFunc("/myproperty/forsale", auth.WithJWTAuth(h.handleGetMySaleProperty, h.Ustore)).Methods("GET")
 }
 
 func parseFilters(r *http.Request) types.PropertyFilters {
@@ -70,6 +71,8 @@ func parseFilters(r *http.Request) types.PropertyFilters {
 	return filters
 }
 
+func (h *Handler) handleGetMySaleProperty(w http.ResponseWriter, r *http.Request) {
+}
 func (h *Handler) handleGetAllProperty(w http.ResponseWriter, r *http.Request) {
 	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
 	userRole := contextValues.Role
