@@ -16,6 +16,7 @@ function DashboardSidebar() {
                     <NavLink to="addproperty">Add Property</NavLink>
                     <NavLink to="allsaleproperty">All Property for Sale</NavLink>
                     <NavLink to="allrentproperty">All Property for Rent</NavLink>
+                    
                     <NavLink to="activelistings">Active Listings</NavLink>
                     <NavLink to="pendinglistings">Pending Listings</NavLink>
                     <NavLink to="soldproperties">Sold Properties</NavLink>

@@ -20,6 +20,15 @@ import VerifyUserPage from "./Dashboard/Pages/VerifyUser/VerifyUser";
 import Adminsaleproperty from "./Dashboard/Pages/Allproperty/Saleproperty";
 import Adminrentproperty from "./Dashboard/Pages/Allproperty/Rentproperty";
 
+// user dashboard Property Handler
+import ActiveListings from "./Dashboard/Pages/Myproperty/ActiveListings";
+import PendingListings from "./Dashboard/Pages/Myproperty/PendingListings";
+import RentListings from "./Dashboard/Pages/Myproperty/RentListings";
+import SoldListings from "./Dashboard/Pages/Myproperty/SoldListings";
+import MyPurchasedListings from "./Dashboard/Pages/Myproperty/MyPurchasedListings";
+import MyRentedListings from "./Dashboard/Pages/Myproperty/MyRentedListings";
+
+
 import { useLocation } from "react-router-dom";
 import { getID, setProfile } from "./utils/localstorage";
 
@@ -76,6 +85,12 @@ function App() {
                     <Route path="addproperty" element={<AddProperty />} />
                     <Route path="allsaleproperty" element={<Adminsaleproperty />} />
                     <Route path="allrentproperty" element={<Adminrentproperty />} />
+                    <Route path="activelistings" element={<ActiveListings />} />
+                    <Route path="pendinglistings" element={<PendingListings />} />
+                    <Route path="rentproperties" element={<RentListings />} />
+                    <Route path="soldproperties" element={<SoldListings />} />
+                    <Route path="mypurchasedproperites" element={<MyPurchasedListings />} />
+                    <Route path="myrentedproperties" element={<MyRentedListings />} />
                 </Route>
             </Routes>
         </>
