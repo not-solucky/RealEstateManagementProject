@@ -32,6 +32,7 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/getrentproperty", h.handleGetRentProperty).Methods("GET")
 	router.HandleFunc("/admin/getallproperty", auth.WithJWTAuth(h.handleGetAllProperty, h.Ustore)).Methods("GET")
 	router.HandleFunc("/myproperty/forsale", auth.WithJWTAuth(h.handleGetMySaleProperty, h.Ustore)).Methods("GET")
+	router.HandleFunc("/getproperty/{id}", h.handleGetProperty).Methods("GET")
 }
 
 func parseFilters(r *http.Request) types.PropertyFilters {
@@ -69,6 +70,23 @@ func parseFilters(r *http.Request) types.PropertyFilters {
 	filters.Status = query.Get("status")
 
 	return filters
+}
+
+func (h *Handler) handleGetProperty(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid id"))
+		return
+	}
+
+	property, err := h.store.GetPropertyByID(id)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, property)
 }
 
 func (h *Handler) handleGetMySaleProperty(w http.ResponseWriter, r *http.Request) {

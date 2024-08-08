@@ -22,7 +22,8 @@ type PropertyStore interface {
 	CreateHouse(payload PropertyHousePayload) error
 	CreateApartment(payload PropertyApartmentPayload) error
 	CreateCommercial(payload PropertyCommercialPayload) error
-	GetAllProperty(payload PropertyFilters, image bool) ([]*Property,int, error)
+	GetAllProperty(payload PropertyFilters, image bool) ([]*Property, int, error)
+	GetPropertyByID(id int) (*PropertyFull, error)
 }
 
 type ImageStore interface {
@@ -36,7 +37,6 @@ type UserContext struct {
 }
 
 // Define Prperty type
-
 
 // Define Image type
 type Image struct {

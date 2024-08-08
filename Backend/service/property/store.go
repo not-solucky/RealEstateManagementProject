@@ -210,6 +210,26 @@ func (s *Store) GetAllProperty(filters types.PropertyFilters, image bool) ([]*ty
 	return properties, count, nil
 }
 
+func (s *Store) GetPropertyByID(id int) (*types.PropertyFull, error) {
+	rows, err := s.DB.Query("SELECT * FROM properties WHERE property_id = ?", id)
+	if err != nil {
+		return nil, err
+	}
+
+	p := new(types.PropertyFull)
+	for rows.Next() {
+		p, err = s.ScanRowToPropertyFull(rows)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if p.ID == 0 {
+		return nil, nil
+	}
+
+	return p, nil
+}
 func (s *Store) ScanRowToProperty(row *sql.Rows, image bool) (*types.Property, error) {
 	p := new(types.Property)
 
@@ -248,6 +268,93 @@ func (s *Store) ScanRowToProperty(row *sql.Rows, image bool) (*types.Property, e
 		if err != nil {
 			return nil, err
 		}
+	}
+
+	return p, nil
+}
+
+func (s *Store) ScanRowToPropertyFull(row *sql.Rows) (*types.PropertyFull, error) {
+	p := new(types.PropertyFull)
+
+	var houseNo sql.NullInt32
+	var roomCount sql.NullInt32
+	var bathroomCount sql.NullInt32
+	var size sql.NullInt32
+	var balconyCount sql.NullInt32
+	var parkingFacility sql.NullBool
+	var floorNo sql.NullInt32
+	var floorCount sql.NullInt32
+
+	err := row.Scan(
+		&p.ID,
+		&p.Owner,
+		&p.Title,
+		&p.Description, // Description (nullable)
+		&p.Price,
+		&p.PropertyType,
+		&p.PropertyCategory,
+		&p.State,
+		&p.City,
+		&p.Postal,
+		&p.StreetNo,
+		&p.StreetName,
+		&houseNo,         // HouseNo (nullable)
+		&roomCount,       // RoomCount (nullable)
+		&bathroomCount,   // BathroomCount (nullable)
+		&size,            // Size (nullable)
+		&balconyCount,    // BalconyCount (nullable)
+		&parkingFacility, // ParkingFacility (nullable)
+		&floorNo,         // FloorNo (nullable)
+		&floorCount,      // FloorCount (nullable)
+		&p.Status,
+		&p.Verified,
+		&p.CreatedAt,
+		&p.UpdatedAt,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	// Assign nullable values to PropertyFull fields
+	if houseNo.Valid {
+		p.HouseNo = &houseNo.Int32
+	} else {
+		p.HouseNo = nil
+	}
+	if roomCount.Valid {
+		p.RoomCount = &roomCount.Int32
+	} else {
+		p.RoomCount = nil
+	}
+	if bathroomCount.Valid {
+		p.BathroomCount = &bathroomCount.Int32
+	} else {
+		p.BathroomCount = nil
+	}
+	if size.Valid {
+		p.Size = &size.Int32
+	} else {
+		p.Size = nil
+	}
+	if balconyCount.Valid {
+		p.BalconyCount = &balconyCount.Int32
+	} else {
+		p.BalconyCount = nil
+	}
+	if parkingFacility.Valid {
+		p.ParkingFacility = &parkingFacility.Bool
+	} else {
+		p.ParkingFacility = nil
+	}
+	if floorNo.Valid {
+		p.FloorNo = &floorNo.Int32
+	} else {
+		p.FloorNo = nil
+	}
+	if floorCount.Valid {
+		p.FloorCount = &floorCount.Int32
+	} else {
+		p.FloorCount = nil
 	}
 
 	return p, nil

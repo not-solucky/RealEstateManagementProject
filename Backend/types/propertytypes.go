@@ -1,5 +1,9 @@
 package types
 
+import (
+	"time"
+)
+
 type PropertyFilters struct {
 	Type     string
 	Category string
@@ -157,4 +161,31 @@ type PropertyCommercialPayload struct {
 	ParkingFacility  bool     `json:"parking" validate:"required"`
 	FloorNo          int      `json:"floor_no" validate:"required"`
 	Image            []string `json:"image" validate:"required"`
+}
+
+type PropertyFull struct {
+	ID               int       `json:"id"`
+	Owner            int       `json:"owner"`
+	Title            string    `json:"title"`
+	Description      string   `json:"description"` // Nullable
+	Price            float64   `json:"price"`
+	PropertyType     string    `json:"property_type"`
+	PropertyCategory string    `json:"property_category"`
+	State            string    `json:"state"`
+	City             string    `json:"city"`
+	Postal           string    `json:"postal"`
+	StreetNo         int       `json:"street_no"`
+	StreetName       string    `json:"street_name"`
+	HouseNo          *int32    `json:"house_no,omitempty"`         // Nullable
+	RoomCount        *int32    `json:"room_count,omitempty"`       // Nullable
+	BathroomCount    *int32    `json:"bathroom_count,omitempty"`   // Nullable
+	Size             *int32    `json:"size,omitempty"`             // Nullable
+	BalconyCount     *int32    `json:"balcony_count,omitempty"`    // Nullable
+	ParkingFacility  *bool     `json:"parking_facility,omitempty"` // Nullable
+	FloorNo          *int32    `json:"floor_no,omitempty"`         // Nullable
+	FloorCount       *int32    `json:"floor_count,omitempty"`      // Nullable
+	Status           string    `json:"status"`
+	Verified         bool      `json:"verified"`
+	CreatedAt        time.Time `json:"created_at"`
+	UpdatedAt        time.Time `json:"updated_at"`
 }
