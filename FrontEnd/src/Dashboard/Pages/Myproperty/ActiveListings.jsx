@@ -1,4 +1,5 @@
 import "./Myproperty.scss";
+import { Card } from "./Components";
 
 function ActiveListings() {
     return (
