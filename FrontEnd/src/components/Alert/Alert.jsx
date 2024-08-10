@@ -14,5 +14,5 @@ function Alert({payload, func}) {
         </>
     );
 }
-
+// Alert component
 export default Alert;
