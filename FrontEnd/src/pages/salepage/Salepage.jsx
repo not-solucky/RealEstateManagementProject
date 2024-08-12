@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { PropertyApi } from "../../api/property";
 import { ImageApi } from "../../api/image";
 import "./AllPropertyPage.scss";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 function Card ({props}){
     return (
@@ -45,6 +46,19 @@ function SalePage() {
     const [message, setMessage] = useState("");
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    // get url params
+
+    const updateURLWithFilters = () => {
+        const params = new URLSearchParams();
+        for (const key in filters) {
+            if (filters[key] && key !== "Limit") {
+                params.set(key, filters[key]);
+            }
+        }
+        navigate(`/buyproperty?${params.toString()}`);
+    };
 
     const ScrolltoTop = () => {
         window.scrollTo({
@@ -68,13 +82,8 @@ function SalePage() {
             setMessage(data.error);
         }
     };
-    const handleFilter = () => {
-        setFilters({
-            ...filters,
-            page: 1,
-        });
-        setPage(1);
-        GetProperty();
+    const handleFilterChange = () => {
+        updateURLWithFilters();
     };
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -85,9 +94,16 @@ function SalePage() {
     };
 
     useEffect(() => {
-        handleFilter();
-    }
-    , []);
+        const updatedFilters = { ...filters };
+        for (const [key, value] of searchParams.entries()) {
+            if (value) {
+                updatedFilters[key] = value;
+            }
+        }
+        setFilters(updatedFilters);
+
+        GetProperty();
+    }, [searchParams]);
 
 
     return (
@@ -96,7 +112,6 @@ function SalePage() {
                 <div className="background-container">
                     <div className="background"></div>
                     <div className="search-container">
-                        
                         <div className="filter-item">
                             <h2>Buy your Dream Property</h2>
                             <div className="search">
@@ -108,13 +123,13 @@ function SalePage() {
                                     onChange={handleInputChange}
                                     onKeyUp={(e) => {
                                         if (e.key === "Enter") {
-                                            handleFilter();
+                                            handleFilterChange();
                                         }
                                     }
                                 } 
                                 />
                                 <div className="button-container">
-                                    <button onClick={handleFilter}>Search</button>
+                                    <button onClick={updateURLWithFilters}>Search</button>
                                 </div>
                             </div>
                         </div>
@@ -172,7 +187,7 @@ function SalePage() {
                         </div>
                         
                         <div className="filter-item">
-                            <button onClick={handleFilter}>Filter</button>
+                            <button onClick={handleFilterChange}>Filter</button>
                         </div>
                     </div>
                     <div className="card-container">
