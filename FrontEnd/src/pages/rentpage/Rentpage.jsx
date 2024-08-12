@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { PropertyApi } from "../../api/property";
 import { ImageApi } from "../../api/image";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 function Card({ props }) {
     return (
@@ -48,6 +49,22 @@ function RentPage() {
         
     });
 
+    const [message, setMessage] = useState("");
+    const [page, setPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(1);
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+
+    const updateURLWithFilters = () => {
+        const params = new URLSearchParams();
+        for (const key in filters) {
+            if (filters[key] && key !== "Limit") {
+                params.set(key, filters[key]);
+            }
+        }
+        navigate(`/rentproperty?${params.toString()}`);
+    };
+
     const ScrolltoTop = () => {
         window.scrollTo({
             top: 0,
@@ -55,9 +72,6 @@ function RentPage() {
         });
     };
 
-    const [page, setPage] = useState(1);
-    const [totalPage, setTotalPage] = useState(1);
-    const [message, setMessage] = useState("");
     const GetProperty = async () => {
         const { statusCode, data } = await PropertyApi.GetRentProperties(filters);
         if (statusCode === 200) {
@@ -72,13 +86,10 @@ function RentPage() {
             setMessage(data.error);
         }
     };
-    const handleFilter = () => {
-        setFilters({
-            ...filters,
-            page: 1,
-        });
-        setPage(1);
-        GetProperty();
+
+
+    const handleFilterChange = () => {
+        updateURLWithFilters();
     };
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -89,8 +100,18 @@ function RentPage() {
     };
 
     useEffect(() => {
-        handleFilter();
-    }, []);
+        const updatedFilters = { ...filters };
+        for (const [key, value] of searchParams.entries()) {
+            if (value) {
+                updatedFilters[key] = value;
+            }
+        }
+        setFilters(updatedFilters);
+
+        GetProperty();
+    }, [searchParams]);
+
+
 
     return (
         <>
@@ -109,12 +130,12 @@ function RentPage() {
                                     onChange={handleInputChange}
                                     onKeyUp={(e) => {
                                         if (e.key === "Enter") {
-                                            handleFilter();
+                                            handleFilterChange();
                                         }
                                     }}
                                 />
                                 <div className="button-container">
-                                    <button onClick={handleFilter}>Search</button>
+                                    <button onClick={handleFilterChange}>Search</button>
                                 </div>
                             </div>
                         </div>
@@ -176,7 +197,7 @@ function RentPage() {
                         </div>
 
                         <div className="filter-item">
-                            <button onClick={handleFilter}>Filter</button>
+                            <button onClick={handleFilterChange}>Filter</button>
                         </div>
                     </div>
                     <div className="card-container">
