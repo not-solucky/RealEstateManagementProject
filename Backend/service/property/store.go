@@ -5,7 +5,6 @@ import (
 	"learninggo/types"
 	"learninggo/utils"
 	"strings"
-	// "log"
 )
 
 type Store struct {
@@ -230,132 +229,44 @@ func (s *Store) GetPropertyByID(id int) (*types.PropertyFull, error) {
 
 	return p, nil
 }
-func (s *Store) ScanRowToProperty(row *sql.Rows, image bool) (*types.Property, error) {
-	p := new(types.Property)
 
-	if image {
-		err := row.Scan(
-			&p.ID,
-			&p.Owner,
-			&p.Title,
-			&p.Description,
-			&p.Price,
-			&p.PropertyType,
-			&p.PropertyCategory,
-			&p.State,
-			&p.City,
-			&p.Status,
-			&p.Verified,
-			&p.Image,
-		)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		err := row.Scan(
-			&p.ID,
-			&p.Owner,
-			&p.Title,
-			&p.Description,
-			&p.Price,
-			&p.PropertyType,
-			&p.PropertyCategory,
-			&p.State,
-			&p.City,
-			&p.Status,
-			&p.Verified,
-		)
-		if err != nil {
-			return nil, err
-		}
+func (s *Store) DashGetPropertyVerified(id int)([]*types.DashPropertyVerified, error) {
+	rows, err := s.DB.Query(`SELECT p.property_id, p.title, p.description, p.price, p.property_type, p.property_category, p.state, p.city, GROUP_CONCAT(pp.photo_url) AS photo_urls, p.is_verified FROM 
+    properties p JOIN propertyphotos pp ON p.property_id = pp.property_id WHERE p.is_verified = 1 AND p.owner_id = ? GROUP BY p.property_id ORDER BY 
+        p.property_id DESC`, id)
+
+	if err != nil {
+		return nil , err
 	}
+	
+	properties := make([]*types.DashPropertyVerified, 0)
+	for rows.Next(){
+		p, err := s.ScanRowToDashPropertyVerified(rows)
 
-	return p, nil
+		if err != nil {
+			return nil, err
+		}
+		properties = append(properties, p)
+	}
+	return properties, nil
 }
 
-func (s *Store) ScanRowToPropertyFull(row *sql.Rows) (*types.PropertyFull, error) {
-	p := new(types.PropertyFull)
-
-	var houseNo sql.NullInt32
-	var roomCount sql.NullInt32
-	var bathroomCount sql.NullInt32
-	var size sql.NullInt32
-	var balconyCount sql.NullInt32
-	var parkingFacility sql.NullBool
-	var floorNo sql.NullInt32
-	var floorCount sql.NullInt32
-
-	err := row.Scan(
-		&p.ID,
-		&p.Owner,
-		&p.Title,
-		&p.Description, // Description (nullable)
-		&p.Price,
-		&p.PropertyType,
-		&p.PropertyCategory,
-		&p.State,
-		&p.City,
-		&p.Postal,
-		&p.StreetNo,
-		&p.StreetName,
-		&houseNo,         // HouseNo (nullable)
-		&roomCount,       // RoomCount (nullable)
-		&bathroomCount,   // BathroomCount (nullable)
-		&size,            // Size (nullable)
-		&balconyCount,    // BalconyCount (nullable)
-		&parkingFacility, // ParkingFacility (nullable)
-		&floorNo,         // FloorNo (nullable)
-		&floorCount,      // FloorCount (nullable)
-		&p.Status,
-		&p.Verified,
-		&p.CreatedAt,
-		&p.UpdatedAt,
-	)
+func (s *Store) DashGetPropertyNotVerified(id int) ([]*types.DashPropertyNotVerified, error){
+	rows, err := s.DB.Query(`SELECT p.property_id, p.title, p.description, p.price, p.property_type, p.property_category, p.state, p.city, GROUP_CONCAT(pp.photo_url) AS photo_urls, p.is_verified,pd.document_id, pd.status FROM properties p LEFT JOIN propertyphotos pp ON p.property_id = pp.property_id LEFT JOIN propertydocuments pd ON p.property_id = pd.property_id WHERE 
+    p.is_verified = 0 AND p.owner_id = ? GROUP BY p.property_id, pd.document_id, pd.status ORDER BY 
+        p.property_id DESC;`, id)
 	if err != nil {
-		return nil, err
+		return nil , err
 	}
 
-	// Assign nullable values to PropertyFull fields
-	if houseNo.Valid {
-		p.HouseNo = &houseNo.Int32
-	} else {
-		p.HouseNo = nil
-	}
-	if roomCount.Valid {
-		p.RoomCount = &roomCount.Int32
-	} else {
-		p.RoomCount = nil
-	}
-	if bathroomCount.Valid {
-		p.BathroomCount = &bathroomCount.Int32
-	} else {
-		p.BathroomCount = nil
-	}
-	if size.Valid {
-		p.Size = &size.Int32
-	} else {
-		p.Size = nil
-	}
-	if balconyCount.Valid {
-		p.BalconyCount = &balconyCount.Int32
-	} else {
-		p.BalconyCount = nil
-	}
-	if parkingFacility.Valid {
-		p.ParkingFacility = &parkingFacility.Bool
-	} else {
-		p.ParkingFacility = nil
-	}
-	if floorNo.Valid {
-		p.FloorNo = &floorNo.Int32
-	} else {
-		p.FloorNo = nil
-	}
-	if floorCount.Valid {
-		p.FloorCount = &floorCount.Int32
-	} else {
-		p.FloorCount = nil
-	}
+	properties := make([]*types.DashPropertyNotVerified, 0)
 
-	return p, nil
+	for rows.Next(){
+		p, err := s.ScanRowToDashPropertyNotVerified(rows)
+		if err != nil {
+			return nil, err
+		}
+		properties = append(properties, p)
+	}
+	return properties, nil
 }

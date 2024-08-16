@@ -167,7 +167,7 @@ type PropertyFull struct {
 	ID               int       `json:"id"`
 	Owner            int       `json:"owner"`
 	Title            string    `json:"title"`
-	Description      string   `json:"description"` // Nullable
+	Description      string    `json:"description"` // Nullable
 	Price            float64   `json:"price"`
 	PropertyType     string    `json:"property_type"`
 	PropertyCategory string    `json:"property_category"`
@@ -188,4 +188,32 @@ type PropertyFull struct {
 	Verified         bool      `json:"verified"`
 	CreatedAt        time.Time `json:"created_at"`
 	UpdatedAt        time.Time `json:"updated_at"`
+}
+
+type DashPropertyVerified struct {
+	PropertyID  int      `json:"property_id"`
+	Title       string   `json:"title"`
+	Description string   `json:"description"`
+	Price		float64 	 `json:"price"`
+	Type        string   `json:"type"`
+	Category    string   `json:"category"`
+	State       string   `json:"state"`
+	City        string   `json:"city"`
+	PhotoURLs   []string `json:"photo_urls"`
+	IsVerified  bool     `json:"is_verified"`
+}
+
+type DashPropertyNotVerified struct {
+	PropertyID  int      `json:"property_id"`
+	Title       string   `json:"title"`
+	Description string   `json:"description"`
+	Price		float64 	 `json:"price"`
+	Type        string   `json:"type"`
+	Category    string   `json:"category"`
+	State       string   `json:"state"`
+	City        string   `json:"city"`
+	PhotoURLs   []string `json:"photo_urls"`
+	IsVerified  bool     `json:"is_verified"`
+	DocumentID  *int64   `json:"document_id"` // Pointer to int64 for nullable field
+	Status      *string  `json:"status"`      // Pointer to string for nullable field
 }

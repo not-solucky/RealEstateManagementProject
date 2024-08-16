@@ -24,6 +24,9 @@ type PropertyStore interface {
 	CreateCommercial(payload PropertyCommercialPayload) error
 	GetAllProperty(payload PropertyFilters, image bool) ([]*Property, int, error)
 	GetPropertyByID(id int) (*PropertyFull, error)
+	// dashboardfuncs
+	DashGetPropertyVerified(id int) ([]*DashPropertyVerified, error)
+	DashGetPropertyNotVerified(id int) ([]*DashPropertyNotVerified, error)
 }
 
 type ImageStore interface {
