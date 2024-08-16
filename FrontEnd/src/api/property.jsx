@@ -122,11 +122,28 @@ const DashGetPendingListings = async () => {
         return { statusCode: 500, data: { error: "Error Connecting to Server" } };
     }
 };
+
+const GetPropertyById = async (id) => {
+    try {
+        const response = await fetch(`${config.baseURL}/getproperty/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const data = await response.json();
+        return { statusCode: response.status, data: data };
+    } catch (error) {
+        console.error(error);
+        return { statusCode: 500, data: { error: "Error Connecting to Server" } };
+    }
+};
 export const PropertyApi = {
     AddProperty,
     GetSaleProperties,
     GetRentProperties,
     AdminGetAllProperty,
     DashGetActiveListings,
-    DashGetPendingListings
+    DashGetPendingListings,
+    GetPropertyById,
 };

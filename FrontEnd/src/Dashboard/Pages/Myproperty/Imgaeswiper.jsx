@@ -2,14 +2,14 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { ImageApi } from '../../api/image';
+import { ImageApi } from "../../../api/image";
 
 import './imageswiper.scss';
 function ImageSwiper({ images }) {
     return (
         <>
             <section className="imageswiper-section">
-                <div className="container">
+                <div className="property-container">
                     <div className="swiper-content">
                         <Swiper
                             className='swiper-container'
