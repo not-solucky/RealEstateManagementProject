@@ -13,7 +13,6 @@ const buildQueryParams = (filters) => {
     }
     return query.toString();
 };
-
 const AddProperty = async (payload) => {
     const token = getToken();
     try {
@@ -33,7 +32,6 @@ const AddProperty = async (payload) => {
         return { statusCode: 500, data: { error: "Error Connecting to Server" } };
     }
 };
-
 const GetSaleProperties = async (filter) => {
     try {
         const query = buildQueryParams(filter);
@@ -66,7 +64,6 @@ const GetRentProperties = async (filter) => {
         return { statusCode: 500, data: { error: "Error Connecting to Server" } };
     }
 };
-
 const AdminGetAllProperty = async (filter) => {
     const token = getToken();
     try {
@@ -86,11 +83,50 @@ const AdminGetAllProperty = async (filter) => {
         console.error(error);
         return { statusCode: 500, data: { error: "Error Connecting to Server" } };
     }
-}
+};
+const DashGetActiveListings = async () => {
+    const token = getToken();
+    try {
+        const response = await fetch(`${config.baseURL}/dashboard/getactivelistings`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
 
+            },
+        });
+        const data = await response.json();
+        return { statusCode: response.status, data: data };
+    }
+    catch (error) {
+        console.error(error);
+        return { statusCode: 500, data: { error: "Error Connecting to Server" } };
+    }
+};
+const DashGetPendingListings = async () => {
+    const token = getToken();
+    try {
+        const response = await fetch(`${config.baseURL}/dashboard/getpendinglistings`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+
+            },
+        });
+        const data = await response.json();
+        return { statusCode: response.status, data: data };
+    }
+    catch (error) {
+        console.error(error);
+        return { statusCode: 500, data: { error: "Error Connecting to Server" } };
+    }
+};
 export const PropertyApi = {
     AddProperty,
     GetSaleProperties,
     GetRentProperties,
     AdminGetAllProperty,
+    DashGetActiveListings,
+    DashGetPendingListings
 };

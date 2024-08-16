@@ -4,6 +4,11 @@ import { ImageApi } from "../../api/image";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 function Card({ props }) {
+
+    const navigate = useNavigate();
+    const handleButtonClick = () => {
+        navigate(`/rentproperty/${props.property_id}`);
+    }
     return (
         <div className="card">
             <div className="card-image">
@@ -27,7 +32,7 @@ function Card({ props }) {
                         <p>Rent</p>
                         <h2>{props.price}</h2>
                     </div>
-                    <button>Property Details</button>
+                    <button onClick={handleButtonClick}>Property Details</button>
                 </div>
             </div>
         </div>

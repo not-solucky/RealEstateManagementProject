@@ -8,6 +8,7 @@ import Homepage from "./pages/homepage/Home";
 import Signinpage from "./pages/loginpage/Signin";
 import Signuppage from "./pages/loginpage/Signup";
 import Servicespage from "./pages/servicespage/Service";
+import Propertiespage from "./pages/propertiespage/Properties";
 
 // admin panel
 import AdminPanel from "./Dashboard/Admin/Dashboard";
@@ -68,8 +69,8 @@ function App() {
                 <Route path="/" element={<Homepage />} />
                 <Route path="/buyproperty" element={<SalePage />} />
                 <Route path="/rentproperty" element={<RentPage />} />
-                <Route path="/buyproperty/:id" element={<SalePage />} />
-                <Route path="/rentproperty/:id" element={<RentPage />} />
+                <Route path="/buyproperty/:id" element={<Propertiespage />} />
+                <Route path="/rentproperty/:id" element={<Propertiespage />} />
                 <Route path="/about" element={<Aboutpage />} />
                 <Route path="/services" element={<Servicespage />} />
                 <Route

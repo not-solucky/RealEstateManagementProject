@@ -5,6 +5,11 @@ import "./AllPropertyPage.scss";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 function Card ({props}){
+    const navigate = useNavigate();
+    const handleButtonClick = () => {
+        navigate(`/rentproperty/${props.property_id}`);
+    }
+
     return (
         <div className="card">
             <div className="card-image">
@@ -24,7 +29,7 @@ function Card ({props}){
                         <p>Price</p>
                         <h2>{props.price}</h2>
                     </div>
-                    <button>Property Details</button>
+                    <button onClick={handleButtonClick}>Property Details</button>
                 </div>
             </div>
         </div>
@@ -67,16 +72,15 @@ function SalePage() {
         });
     };
 
-    const GetProperty = async () => {
-        const { statusCode, data } = await PropertyApi.GetSaleProperties(filters);
+    const GetProperty = async (filterParams) => {
+        const { statusCode, data } = await PropertyApi.GetSaleProperties(filterParams);
         if (statusCode === 200) {
             setProperties(data.properties);
-            if (data.length === 0) {
+            if (data.properties.length === 0) {
                 setMessage("No Property Found");
             } else {
                 setMessage("");
-                setTotalPage(Math.ceil(data.count/filters.Limit));
-                
+                setTotalPage(Math.ceil(data.count / filterParams.Limit));
             }
         } else {
             setMessage(data.error);
@@ -101,8 +105,7 @@ function SalePage() {
             }
         }
         setFilters(updatedFilters);
-
-        GetProperty();
+        GetProperty(updatedFilters);
     }, [searchParams]);
 
 
