@@ -3,6 +3,7 @@ import { PropertyApi } from "../../../api/property";
 import { ImageApi } from "../../../api/image";
 import { useEffect, useState } from "react";
 import ImageSwiper from "./Imgaeswiper";
+import { Utility } from "../../../utils/utility";
 
 function PropertyCard ({property, setShowProperty, setPropertyId}) {
     const handleClick = () => {
@@ -154,6 +155,113 @@ function PropertyInfo({property, images}) {
         <>
             <TitleSection title={property.title} price={property.price} />
             <ImageSwiper images={images} />
+            <div className="description-box">
+                <p className="dstitle">Description</p>
+                <p className="dscontent">{property.description}</p>
+                <div className="extra-info-box">
+                    <div className="column">
+                        <div className="content-box">
+                            <p className="title">Property Information</p>
+                            <div className="content">
+                                <table>
+                                    <tr>
+                                        <td>Property Type</td>
+                                        <td>{property.property_category} | For {property.property_type}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Status</td>
+                                        <td>{property.status}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Verified</td>
+                                        <td>{property.verified ? `True` : `False`}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Created At</td>
+                                        <td>{Utility.formatDate(property.created_at)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Updated At</td>
+                                        <td>{Utility.formatDate(property.updated_at)}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="content-box">
+                            <p className="title">Property Facilities</p>
+                            <div className="content">
+                                <table>
+                                    <tr>
+                                        <td>Property Size</td>
+                                        <td>{property.size} sqft</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Parking Facility</td>
+                                        <td>{property.parking_facility ? `Available` : `Not Available`}</td>
+                                    </tr>
+                                    
+                                    { property.property_category ==="house" ? 
+                                        <tr>
+                                            <td>Total Floors</td>
+                                            <td>{property.floor_count}</td>
+                                        </tr> :
+                                        <tr>
+                                            <td>Floor No</td>
+                                            <td>{property.floor_no}</td>
+                                        </tr>
+                                    }
+
+                                    { property.property_category !== "commercial" && (
+                                        <>
+                                            <tr>
+                                                <td>No. of rooms</td>
+                                                <td>{property.room_count}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>No. of bathrooms</td>
+                                                <td>{property.bathroom_count}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>No. of balconies</td>
+                                                <td>{property.balcony_count}</td>
+                                            </tr>
+                                        </>
+                                        
+                                    )}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="content-box">
+                        <p className="title">Address</p>
+                        <div className="content">
+                            <table>
+                                <tr>
+                                    <td>State</td>
+                                    <td>{property.state}</td>
+                                </tr>
+                                <tr>
+                                    <td>City</td>
+                                    <td>{property.city}</td>
+                                </tr>
+                                <tr>
+                                    <td>Postal Code</td>
+                                    <td>{property.postal}</td>
+                                </tr>
+                                <tr>
+                                    <td>Street</td>
+                                    <td>Road No. {property.street_no}, {property.street_name}</td>
+                                </tr>
+                                <tr>
+                                    <td>House No.</td>
+                                    <td>{property.house_no}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </>
     );
 }

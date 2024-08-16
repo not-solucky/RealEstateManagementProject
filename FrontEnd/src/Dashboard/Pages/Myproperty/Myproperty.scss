@@ -245,6 +245,61 @@
                     }
                 }
             }
+            .description-box{
+                margin-top: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                padding: 40px;
+                border: 1px solid var(--gray-15);
+                border-radius: 8px;
+
+                .dstitle{
+                    font-size: var(--medium);
+                    font-weight: var(--font-weight-semibold);
+                }
+                .dscontent{
+                    font-size: var(--extra-small);
+                    color: var(--gray-60);
+                    letter-spacing: 1px;
+
+                }
+                .extra-info-box{
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 40px;
+                }
+            }
+            .content-box{
+                margin-top: 20px;
+                .title{
+                    font-size: var(--medium);
+                    font-weight: var(--font-weight-semibold);
+                    margin-bottom: 20px;
+                    padding: 10px 0;
+                    border-bottom: 1px solid var(--gray-15);
+                }
+                
+                .content{
+                    table{
+                        border-collapse: collapse;
+                        tr{
+                            td{
+                                font-size: var(--extra-small);
+                                text-transform: capitalize;
+
+                                &:first-child{
+                                    font-weight: var(--font-weight-medium);
+                                    color: var(--gray-60);
+                                    padding-right: 20px;
+                                }
+                            }
+                            
+                        }
+
+                    }
+                }
+            }
         }
     }
 }

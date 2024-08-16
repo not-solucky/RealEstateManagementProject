@@ -188,6 +188,7 @@ type PropertyFull struct {
 	Verified         bool      `json:"verified"`
 	CreatedAt        time.Time `json:"created_at"`
 	UpdatedAt        time.Time `json:"updated_at"`
+	Image			 []string    `json:"photo_url"`
 }
 
 type DashPropertyVerified struct {

@@ -39,6 +39,42 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/dashboard/getpendinglistings", auth.WithJWTAuth(h.handleDashGetPendingListings, h.Ustore)).Methods("GET")
 }
 
+func parseFilters(r *http.Request) types.PropertyFilters {
+	query := r.URL.Query()
+	filters := types.PropertyFilters{}
+
+	filters.Type = query.Get("type")
+	filters.Category = query.Get("category")
+	filters.State = query.Get("state")
+	filters.City = query.Get("city")
+
+	if priceMin, err := strconv.Atoi(query.Get("priceMin")); err == nil {
+		filters.PriceMin = priceMin
+	}
+
+	if priceMax, err := strconv.Atoi(query.Get("priceMax")); err == nil {
+		filters.PriceMax = priceMax
+	}
+
+	filters.Search = query.Get("search")
+
+	if limit, err := strconv.Atoi(query.Get("Limit")); err == nil {
+		filters.Limit = limit
+	} else {
+		filters.Limit = 15 // default limit
+	}
+
+	if page, err := strconv.Atoi(query.Get("page")); err == nil {
+		filters.Page = page
+	} else {
+		filters.Page = 1 // default page
+	}
+
+	filters.Verified = query.Get("verified")
+	filters.Status = query.Get("status")
+
+	return filters
+}
 func (h *Handler) handleDashGetPendingListings(w http.ResponseWriter, r *http.Request) {
 	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
 	userID := contextValues.ID
@@ -75,42 +111,6 @@ func (h *Handler) handleDashGetActiveListings(w http.ResponseWriter, r *http.Req
 		"property": property,
 	}
 	utils.WriteJSON(w, http.StatusOK, response)
-}
-func parseFilters(r *http.Request) types.PropertyFilters {
-	query := r.URL.Query()
-	filters := types.PropertyFilters{}
-
-	filters.Type = query.Get("type")
-	filters.Category = query.Get("category")
-	filters.State = query.Get("state")
-	filters.City = query.Get("city")
-
-	if priceMin, err := strconv.Atoi(query.Get("priceMin")); err == nil {
-		filters.PriceMin = priceMin
-	}
-
-	if priceMax, err := strconv.Atoi(query.Get("priceMax")); err == nil {
-		filters.PriceMax = priceMax
-	}
-
-	filters.Search = query.Get("search")
-
-	if limit, err := strconv.Atoi(query.Get("Limit")); err == nil {
-		filters.Limit = limit
-	} else {
-		filters.Limit = 15 // default limit
-	}
-
-	if page, err := strconv.Atoi(query.Get("page")); err == nil {
-		filters.Page = page
-	} else {
-		filters.Page = 1 // default page
-	}
-
-	filters.Verified = query.Get("verified")
-	filters.Status = query.Get("status")
-
-	return filters
 }
 func (h *Handler) handleGetProperty(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)

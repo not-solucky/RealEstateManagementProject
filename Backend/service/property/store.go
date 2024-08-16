@@ -210,24 +210,59 @@ func (s *Store) GetAllProperty(filters types.PropertyFilters, image bool) ([]*ty
 }
 
 func (s *Store) GetPropertyByID(id int) (*types.PropertyFull, error) {
-	rows, err := s.DB.Query("SELECT * FROM properties WHERE property_id = ?", id)
-	if err != nil {
-		return nil, err
-	}
+    rows, err := s.DB.Query(`
+        SELECT 
+            p.property_id,
+			p.owner_id, 
+            p.title, 
+            p.description, 
+			p.price,
+			p.property_type,
+			p.property_category,
+            p.state, 
+            p.city,
+			p.postal_code,
+			p.street_no,
+			p.street_name,
+			p.house_no,
+			p.room_count,
+			p.bathroom_count,
+			p.size,
+			p.balcony_count,
+			p.parking_facility,
+			p.floor_no,
+			p.floor_count,
+			p.status,
+			p.is_verified,
+			p.created_at,
+			p.updated_at,
+            GROUP_CONCAT(pp.photo_url ORDER BY pp.photo_id) AS photo_urls
+        FROM 
+            properties p
+        LEFT JOIN 
+            propertyphotos pp ON p.property_id = pp.property_id
+        WHERE 
+            p.property_id = ?
+        GROUP BY 
+            p.property_id`, id)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
 
-	p := new(types.PropertyFull)
-	for rows.Next() {
-		p, err = s.ScanRowToPropertyFull(rows)
-		if err != nil {
-			return nil, err
-		}
-	}
+    p := new(types.PropertyFull)
+    if rows.Next() {
+        p, err = s.ScanRowToPropertyFull(rows)
+        if err != nil {
+            return nil, err
+        }
+    }
 
-	if p.ID == 0 {
-		return nil, nil
-	}
+    if p.ID == 0 {
+        return nil, nil
+    }
 
-	return p, nil
+    return p, nil
 }
 
 func (s *Store) DashGetPropertyVerified(id int)([]*types.DashPropertyVerified, error) {
