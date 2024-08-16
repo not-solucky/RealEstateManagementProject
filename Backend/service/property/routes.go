@@ -30,12 +30,57 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/property/create/commercial", auth.WithJWTAuth(h.handleCreateCommercial, h.Ustore)).Methods("POST")
 	router.HandleFunc("/getsaleproperty", h.handleGetSaleProperty).Methods("GET")
 	router.HandleFunc("/getrentproperty", h.handleGetRentProperty).Methods("GET")
+	router.HandleFunc("/getproperty/{id}", h.handleGetProperty).Methods("GET")
+	router.HandleFunc("/admin/getallproperty", auth.WithJWTAuth(h.handleGetAllProperty, h.Ustore)).Methods("GET")
+	router.HandleFunc("/myproperty/forsale", auth.WithJWTAuth(h.handleGetMySaleProperty, h.Ustore)).Methods("GET")
+
+	// dashboard content
+	router.HandleFunc("/dashboard/getactivelistings", auth.WithJWTAuth(h.handleDashGetActiveListings, h.Ustore)).Methods("GET")
+	router.HandleFunc("/dashboard/getpendinglistings", auth.WithJWTAuth(h.handleDashGetPendingListings, h.Ustore)).Methods("GET")
 }
 
+func (h *Handler) handleDashGetPendingListings(w http.ResponseWriter, r *http.Request) {
+	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
+	userID := contextValues.ID
+	property, err := h.store.DashGetPropertyNotVerified(userID)
+
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+	count := len(property) // Assuming 'property' is a slice
+
+	// Prepare the response
+	response := map[string]interface{}{
+		"count":    count,
+		"property": property,
+	}
+	utils.WriteJSON(w, http.StatusOK, response)
+}
+func (h *Handler) handleDashGetActiveListings(w http.ResponseWriter, r *http.Request) {
+	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
+	userID := contextValues.ID
+
+	property, err := h.store.DashGetPropertyVerified(userID)
+
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+	count := len(property) // Assuming 'property' is a slice
+
+	// Prepare the response
+	response := map[string]interface{}{
+		"count":    count,
+		"property": property,
+	}
+	utils.WriteJSON(w, http.StatusOK, response)
+}
 func parseFilters(r *http.Request) types.PropertyFilters {
 	query := r.URL.Query()
 	filters := types.PropertyFilters{}
 
+	filters.Type = query.Get("type")
 	filters.Category = query.Get("category")
 	filters.State = query.Get("state")
 	filters.City = query.Get("city")
@@ -53,7 +98,7 @@ func parseFilters(r *http.Request) types.PropertyFilters {
 	if limit, err := strconv.Atoi(query.Get("Limit")); err == nil {
 		filters.Limit = limit
 	} else {
-		filters.Limit = 24 // default limit
+		filters.Limit = 15 // default limit
 	}
 
 	if page, err := strconv.Atoi(query.Get("page")); err == nil {
@@ -62,12 +107,57 @@ func parseFilters(r *http.Request) types.PropertyFilters {
 		filters.Page = 1 // default page
 	}
 
+	filters.Verified = query.Get("verified")
+	filters.Status = query.Get("status")
+
 	return filters
 }
+func (h *Handler) handleGetProperty(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid id"))
+		return
+	}
 
+	property, err := h.store.GetPropertyByID(id)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, property)
+}
+func (h *Handler) handleGetMySaleProperty(w http.ResponseWriter, r *http.Request) {
+}
+func (h *Handler) handleGetAllProperty(w http.ResponseWriter, r *http.Request) {
+	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
+	userRole := contextValues.Role
+
+	if userRole != "admin" {
+		http.Error(w, "you must be an admin to view all properties", http.StatusUnauthorized)
+		return
+	}
+
+	filters := parseFilters(r)
+	properties, count, err := h.store.GetAllProperty(filters, false)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	output := types.AllProperty{
+		Properties: properties,
+		Count:      count,
+	}
+
+	utils.WriteJSON(w, http.StatusOK, output)
+}
 func (h *Handler) handleGetRentProperty(w http.ResponseWriter, r *http.Request) {
 	filters := parseFilters(r)
-	properties,count, err := h.store.GetAllProperty(filters, "rent")
+	filters.Verified = "yes"
+	filters.Status = "available"
+	properties, count, err := h.store.GetAllProperty(filters, true)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
@@ -77,11 +167,13 @@ func (h *Handler) handleGetRentProperty(w http.ResponseWriter, r *http.Request) 
 		Count:      count,
 	}
 	utils.WriteJSON(w, http.StatusOK, output)
-
 }
 func (h *Handler) handleGetSaleProperty(w http.ResponseWriter, r *http.Request) {
 	filters := parseFilters(r)
-	properties,count, err := h.store.GetAllProperty(filters, "sale")
+	filters.Verified = "yes"
+	filters.Status = "available"
+	filters.Type = "sale"
+	properties, count, err := h.store.GetAllProperty(filters, true)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
@@ -92,7 +184,6 @@ func (h *Handler) handleGetSaleProperty(w http.ResponseWriter, r *http.Request) 
 	}
 
 	utils.WriteJSON(w, http.StatusOK, output)
-
 }
 func (h *Handler) handleCreateHouse(w http.ResponseWriter, r *http.Request) {
 	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
@@ -125,7 +216,6 @@ func (h *Handler) handleCreateHouse(w http.ResponseWriter, r *http.Request) {
 
 	utils.WriteJSON(w, http.StatusOK, nil)
 }
-
 func (h *Handler) handleCreateApartment(w http.ResponseWriter, r *http.Request) {
 	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
 	userVerified := contextValues.Verified
@@ -155,7 +245,6 @@ func (h *Handler) handleCreateApartment(w http.ResponseWriter, r *http.Request) 
 	}
 
 	utils.WriteJSON(w, http.StatusOK, nil)
-
 }
 func (h *Handler) handleCreateCommercial(w http.ResponseWriter, r *http.Request) {
 	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
@@ -185,5 +274,4 @@ func (h *Handler) handleCreateCommercial(w http.ResponseWriter, r *http.Request)
 	}
 
 	utils.WriteJSON(w, http.StatusOK, nil)
-
 }
