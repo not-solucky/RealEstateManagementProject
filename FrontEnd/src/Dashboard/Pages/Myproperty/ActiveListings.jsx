@@ -76,6 +76,8 @@ function ActiveListings() {
     );
 }
 
+
+// expanded view of property
 function CardContainer({properties, setPropertyId, setShowProperty}) {
     return (
         <div className="card-container">
@@ -85,7 +87,6 @@ function CardContainer({properties, setPropertyId, setShowProperty}) {
         </div>
     );
 }
-
 function PropertyView({id, setShowProperty, setPropertyId}){
 
     const [property, setProperty] = useState({});
