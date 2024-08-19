@@ -1,9 +1,11 @@
 import "./Myproperty.scss";
 import { PropertyApi } from "../../../api/property";
 import { ImageApi } from "../../../api/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ImageSwiper from "./Imgaeswiper";
 import { Utility } from "../../../utils/utility";
+import { Cropper } from "react-advanced-cropper";
+
 
 function PropertyCard ({property, setShowProperty, setPropertyInfo}){
     const handleClick = () => {
@@ -295,18 +297,113 @@ function PropertyInfo({property, images}) {
     );
 }
 
+function ImageModal({setShowModal, setDocument}) {
+    const [image, setImage] = useState('');
+    const cropperRef = useRef(null);
+
+    const handleImageChange = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    const handleConfirm = () => {
+
+        if (image === ""){
+            return
+        }
+
+        if (cropperRef.current) {
+            const croppedImage = cropperRef.current.getCanvas().toDataURL();
+
+            setDocument(croppedImage);
+            setShowModal(false)
+        }
+        
+    }
+    const handleCancel = () => {
+        setImage(null);
+        setShowModal(false);
+    };
+
+    return(
+        <div className="modal">
+            <div className="modal-content">
+                <div className="modal-header">
+                    <h2>Upload Profile Image</h2>
+                </div>
+                <div className="image-upload">
+                    <div className="input">
+                        <input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
+                        <label htmlFor="image">Choose Image</label>
+                    </div>
+                    <div className="preview">
+                    {image ? (
+                        <div className="image-container">
+                            <Cropper
+                                ref={cropperRef}
+                                src={image}
+                                className="cropper"
+                                style={{ height: 300, width: 400 }}
+                                cropperOptions={{
+                                    aspectRatio: 2/3,
+
+                                }}
+                                aspectRatio={2/3}
+                            />
+                        </div>
+                    ) : (
+                        <div className="no-image">
+                            <p>No image selected</p>
+                        </div>
+                    )}
+                        <div className="button-container">
+                            <button onClick={handleConfirm}>Ok</button>
+                            <button onClick={handleCancel}>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
 function VerificationBox({props}) {
     const [document, setDocument] = useState(null);
     const [modal, setModal] = useState(false);
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [documentID, setDocumentID] = useState(props.documentID);
+    const submitDocumentModal = () => {
+        setModal(true);
+    }
     return(
         <>
             <div className="verification-box">
-                {documentID === null && (
-                    <p>No property document has been submitted for verification.</p>
-                )}
+                <div className="title-box">
+                    <h2>Verification</h2>
+                </div>
+                <div className="content">
+                    {documentID === null && (
+                        <div className="content">
+                            <p>No document has been submitted for verification.</p>
+                            <button onClick={submitDocumentModal}>Submit Document</button>
+                        </div>
+                    )}
+                </div>
+                {
+                    document && (
+                        <div className="document">
+                            <img src={document} alt="document" />
+                        </div>
+                    )
+                }
+                {
+                    modal && <ImageModal setShowModal={setModal} setDocument={setDocument}/>
+                }
             </div>
         </>
     );
