@@ -37,6 +37,9 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	// dashboard content
 	router.HandleFunc("/dashboard/getactivelistings", auth.WithJWTAuth(h.handleDashGetActiveListings, h.Ustore)).Methods("GET")
 	router.HandleFunc("/dashboard/getpendinglistings", auth.WithJWTAuth(h.handleDashGetPendingListings, h.Ustore)).Methods("GET")
+	router.HandleFunc("/dashboard/getdocument/{id}", auth.WithJWTAuth(h.handleDashGetDocument, h.Ustore)).Methods("GET")
+	router.HandleFunc("/dashboard/submitdocument", auth.WithJWTAuth(h.handleDashSubmitDocument, h.Ustore)).Methods("POST")
+	router.HandleFunc("/dashboard/getallpendingproperty/{page}", auth.WithJWTAuth(h.GetAllPendingProperty, h.Ustore)).Methods("GET")
 }
 
 func parseFilters(r *http.Request) types.PropertyFilters {
@@ -85,6 +88,35 @@ func (h *Handler) handleDashGetPendingListings(w http.ResponseWriter, r *http.Re
 		return
 	}
 	count := len(property) // Assuming 'property' is a slice
+
+	// Prepare the response
+	response := map[string]interface{}{
+		"count":    count,
+		"property": property,
+	}
+	utils.WriteJSON(w, http.StatusOK, response)
+}
+func (h *Handler) GetAllPendingProperty(w http.ResponseWriter, r *http.Request) {
+	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
+	if contextValues.Role != "admin" {
+		http.Error(w, "you must be an admin to view all properties", http.StatusUnauthorized)
+		return
+	}
+
+	page, err := strconv.Atoi(mux.Vars(r)["page"])
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid page number"))
+		return
+	}
+
+
+	property,count, err := h.store.GetAllPendingProperty(page)
+
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
 
 	// Prepare the response
 	response := map[string]interface{}{

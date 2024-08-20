@@ -305,3 +305,44 @@ func (s *Store) DashGetPropertyNotVerified(id int) ([]*types.DashPropertyNotVeri
 	}
 	return properties, nil
 }
+
+func (s *Store) GetAllPendingProperty(page int) ([]*types.DashPropertyNotVerified,int, error){
+	limit := 15
+	offset := (page - 1) * limit
+
+	var totalCount int
+	countQuery := `
+		SELECT 
+			COUNT(DISTINCT p.property_id) 
+		FROM 
+			properties p 
+		LEFT JOIN 
+			propertydocuments pd 
+		ON 
+			p.property_id = pd.property_id 
+		WHERE 
+			p.is_verified = 0 
+			AND pd.status = ?;`
+
+	err := s.DB.QueryRow(countQuery, "pending").Scan(&totalCount)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	rows, err := s.DB.Query(`SELECT p.property_id, p.title, p.description, p.price, p.property_type, p.property_category, p.state, p.city, GROUP_CONCAT(pp.photo_url) AS photo_urls, p.is_verified,pd.document_id, pd.status FROM properties p LEFT JOIN propertyphotos pp ON p.property_id = pp.property_id LEFT JOIN propertydocuments pd ON p.property_id = pd.property_id WHERE 
+    p.is_verified = 0 AND pd.status = ?  GROUP BY p.property_id, pd.document_id, pd.status LIMIT ? OFFSET ? ;`, "pending", limit, offset)
+	if err != nil {
+		return nil ,0, err
+	}
+
+	properties := make([]*types.DashPropertyNotVerified, 0)
+
+	for rows.Next(){
+		p, err := s.ScanRowToDashPropertyNotVerified(rows)
+		if err != nil {
+			return nil,0, err
+		}
+		properties = append(properties, p)
+	}
+	return properties,totalCount, nil
+}

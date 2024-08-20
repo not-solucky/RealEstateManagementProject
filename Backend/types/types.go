@@ -27,6 +27,12 @@ type PropertyStore interface {
 	// dashboardfuncs
 	DashGetPropertyVerified(id int) ([]*DashPropertyVerified, error)
 	DashGetPropertyNotVerified(id int) ([]*DashPropertyNotVerified, error)
+	GetDocumentByID(id int) (*PropertyDocument, error)
+	SubmitDocument(payload PropertyDocumentPayload) error
+	UpdateDocument(payload PropertyDocumentPayload) error
+	GetDocumentID(propertyID int) (int, error)
+	GetAllPendingProperty(page int) ([]*DashPropertyNotVerified,int, error)
+
 }
 
 type ImageStore interface {
