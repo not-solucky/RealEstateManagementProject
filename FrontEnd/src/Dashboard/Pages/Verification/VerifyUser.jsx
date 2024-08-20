@@ -1,4 +1,4 @@
-import "./Verifyuser.scss"
+import "./Verification.scss"
 import { useState } from "react";
 
 function UserRow({ user }) {

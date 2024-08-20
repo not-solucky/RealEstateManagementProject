@@ -4,6 +4,13 @@ function formatDate(dateString) {
     return `${date.toLocaleDateString('en-GB', options)}`;
 }
 
+function imageParser(image) {
+    const base64Image = image.split(',')[1]
+    return base64Image
+}
+
+
 export const Utility = {
-    formatDate
+    formatDate,
+    imageParser
 }

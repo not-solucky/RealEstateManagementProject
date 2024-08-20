@@ -123,6 +123,26 @@ const DashGetPendingListings = async () => {
     }
 };
 
+const DashGetPendingAllproperties = async (page) => {
+    const token = getToken();
+    try {
+        const response = await fetch(`${config.baseURL}/dashboard/getallpendingproperty/${page}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+
+            },
+        });
+        const data = await response.json();
+        return { statusCode: response.status, data: data };
+    }
+    catch (error) {
+        console.error(error);
+        return { statusCode: 500, data: { error: "Error Connecting to Server" } };
+    }
+};
+
 const GetPropertyById = async (id) => {
     try {
         const response = await fetch(`${config.baseURL}/getproperty/${id}`, {
@@ -138,6 +158,46 @@ const GetPropertyById = async (id) => {
         return { statusCode: 500, data: { error: "Error Connecting to Server" } };
     }
 };
+
+const GetDocument = async (id) => {
+    const token = getToken();
+    try {
+        const response = await fetch(`${config.baseURL}/dashboard/getdocument/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+
+            },
+        });
+        const data = await response.json();
+        return { statusCode: response.status, data: data };
+    }
+    catch (error) {
+        console.error(error);
+        return { statusCode: 500, data: { error: "Error Connecting to Server" } };
+    }
+}
+
+const SubmitDocument = async (payload) => {
+    const token = getToken();
+    try {
+        const response = await fetch(`${config.baseURL}/dashboard/submitdocument`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        return { statusCode: response.status, data: data };
+    }
+    catch (error) {
+        console.error(error);
+        return { statusCode: 500, data: { error: "Error Connecting to Server" } };
+    }
+}
 export const PropertyApi = {
     AddProperty,
     GetSaleProperties,
@@ -146,4 +206,7 @@ export const PropertyApi = {
     DashGetActiveListings,
     DashGetPendingListings,
     GetPropertyById,
+    GetDocument,
+    SubmitDocument,
+    DashGetPendingAllproperties
 };

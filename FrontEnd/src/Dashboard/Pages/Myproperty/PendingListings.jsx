@@ -106,7 +106,7 @@ function PendingListings() {
     );
 }
 
-
+// Property Card Container
 function CardContainer({properties, setPropertyInfo, setShowProperty}) {
     return (
         <div className="card-container">
@@ -116,6 +116,8 @@ function CardContainer({properties, setPropertyInfo, setShowProperty}) {
         </div>
     );
 }
+
+// Property Expanded View
 function PropertyView({ setShowProperty, setPropertyInfo, propertyInfo}) {
 
     const [property, setProperty] = useState({});
@@ -131,7 +133,6 @@ function PropertyView({ setShowProperty, setPropertyInfo, propertyInfo}) {
         if (statusCode === 200) {
             setProperty(data);
             setImages(data.photo_url);
-            console.log(data)
 
         } else {
             setMessage(data.error);
@@ -141,7 +142,6 @@ function PropertyView({ setShowProperty, setPropertyInfo, propertyInfo}) {
 
     useEffect(() => {
         GetProperty();
-
     }, []);
     return(
         <>
@@ -297,10 +297,13 @@ function PropertyInfo({property, images}) {
     );
 }
 
-function ImageModal({setShowModal, setDocument}) {
+// Property Verification Part
+function ImageModal({setShowModal,submitImagefunc}) {
     const [image, setImage] = useState('');
     const cropperRef = useRef(null);
-
+    const [loading, setLoading] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
+    const [error, setError] = useState("");
     const handleImageChange = (e) => {
         const file = e.target.files && e.target.files[0];
         if (file) {
@@ -311,20 +314,23 @@ function ImageModal({setShowModal, setDocument}) {
             reader.readAsDataURL(file);
         }
     };
-    const handleConfirm = () => {
+    const handleSubmit = async() => {
+        setLoading(true);
+        if (image) {
+            const cropped_image = cropperRef.current.getCanvas().toDataURL()
+            const imageData = Utility.imageParser(cropped_image);
+            const data = await submitImagefunc(imageData);
 
-        if (image === ""){
-            return
+            if (data.statusCode === 200) {
+                setSubmitted(true);
+                setError("");
+            } else {
+                setSubmitted(false);
+                setError(data.error);
+            }
         }
-
-        if (cropperRef.current) {
-            const croppedImage = cropperRef.current.getCanvas().toDataURL();
-
-            setDocument(croppedImage);
-            setShowModal(false)
-        }
-        
-    }
+        setLoading(false);
+    };
     const handleCancel = () => {
         setImage(null);
         setShowModal(false);
@@ -336,50 +342,116 @@ function ImageModal({setShowModal, setDocument}) {
                 <div className="modal-header">
                     <h2>Upload Profile Image</h2>
                 </div>
-                <div className="image-upload">
-                    <div className="input">
-                        <input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
-                        <label htmlFor="image">Choose Image</label>
+                {error && (
+                    <div className="error">
+                        <p>{error}</p>
                     </div>
-                    <div className="preview">
-                    {image ? (
-                        <div className="image-container">
-                            <Cropper
-                                ref={cropperRef}
-                                src={image}
-                                className="cropper"
-                                style={{ height: 300, width: 400 }}
-                                cropperOptions={{
-                                    aspectRatio: 2/3,
+                )}
+                {loading ? (
+                    <div className="loading">
+                        <p>Loading...</p>
+                    </div>) : submitted ? (
+                    <div className="success-message">
+                        <p>Image submitted successfully!</p>
+                        <button onClick={() => setShowModal(false)}>Close</button>
+                    </div> ) : (
+                    <div className="image-upload">
+                        <div className="input">
+                            <input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
+                            <label htmlFor="image">Choose Image</label>
+                        </div>
+                        <div className="preview">
+                        {image ? (
+                            <div className="image-container">
+                                <Cropper
+                                    ref={cropperRef}
+                                    src={image}
+                                    className="cropper"
+                                    style={{ height: 300, width: 400 }}
+                                    cropperOptions={{
+                                        aspectRatio: 2/3,
 
-                                }}
-                                aspectRatio={2/3}
-                            />
-                        </div>
-                    ) : (
-                        <div className="no-image">
-                            <p>No image selected</p>
-                        </div>
-                    )}
-                        <div className="button-container">
-                            <button onClick={handleConfirm}>Ok</button>
-                            <button onClick={handleCancel}>Cancel</button>
+                                    }}
+                                    aspectRatio={2/3}
+                                />
+                            </div>
+                        ) : (
+                            <div className="no-image">
+                                <p>No image selected</p>
+                            </div>
+                        )}
+                            <div className="button-container">
+                                <button onClick={handleSubmit}>Ok</button>
+                                <button onClick={handleCancel}>Cancel</button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     )
 }
 function VerificationBox({props}) {
-    const [document, setDocument] = useState(null);
-    const [modal, setModal] = useState(false);
-    const [message, setMessage] = useState("");
-    const [loading, setLoading] = useState(false);
     const [documentID, setDocumentID] = useState(props.documentID);
+    const [image, setImage] = useState(null);
+    const [showImage, setShowImage] = useState(false);
+    const [message, setMessage] = useState("");
+    const [status, setStatus] = useState("");
+    const [submitted, setSubmitted] = useState("");
+
+    const [error, setError] = useState("");
+    const [modal, setModal] = useState(false);
+    const [loading, setLoading] = useState(false);
     const submitDocumentModal = () => {
         setModal(true);
     }
+
+    const getDocument = async () => {
+        setLoading(true);
+        const { statusCode, data } = await PropertyApi.GetDocument(documentID);
+        if (statusCode === 200) {
+            setImage(data.image);
+            setMessage(data.message);
+            setStatus(data.status);
+            setSubmitted(data.submitted);
+            setError("");
+            
+        } else {
+            setError(data.error);
+        }
+        setLoading(false);
+    }
+    const submitDocumentfunc = async (image) => {
+        const payload = {
+            property_id: props.propertyID,  
+            image: image,
+        };
+        setLoading(true);
+        var error = "";
+        const { statusCode, data } = await PropertyApi.SubmitDocument(payload);
+        if (statusCode === 200) {
+            setDocumentID(data.document_id);
+            setMessage(data.message);
+            setStatus(data.status);
+            setSubmitted(data.submitted);
+            setImage(data.image);
+            setError("");
+        } else {
+            setError(data.error);
+            error = data.error;
+        }
+        setLoading(false);
+        return {
+            statusCode: statusCode,
+            error: error,
+        }
+    }
+
+    useEffect(() => {
+        if (documentID) {
+            getDocument();
+        }
+    }, [documentID]);
     return(
         <>
             <div className="verification-box">
@@ -388,22 +460,43 @@ function VerificationBox({props}) {
                 </div>
                 <div className="content">
                     {documentID === null && (
-                        <div className="content">
+                        <>
                             <p>No document has been submitted for verification.</p>
                             <button onClick={submitDocumentModal}>Submit Document</button>
-                        </div>
+                        </>
                     )}
+                    {
+                        image && (
+                            <>
+                                {status === "pending" && (
+                                    <div className="message">
+                                        <p>Pending verification. This may take upto 48 hours.</p>
+                                    </div>
+                                )}
+                                {status === "rejected" && (
+                                    <div className="message">
+                                        <p>Document rejectet for the following reasons. Please review and resubmit.</p>
+                                        <div className="message-box">
+                                            <p>{message}</p>
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="document">
+                                    <div className="dropdown">
+                                        <button onClick={() => setShowImage(!showImage)}>View Document</button>
+                                        {showImage && (
+                                            <div className="image">
+                                                <img src={ImageApi.GetStaticPropertyDocumentImage(image)} alt="document" />
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <button onClick={submitDocumentModal}>Resubmit</button>
+                            </>
+                        )
+                    }
                 </div>
-                {
-                    document && (
-                        <div className="document">
-                            <img src={document} alt="document" />
-                        </div>
-                    )
-                }
-                {
-                    modal && <ImageModal setShowModal={setModal} setDocument={setDocument}/>
-                }
+                { modal && <ImageModal setShowModal={setModal} submitImagefunc={submitDocumentfunc}/> }
             </div>
         </>
     );

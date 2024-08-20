@@ -13,6 +13,7 @@ function DashboardSidebar() {
                     <NavLink to="alluser"> All Users</NavLink>
                     <NavLink to="adduser"> Add User</NavLink>
                     <NavLink to="verifyuser"> Verify User</NavLink>
+                    <NavLink to="verifyproperty"> Verify Property</NavLink>
                     <NavLink to="addproperty">Add Property</NavLink>
                     <NavLink to="allsaleproperty">All Property for Sale</NavLink>
                     <NavLink to="allrentproperty">All Property for Rent</NavLink>
