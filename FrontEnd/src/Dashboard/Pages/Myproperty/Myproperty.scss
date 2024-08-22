@@ -300,6 +300,87 @@
                     }
                 }
             }
+            .verification-box{
+                padding: 40px;
+                border: 1px solid var(--gray-15);
+                border-radius: 8px;
+                margin-top: 20px;
+                
+                .title-box{
+                    margin-bottom: 20px;
+                    h2{
+                        font-size: var(--medium);
+                        font-weight: var(--font-weight-semibold);
+                    }
+                }
+                .content{
+                    display: flex;
+                    gap: 20px;
+                    flex-direction: column;
+                    .message{
+                        font-size: var(--extra-small);
+                        p{
+                            color: var(--gray-60);
+                        }
+                        .message-box{
+                            margin-top: 10px;
+                            border: 1px solid rgb(249, 74, 4);
+                            padding: 10px;
+                            p{
+                                color: var(--gray-60);
+                                font-size: 14px;
+                            }
+                        }
+                    }
+                    .document{
+                        .dropdown{
+                            
+                            button{
+                                text-align: left;
+                                border: 1px solid var(--gray-15);
+                                padding: 10px 20px;
+                                background-color: transparent;
+                                font-size: var(--extra-small);
+                            }
+                            .image{
+                                margin-top: 20px;
+                                display: flex;
+                                flex-direction: column;
+                                gap: 20px;
+                                img{
+                                    aspect-ratio: 2/3;
+                                    border-radius: 6px;
+                                    background-size: cover;
+                                    width: 200px;
+                                }
+                                button{
+                                    padding: 10px 20px;
+                                    font-size: 14px;
+                                    font-weight: var(--font-weight-medium);
+                                    background-color: transparent;
+                                    cursor: pointer;
+                                    color: white;
+                                    border: 1px solid var(--gray-15);
+                                    align-self: flex-start;
+                                }
+                            }
+                            
+                        }
+                    }
+                    .footer{
+                        button{
+                            padding: 10px 24px;
+                            font-size: var(--extra-small);
+                            font-weight: var(--font-weight-medium);
+                            background-color: var(--purple-60);
+                            border: none;
+                            cursor: pointer;
+                            color: white;
+                        }
+                    }
+                }
+                
+            }
         }
     }
 }

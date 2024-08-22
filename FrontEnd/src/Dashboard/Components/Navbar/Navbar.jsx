@@ -3,9 +3,12 @@ import { useState, useEffect } from 'react';
 import { isLogin, getProfile } from '../../../utils/localstorage';
 import { ImageApi } from '../../../api/image';
 
-function DashboardNavbar({loading}) {
+function DashboardNavbar({loading, toggleSidebar, setToggleSidebar}) {
     const [profile, setProfile] = useState(false);
 
+    const handleToggleSidebar = () => {
+        setToggleSidebar(!toggleSidebar);
+    }
     useEffect(() => {
         
         if (isLogin()) {
@@ -18,7 +21,7 @@ function DashboardNavbar({loading}) {
         <>
             <nav className="dashboard-navbar">
                 <div className="navbar-left">
-                    <div className="hamburger"></div>
+                    <div className="hamburger" onClick={handleToggleSidebar}></div>
                     <div className="logo">
                         <h2>Dashboard</h2>
                     </div>

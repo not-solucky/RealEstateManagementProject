@@ -29,7 +29,7 @@
                         aspect-ratio: 73/52;
                         border-radius: 6px;
                         background-size: cover;
-                        height: 200px;
+                        height: 150px;
 
                         
                     }
@@ -224,6 +224,66 @@
                             
                         }
 
+                    }
+                }
+            }
+            .verification-box{
+                padding: 40px;
+                border: 1px solid var(--gray-15);
+                border-radius: 8px;
+                margin-top: 20px;
+                
+                .title-box{
+                    margin-bottom: 20px;
+                    h2{
+                        font-size: var(--medium);
+                        font-weight: var(--font-weight-semibold);
+                    }
+                }
+                .content{
+                    display: flex;
+                    gap: 20px;
+                    flex-direction: column;
+                    .message{
+                        font-size: var(--extra-small);
+                        p{
+                            color: var(--gray-60);
+                        }
+                    }
+                    .document{
+                        .dropdown{
+                            
+                            button{
+                                text-align: left;
+                                border: 1px solid var(--gray-15);
+                                padding: 10px 20px;
+                                background-color: transparent;
+                                font-size: var(--extra-small);
+                            }
+                            .image{
+                                margin-top: 20px;
+                                display: flex;
+                                flex-direction: column;
+                                gap: 20px;
+                                img{
+                                    aspect-ratio: 2/3;
+                                    border-radius: 6px;
+                                    background-size: cover;
+                                    width: 200px;
+                                }
+                                button{
+                                    padding: 10px 20px;
+                                    font-size: 14px;
+                                    font-weight: var(--font-weight-medium);
+                                    background-color: transparent;
+                                    cursor: pointer;
+                                    color: white;
+                                    border: 1px solid var(--gray-15);
+                                    align-self: flex-start;
+                                }
+                            }
+                            
+                        }
                     }
                 }
             }

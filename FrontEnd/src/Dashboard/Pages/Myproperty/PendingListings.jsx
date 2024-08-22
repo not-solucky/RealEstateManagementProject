@@ -483,7 +483,7 @@ function VerificationBox({props}) {
                                 )}
                                 <div className="document">
                                     <div className="dropdown">
-                                        <button onClick={() => setShowImage(!showImage)}>View Document</button>
+                                        <button onClick={() => setShowImage(!showImage)}>{ showImage ? (`Close Document`) : (`View Document`)}</button>
                                         {showImage && (
                                             <div className="image">
                                                 <img src={ImageApi.GetStaticPropertyDocumentImage(image)} alt="document" />
@@ -491,7 +491,10 @@ function VerificationBox({props}) {
                                         )}
                                     </div>
                                 </div>
-                                <button onClick={submitDocumentModal}>Resubmit</button>
+                                <div className="footer">
+                                    <button onClick={submitDocumentModal}>Resubmit Document</button>
+
+                                </div>
                             </>
                         )
                     }

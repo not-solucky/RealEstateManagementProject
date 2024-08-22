@@ -12,6 +12,7 @@ function VerifyProperty() {
     const [message, setMessage] = useState("");
     const [showProperty, setShowProperty] = useState(false);
     const [propertyId, setpropertyId] = useState(null);
+    const [docID, setDocID] = useState(null);
 
     const GetProperty = async () => {
         setMessage("Loading...");
@@ -42,8 +43,8 @@ function VerifyProperty() {
                 <div className="subcontainer">
                     {count === 0 && <p>No Active Listings</p>}
                     {
-                        showProperty ? <PropertyView setShowProperty={setShowProperty} setPropertyInfo = {setpropertyId} propertyInfo = {propertyId} /> :
-                        <CardContainer properties={properties} setShowProperty={setShowProperty} setPropertyInfo={setpropertyId}/>
+                        showProperty ? <PropertyView setShowProperty={setShowProperty} setPropertyInfo = {setpropertyId} propertyInfo = {propertyId} docID={docID} setDocID={setDocID}/> :
+                        <CardContainer properties={properties} setShowProperty={setShowProperty} setPropertyInfo={setpropertyId} setDocId = {setDocID}/>
                     }
                 </div>
             </div>
@@ -51,10 +52,11 @@ function VerifyProperty() {
     );
 }
 
-function PropertyCard ({property, setShowProperty, setPropertyInfo}){
+function PropertyCard ({property, setShowProperty, setPropertyInfo, setDocID}){
     const handleClick = () => {
         setShowProperty(true);
         setPropertyInfo(property.property_id);
+        setDocID(property.document_id);
     }
 
     return (
@@ -84,18 +86,18 @@ function PropertyCard ({property, setShowProperty, setPropertyInfo}){
     );
 }
 
-function CardContainer({ properties, setShowProperty, setPropertyInfo }) {
+function CardContainer({ properties, setShowProperty, setPropertyInfo, setDocId }) {
     return (
         <div className="card-container">
             {properties.map((property) => (
-                <PropertyCard key={property.property_id} property={property} setShowProperty={setShowProperty} setPropertyInfo={setPropertyInfo} />
+                <PropertyCard key={property.property_id} property={property} setShowProperty={setShowProperty} setPropertyInfo={setPropertyInfo} setDocID={setDocId}/>
             ))}
         </div>
     );
 }
 
 
-function PropertyView({ setShowProperty, setPropertyInfo, propertyInfo}) {
+function PropertyView({ setShowProperty, setPropertyInfo, propertyInfo, docID, setDocID}) {
 
     const [property, setProperty] = useState({});
     const [message, setMessage] = useState("");
@@ -127,8 +129,12 @@ function PropertyView({ setShowProperty, setPropertyInfo, propertyInfo}) {
             </div>
             <div className="content-body">
                 {loading ? <p>Loading...</p> :
+                <>
                     <PropertyInfo property={property} images = {images} />
+                    
+                </>
                 }
+                <VerificationBox docID={docID} />
             </div>
         </>
     )
@@ -270,6 +276,92 @@ function PropertyInfo({property, images}) {
                 </div>
             </div>
             
+        </>
+    );
+}
+
+function VerificationBox({docID}) {
+    const [documentID, setDocumentID] = useState(docID);
+    const [image, setImage] = useState(null);
+    const [showImage, setShowImage] = useState(false);
+    const [message, setMessage] = useState("");
+    const [status, setStatus] = useState("");
+    const [submitted, setSubmitted] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const [toggle, setToggle] = useState(false);
+
+    const getDocument = async () => {
+        setLoading(true);
+        const { statusCode, data } = await PropertyApi.GetDocument(documentID);
+        if (statusCode === 200) {
+            setImage(data.image);
+            setMessage(data.message);
+            setStatus(data.status);
+            setSubmitted(data.submitted);
+            setError("");
+            console.log(data);
+            
+        } else {
+            setError(data.error);
+        }
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        if (documentID) {
+            console.log(documentID);
+            getDocument();
+        }
+    }, [documentID]);
+    return(
+        <>
+            <div className="verification-box">
+                <div className="title-box">
+                    <h2>Verification</h2>
+                </div>
+                <div className="content">
+                    {documentID === null && (
+                        <>
+                            <p>No document has been submitted for verification.</p>
+                        </>
+                    )}
+                    {
+                        image && (
+                            <>
+                                {status === "pending" && (
+                                    <div className="message">
+                                        <p>Verification status: Pending</p>
+                                    </div>
+                                )}
+                                {status === "rejected" && (
+                                    <div className="message">
+                                        <p>Document rejectet for the following reasons.</p>
+                                        <div className="message-box">
+                                            <p>{message}</p>
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="document">
+                                    <div className="dropdown">
+                                        <button onClick={() => setShowImage(!showImage)}>View Document</button>
+                                        {showImage && (
+                                            <div className="image">
+                                                <img src={ImageApi.GetStaticPropertyDocumentImage(image)} alt="document" />
+
+                                                <button onClick={() => setToggle(true)}>Enlarge Image</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {toggle && ( <ImageViewer src={ImageApi.GetStaticPropertyDocumentImage(image)} onClose={() => setToggle(false)} />)}
+                            </>
+                        )
+                    }
+                </div>
+            </div>
         </>
     );
 }
