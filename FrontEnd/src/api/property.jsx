@@ -198,6 +198,27 @@ const SubmitDocument = async (payload) => {
         return { statusCode: 500, data: { error: "Error Connecting to Server" } };
     }
 }
+
+const updateVerificationProperty = async (payload) => {
+    // payload = {property_id: "property_id", status: "verified", message: "message" required if rejected`}
+    const token = getToken();
+    try {
+        const response = await fetch(`${config.baseURL}/dashboard/verifyproperty`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        return { statusCode: response.status, data: data };
+    }
+    catch (error) {
+        console.error(error);
+        return { statusCode: 500, data: { error: "Error Connecting to Server" } };
+    }
+}
 export const PropertyApi = {
     AddProperty,
     GetSaleProperties,
@@ -208,5 +229,6 @@ export const PropertyApi = {
     GetPropertyById,
     GetDocument,
     SubmitDocument,
-    DashGetPendingAllproperties
+    DashGetPendingAllproperties,
+    updateVerificationProperty
 };

@@ -285,6 +285,19 @@
                             
                         }
                     }
+                    .footer{
+                        display: flex;
+                        gap: 20px;
+                        button{
+                            padding: 10px 24px;
+                            font-size: var(--extra-small);
+                            font-weight: var(--font-weight-medium);
+                            background-color: var(--purple-60);
+                            border: none;
+                            cursor: pointer;
+                            color: white;
+                        }
+                    }
                 }
             }
         }

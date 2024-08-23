@@ -134,7 +134,7 @@ function PropertyView({ setShowProperty, setPropertyInfo, propertyInfo, docID, s
                     
                 </>
                 }
-                <VerificationBox docID={docID} />
+                <VerificationBox docID={docID} pID = {propertyInfo}/>
             </div>
         </>
     )
@@ -280,89 +280,116 @@ function PropertyInfo({property, images}) {
     );
 }
 
-function VerificationBox({docID}) {
-    const [documentID, setDocumentID] = useState(docID);
+function VerificationBox({ docID, pID }) {
     const [image, setImage] = useState(null);
-    const [showImage, setShowImage] = useState(false);
-    const [message, setMessage] = useState("");
-    const [status, setStatus] = useState("");
-    const [submitted, setSubmitted] = useState("");
+    const [rejectMessage, setRejectMessage] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-
+    const [showImage, setShowImage] = useState(false);
     const [toggle, setToggle] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     const getDocument = async () => {
         setLoading(true);
-        const { statusCode, data } = await PropertyApi.GetDocument(documentID);
-        if (statusCode === 200) {
-            setImage(data.image);
-            setMessage(data.message);
-            setStatus(data.status);
-            setSubmitted(data.submitted);
-            setError("");
-            console.log(data);
-            
-        } else {
-            setError(data.error);
+        try {
+            const { statusCode, data } = await PropertyApi.GetDocument(docID);
+            if (statusCode === 200) {
+                setImage(data.image);
+                setError("");
+            } else {
+                setError(data.error || "Failed to fetch document details.");
+            }
+        } catch (error) {
+            setError("An unexpected error occurred while fetching the document.");
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
-    }
+    };
+
+    const handleApprove = async (docstatus) => {
+        if (docstatus === "rejected" && rejectMessage.trim() === "") {
+            setError("Please provide a rejection message.");
+            return;
+        }
+        setLoading(true);
+        try {
+            const payload = {
+                property_id: pID,
+                status: docstatus,
+                message: docstatus === "rejected" ? rejectMessage : null,
+            };
+            const { statusCode, data } = await PropertyApi.updateVerificationProperty(payload);
+            if (statusCode === 200) {
+                setError(""); 
+                setSuccess(true);
+            } else {
+                setError(data.error || "An error occurred during the update.");
+            }
+        } catch (error) {
+            setError("An unexpected error occurred during the update.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        if (documentID) {
-            console.log(documentID);
-            getDocument();
-        }
-    }, [documentID]);
-    return(
-        <>
-            <div className="verification-box">
-                <div className="title-box">
-                    <h2>Verification</h2>
-                </div>
-                <div className="content">
-                    {documentID === null && (
-                        <>
-                            <p>No document has been submitted for verification.</p>
-                        </>
-                    )}
-                    {
-                        image && (
+        getDocument();
+    }, [docID]);
+
+    return (
+        <div className="verification-box">
+            <div className="title-box">
+                <h2>Verification</h2>
+            </div>
+            <div className="content">
+                {loading ? (
+                    <p>Loading...</p>
+                ) : success ?(
+                    <p>Property has been {rejectMessage ? "rejected" : "approved"} successfully.</p>
+                ) : 
+                (
+                    <>
+                        {image && (
                             <>
-                                {status === "pending" && (
-                                    <div className="message">
-                                        <p>Verification status: Pending</p>
-                                    </div>
-                                )}
-                                {status === "rejected" && (
-                                    <div className="message">
-                                        <p>Document rejectet for the following reasons.</p>
-                                        <div className="message-box">
-                                            <p>{message}</p>
-                                        </div>
-                                    </div>
-                                )}
                                 <div className="document">
                                     <div className="dropdown">
                                         <button onClick={() => setShowImage(!showImage)}>View Document</button>
                                         {showImage && (
                                             <div className="image">
                                                 <img src={ImageApi.GetStaticPropertyDocumentImage(image)} alt="document" />
-
                                                 <button onClick={() => setToggle(true)}>Enlarge Image</button>
                                             </div>
                                         )}
                                     </div>
                                 </div>
-
-                                {toggle && ( <ImageViewer src={ImageApi.GetStaticPropertyDocumentImage(image)} onClose={() => setToggle(false)} />)}
+                                <div className="message">
+                                    <input
+                                        type="text"
+                                        placeholder="Rejection Message (required if rejecting)"
+                                        value={rejectMessage}
+                                        onChange={(e) => setRejectMessage(e.target.value)}
+                                    />
+                                </div>
+                                <div className="footer">
+                                    <button onClick={() => handleApprove('verified')}>Approve</button>
+                                    <button onClick={() => handleApprove('rejected')}>Reject</button>
+                                </div>
+                                {toggle && (
+                                    <ImageViewer
+                                        src={ImageApi.GetStaticPropertyDocumentImage(image)}
+                                        onClose={() => setToggle(false)}
+                                    />
+                                )}
+                                {
+                                    error && <p className="error">{error}</p>
+                                }
+                                
                             </>
-                        )
-                    }
-                </div>
+                        )}
+                    </>
+                )}
             </div>
-        </>
+        </div>
     );
 }
 export default VerifyProperty;
