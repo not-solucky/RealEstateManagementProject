@@ -2,6 +2,7 @@ package property
 
 import (
 	"fmt"
+	"learninggo/service/auth"
 	"learninggo/types"
 	"learninggo/utils"
 	"net/http"
@@ -77,4 +78,36 @@ func (h *Handler) SendDocument(documentID int, w http.ResponseWriter) {
 	}
 
 	utils.WriteJSON(w, http.StatusOK, document)
+}
+
+func (h *Handler) handleVerifyProperty(w http.ResponseWriter, r *http.Request) {
+	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
+	userRole := contextValues.Role
+
+	fmt.Print(userRole)
+
+	if userRole != "admin" {
+		utils.WriteError(w, http.StatusForbidden, fmt.Errorf("unauthorized access"))
+		return
+	}
+
+	var payload types.PropertyVerifyPayload
+	if err := utils.ParseJSON(r, &payload); err != nil {
+		fmt.Println("error")
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+	// check if payload.message is null or not
+
+	if payload.Message == "" {
+		fmt.Println("message is null")
+	}
+	
+	err := h.store.VerifyProperty(payload)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, nil)
 }

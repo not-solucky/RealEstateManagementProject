@@ -46,6 +46,7 @@ body {
     --small: 20px;
     --extra-small: 18px;
     --error: rgb(250, 96, 75);
+    --success: #9ece6a;
 }
 
 body {

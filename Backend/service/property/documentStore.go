@@ -137,6 +137,46 @@ func (s *Store) GetDocumentByID(id int) (*types.PropertyDocument, error) {
 	return document, nil
 }
 
+func (s *Store) VerifyProperty(payload types.PropertyVerifyPayload) error{
+	
+	tx, err := s.DB.Begin()
+
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
+
+	if payload.Status == "approved" {
+		_, err = tx.Exec("UPDATE propertydocuments SET is_verified = ?, status = ? WHERE property_id = ?", true, "completed", payload.PropertyID)
+
+		if err != nil {
+			return err
+		}
+
+		_, err = tx.Exec("UPDATE properties SET is_verified = ? WHERE property_id = ?", true, payload.PropertyID)
+
+		if err != nil {
+			return err
+		}
+	} else if payload.Status == "rejected" {
+
+		_, err = tx.Exec("UPDATE propertydocuments SET is_verified = ?, status = ?, message = ? WHERE property_id = ?", false, "rejected", payload.Message, payload.PropertyID)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 
 func (s *Store) PropertyDocumentScans(row *sql.Rows) (*types.PropertyDocument, error) {
 	document := new(types.PropertyDocument)

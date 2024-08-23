@@ -40,6 +40,7 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/dashboard/getdocument/{id}", auth.WithJWTAuth(h.handleDashGetDocument, h.Ustore)).Methods("GET")
 	router.HandleFunc("/dashboard/submitdocument", auth.WithJWTAuth(h.handleDashSubmitDocument, h.Ustore)).Methods("POST")
 	router.HandleFunc("/dashboard/getallpendingproperty/{page}", auth.WithJWTAuth(h.GetAllPendingProperty, h.Ustore)).Methods("GET")
+	router.HandleFunc("/dashboard/verifyproperty", auth.WithJWTAuth(h.handleVerifyProperty, h.Ustore)).Methods("POST")
 }
 
 func parseFilters(r *http.Request) types.PropertyFilters {

@@ -32,6 +32,7 @@ type PropertyStore interface {
 	UpdateDocument(payload PropertyDocumentPayload) error
 	GetDocumentID(propertyID int) (int, error)
 	GetAllPendingProperty(page int) ([]*DashPropertyNotVerified,int, error)
+	VerifyProperty(payload PropertyVerifyPayload) error
 
 }
 

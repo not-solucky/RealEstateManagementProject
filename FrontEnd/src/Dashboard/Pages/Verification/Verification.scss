@@ -250,6 +250,21 @@
                             color: var(--gray-60);
                         }
                     }
+
+                    .success{
+                        font-size: var(--extra-small);
+                        p{
+                            color: var(--success);
+                        }
+                    }
+                    .loading{
+                        display: flex;
+                        align-items: center;
+                        font-size: var(--extra-small);
+                        p{
+                            color: var(--purple-70);
+                        }
+                    }
                     .document{
                         .dropdown{
                             
@@ -285,6 +300,30 @@
                             
                         }
                     }
+                    .message-box{
+                        display: flex;
+                        flex-direction: column;
+                        label{
+                            font-size: var(--extra-small);
+                            color: var(--error);
+                            margin-bottom: 10px;
+                        }
+                        textarea{
+                            padding: 10px;
+                            border: 1px solid var(--gray-15);
+                            border-radius: 6px;
+                            font-size: 14px;
+                            resize: none;
+                            background-color: transparent;
+                            height: 100px;
+                            color: var(--gray-60);
+
+                            &:focus{
+                                outline:none;
+                                border-color: var(--purple-60);
+                            }
+                        }
+                    }
                     .footer{
                         display: flex;
                         gap: 20px;
@@ -296,6 +335,18 @@
                             border: none;
                             cursor: pointer;
                             color: white;
+                        }
+                        button:first-child{
+                            background-color: var(--success);
+                        }
+                        button:nth-child(2){
+                            background-color: var(--error);
+                        }                       
+                    }
+                    .error{
+                        font-size: var(--extra-small);
+                        p{
+                            color: var(--error);
                         }
                     }
                 }

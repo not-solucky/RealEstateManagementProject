@@ -139,7 +139,7 @@ function PropertyView({ setShowProperty, setPropertyInfo, propertyInfo, docID, s
         </>
     )
 }
-function TitleSection({ title, price }) {
+function TitleSection({ title, price,city, state }) {
     return (
         <div className="property-title-section">
             <div className="property-container">
@@ -150,7 +150,7 @@ function TitleSection({ title, price }) {
                     <div className="property-info">
                         <div className="property-location">
                             <div className="location-icon"></div>
-                            <p>San Francisco, CA</p>
+                            <p>{city}, {state}</p>
                         </div>
                         <div className="property-price">
                             <p>For sale</p>
@@ -167,7 +167,7 @@ function TitleSection({ title, price }) {
 function PropertyInfo({property, images}) {
     return (
         <>
-            <TitleSection title={property.title} price={property.price} />
+            <TitleSection title={property.title} price={property.price} city={property.city} state = {property.state} />
             <ImageSwiper images={images} />
             <div className="description-box">
                 <p className="dstitle">Description</p>
@@ -178,26 +178,29 @@ function PropertyInfo({property, images}) {
                             <p className="title">Property Information</p>
                             <div className="content">
                                 <table>
-                                    <tr>
-                                        <td>Property Type</td>
-                                        <td>{property.property_category} | For {property.property_type}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Status</td>
-                                        <td>{property.status}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Verified</td>
-                                        <td>{property.verified ? `True` : `False`}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Created At</td>
-                                        <td>{Utility.formatDate(property.created_at)}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Updated At</td>
-                                        <td>{Utility.formatDate(property.updated_at)}</td>
-                                    </tr>
+                                    <tbody>
+
+                                        <tr>
+                                            <td>Property Type</td>
+                                            <td>{property.property_category} | For {property.property_type}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Status</td>
+                                            <td>{property.status}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Verified</td>
+                                            <td>{property.verified ? `True` : `False`}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Created At</td>
+                                            <td>{Utility.formatDate(property.created_at)}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Updated At</td>
+                                            <td>{Utility.formatDate(property.updated_at)}</td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -343,9 +346,13 @@ function VerificationBox({ docID, pID }) {
             </div>
             <div className="content">
                 {loading ? (
-                    <p>Loading...</p>
-                ) : success ?(
-                    <p>Property has been {rejectMessage ? "rejected" : "approved"} successfully.</p>
+                    <div className="loading">
+                        <p>Loading...</p>
+                    </div>
+                ) : success ? (
+                    <div className="success">
+                        <p>Property has been {rejectMessage ? "rejected" : "approved"} successfully.</p>
+                    </div>
                 ) : 
                 (
                     <>
@@ -362,16 +369,12 @@ function VerificationBox({ docID, pID }) {
                                         )}
                                     </div>
                                 </div>
-                                <div className="message">
-                                    <input
-                                        type="text"
-                                        placeholder="Rejection Message (required if rejecting)"
-                                        value={rejectMessage}
-                                        onChange={(e) => setRejectMessage(e.target.value)}
-                                    />
+                                <div className="message-box">
+                                    <label>Rejection Message</label>
+                                    <textarea value={rejectMessage} onChange={(e) => setRejectMessage(e.target.value)} maxLength={2000}></textarea>
                                 </div>
                                 <div className="footer">
-                                    <button onClick={() => handleApprove('verified')}>Approve</button>
+                                    <button onClick={() => handleApprove('approved')}>Approve</button>
                                     <button onClick={() => handleApprove('rejected')}>Reject</button>
                                 </div>
                                 {toggle && (
@@ -381,7 +384,7 @@ function VerificationBox({ docID, pID }) {
                                     />
                                 )}
                                 {
-                                    error && <p className="error">{error}</p>
+                                    error && <div className="error"><p>{error}</p></div>
                                 }
                                 
                             </>

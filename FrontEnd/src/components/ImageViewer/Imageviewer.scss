@@ -98,8 +98,8 @@
                     /* slider track */
                     &::-webkit-slider-runnable-track {
                         background-color: var(--purple-60);
-                        border-radius: 5px;
-                        height: 5px;
+                        border-radius: 2px;
+                        height: 2px;
                     }
 
                     /* slider thumb */
@@ -127,8 +127,8 @@
                     /* slider track */
                     &::-moz-range-track {
                         background-color:  var(--purple-60);
-                        border-radius: 5px;
-                        height: 5px;
+                        border-radius: 2px;
+                        height: 2px;
                     }
 
                     /* slider thumb */

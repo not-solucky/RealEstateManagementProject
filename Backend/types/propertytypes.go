@@ -218,3 +218,9 @@ type DashPropertyNotVerified struct {
 	DocumentID  *int64   `json:"document_id"` // Pointer to int64 for nullable field
 	Status      *string  `json:"status"`      // Pointer to string for nullable field
 }
+
+type PropertyVerifyPayload struct {
+	PropertyID int 				`json:"property_id"`
+	Status     string			`json:"status"`
+	Message    string			`json:"message"`
+}
