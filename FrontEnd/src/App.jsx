@@ -17,7 +17,8 @@ import AddUserPage from "./Dashboard/Pages/Adduser/AddUser";
 import AllUser from "./Dashboard/Pages/Alluser/AllUser";
 import UserProfile from "./Dashboard/Pages/UserProfile/UserProfile";
 import UserVerification from "./Dashboard/Pages/UserVerification";
-import VerifyUserPage from "./Dashboard/Pages/VerifyUser/VerifyUser";
+import VerifyUserPage from "./Dashboard/Pages/Verification/VerifyUser";
+import VerifyProperty from "./Dashboard/Pages/Verification/VerifyProperty";
 import Adminsaleproperty from "./Dashboard/Pages/Allproperty/Saleproperty";
 import Adminrentproperty from "./Dashboard/Pages/Allproperty/Rentproperty";
 
@@ -82,9 +83,9 @@ function App() {
                 <Route path="/dashboard" element={<AdminPanel loading={loading} />}>
                     <Route path="alluser" element={<AllUser />} />
                     <Route path="userprofile" element={<UserProfile />} />
-                    <Route path="userverification" element={<UserVerification />} />
                     <Route path="adduser" element={<AddUserPage />} />
                     <Route path="verifyuser" element={<VerifyUserPage />} />
+                    <Route path="verifyproperty" element={<VerifyProperty />} />
                     <Route path="addproperty" element={<AddProperty />} />
                     <Route path="allsaleproperty" element={<Adminsaleproperty />} />
                     <Route path="allrentproperty" element={<Adminrentproperty />} />
@@ -94,6 +95,8 @@ function App() {
                     <Route path="soldproperties" element={<SoldListings />} />
                     <Route path="mypurchasedproperites" element={<MyPurchasedListings />} />
                     <Route path="myrentedproperties" element={<MyRentedListings />} />
+
+                    <Route path="test" element={<UserVerification />} />
                 </Route>
             </Routes>
         </>

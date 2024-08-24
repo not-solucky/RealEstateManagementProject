@@ -28,6 +28,28 @@ func (h *Handler) handleGetImage(w http.ResponseWriter, r *http.Request) {
 
 	// Construct the file path
 	imagePath := filepath.Join("uploads", category, imageName)
+
+	if category == "" || imageName == "" {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid image path"))
+		return
+	}
+
+	if category == "property" {
+		imagePath = filepath.Join("uploads", "property", imageName)
+	}
+
+	if category == "profile" {
+		imagePath = filepath.Join("uploads", "profile", imageName)
+	}
+
+	if category == "udoc" {
+		imagePath = filepath.Join("uploads", "documents/user", imageName)
+	}
+
+	if category == "pdoc" {
+		imagePath = filepath.Join("uploads", "documents/property", imageName)
+	}
+
 	log.Println("Image path", imagePath)
 
 	// Check if file exists

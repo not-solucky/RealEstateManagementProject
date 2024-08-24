@@ -2,8 +2,9 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { ImageApi } from '../../api/image';
 
-import './imageswiper.css';
+import './imageswiper.scss';
 function ImageSwiper({ images }) {
     return (
         <>
@@ -35,7 +36,7 @@ function ImageSwiper({ images }) {
                             {images.map((img, index) => (
                                 <SwiperSlide key={index}>
                                     <div className="swiper-image-container">
-                                        <img src={img} alt={`Slide ${index + 1}`} />
+                                        <img src={ImageApi.GetStaticPropertyImage(img)} alt={`Slide ${index + 1}`} />
                                     </div>
                                 </SwiperSlide>
                             ))}

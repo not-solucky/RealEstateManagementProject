@@ -1,0 +1,5 @@
+1. Property Document submission user needs to be verified
+    L Checking whether the property document submitted by the user is the owner of the property --- to future me. 
+
+2. Probability of a race condition at documentHandler.go file.
+    L handleDashSubmitDocument might suffer from race condition where the condition check whether a document id exists for a particular property or not (very small case but dangerous.). solution: (using transaction or shift the whole checking thing to store function) --- to future me. must fix!!!

@@ -37,45 +37,12 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	// dashboard content
 	router.HandleFunc("/dashboard/getactivelistings", auth.WithJWTAuth(h.handleDashGetActiveListings, h.Ustore)).Methods("GET")
 	router.HandleFunc("/dashboard/getpendinglistings", auth.WithJWTAuth(h.handleDashGetPendingListings, h.Ustore)).Methods("GET")
+	router.HandleFunc("/dashboard/getpropertydocument/{id}", auth.WithJWTAuth(h.handleDashGetDocument, h.Ustore)).Methods("GET")
+	router.HandleFunc("/dashboard/submitpropertydocument", auth.WithJWTAuth(h.handleDashSubmitDocument, h.Ustore)).Methods("POST")
+	router.HandleFunc("/dashboard/getallpendingproperty/{page}", auth.WithJWTAuth(h.GetAllPendingProperty, h.Ustore)).Methods("GET")
+	router.HandleFunc("/dashboard/verifyproperty", auth.WithJWTAuth(h.handleVerifyProperty, h.Ustore)).Methods("POST")
 }
 
-func (h *Handler) handleDashGetPendingListings(w http.ResponseWriter, r *http.Request) {
-	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
-	userID := contextValues.ID
-	property, err := h.store.DashGetPropertyNotVerified(userID)
-
-	if err != nil {
-		utils.WriteError(w, http.StatusInternalServerError, err)
-		return
-	}
-	count := len(property) // Assuming 'property' is a slice
-
-	// Prepare the response
-	response := map[string]interface{}{
-		"count":    count,
-		"property": property,
-	}
-	utils.WriteJSON(w, http.StatusOK, response)
-}
-func (h *Handler) handleDashGetActiveListings(w http.ResponseWriter, r *http.Request) {
-	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
-	userID := contextValues.ID
-
-	property, err := h.store.DashGetPropertyVerified(userID)
-
-	if err != nil {
-		utils.WriteError(w, http.StatusInternalServerError, err)
-		return
-	}
-	count := len(property) // Assuming 'property' is a slice
-
-	// Prepare the response
-	response := map[string]interface{}{
-		"count":    count,
-		"property": property,
-	}
-	utils.WriteJSON(w, http.StatusOK, response)
-}
 func parseFilters(r *http.Request) types.PropertyFilters {
 	query := r.URL.Query()
 	filters := types.PropertyFilters{}
@@ -112,6 +79,72 @@ func parseFilters(r *http.Request) types.PropertyFilters {
 
 	return filters
 }
+func (h *Handler) handleDashGetPendingListings(w http.ResponseWriter, r *http.Request) {
+	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
+	userID := contextValues.ID
+	property, err := h.store.DashGetPropertyNotVerified(userID)
+
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+	count := len(property) // Assuming 'property' is a slice
+
+	// Prepare the response
+	response := map[string]interface{}{
+		"count":    count,
+		"property": property,
+	}
+	utils.WriteJSON(w, http.StatusOK, response)
+}
+func (h *Handler) GetAllPendingProperty(w http.ResponseWriter, r *http.Request) {
+	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
+	if contextValues.Role != "admin" {
+		http.Error(w, "you must be an admin to view all properties", http.StatusUnauthorized)
+		return
+	}
+
+	page, err := strconv.Atoi(mux.Vars(r)["page"])
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid page number"))
+		return
+	}
+
+
+	property,count, err := h.store.GetAllPendingProperty(page)
+
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+
+	// Prepare the response
+	response := map[string]interface{}{
+		"count":    count,
+		"property": property,
+	}
+	utils.WriteJSON(w, http.StatusOK, response)
+}
+func (h *Handler) handleDashGetActiveListings(w http.ResponseWriter, r *http.Request) {
+	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
+	userID := contextValues.ID
+
+	property, err := h.store.DashGetPropertyVerified(userID)
+
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+	count := len(property) // Assuming 'property' is a slice
+
+	// Prepare the response
+	response := map[string]interface{}{
+		"count":    count,
+		"property": property,
+	}
+	utils.WriteJSON(w, http.StatusOK, response)
+}
 func (h *Handler) handleGetProperty(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -135,7 +168,7 @@ func (h *Handler) handleGetAllProperty(w http.ResponseWriter, r *http.Request) {
 	userRole := contextValues.Role
 
 	if userRole != "admin" {
-		http.Error(w, "you must be an admin to view all properties", http.StatusUnauthorized)
+		utils.WriteError(w, http.StatusForbidden, fmt.Errorf("forbidden"))
 		return
 	}
 
@@ -190,7 +223,7 @@ func (h *Handler) handleCreateHouse(w http.ResponseWriter, r *http.Request) {
 	userVerified := contextValues.Verified
 
 	if !userVerified {
-		http.Error(w, "you must be verified to add a property", http.StatusUnauthorized)
+		utils.WriteError(w, http.StatusForbidden, fmt.Errorf("forbidden"))
 		return
 	}
 
@@ -216,12 +249,16 @@ func (h *Handler) handleCreateHouse(w http.ResponseWriter, r *http.Request) {
 
 	utils.WriteJSON(w, http.StatusOK, nil)
 }
+
 func (h *Handler) handleCreateApartment(w http.ResponseWriter, r *http.Request) {
+	
+
 	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
 	userVerified := contextValues.Verified
-
+	fmt.Println("userVerified", userVerified)
 	if !userVerified {
-		http.Error(w, "you must be verified to add a property", http.StatusUnauthorized)
+		fmt.Println("forbidden")
+		utils.WriteError(w, http.StatusForbidden, fmt.Errorf("forbidden"))
 		return
 	}
 
@@ -251,7 +288,7 @@ func (h *Handler) handleCreateCommercial(w http.ResponseWriter, r *http.Request)
 	userVerified := contextValues.Verified
 
 	if !userVerified {
-		http.Error(w, "you must be verified to add a property", http.StatusUnauthorized)
+		utils.WriteError(w, http.StatusForbidden, fmt.Errorf("forbidden"))
 		return
 	}
 	var payload types.PropertyCommercialPayload

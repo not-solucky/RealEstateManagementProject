@@ -45,7 +45,7 @@ func (s *APIServer) Run() error {
 	corsHandler := handlers.CORS(
 		handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
 		handlers.AllowedOrigins([]string{"*"}),
-		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "UPDATE"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "UPDATE", "OPTIONS"}),
 	)
 
 	return http.ListenAndServe(s.addr, corsHandler(router))

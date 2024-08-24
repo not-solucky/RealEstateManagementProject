@@ -100,7 +100,7 @@ func permissionDenied(w http.ResponseWriter) {
 	utils.WriteError(w, http.StatusForbidden, fmt.Errorf("permission denied"))
 }
 
-func CreateJWT(secret []byte, user *types.User) (string, error) {
+func CreateJWT(secret []byte, user *types.Usershort) (string, error) {
 
 	expiration := time.Second * time.Duration(config.Envs.JWTExpirationInSeconds)
 

@@ -22,7 +22,6 @@ const Login = async (payload) => {
 
     }
 }
-
 const Register = async (payload) => {
     try {
         const response = await fetch(`${config.baseURL}/register`, {
@@ -39,7 +38,6 @@ const Register = async (payload) => {
 
     }
 }
-
 const getProfile = async () => {
     try {
         const id = getID();
@@ -62,6 +60,26 @@ const getProfile = async () => {
     }
 }
 
+const getUserById = async (id) => {
+    try {
+        const token = getToken();
+        const response = await fetch(`${config.baseURL}/users/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+        return {statusCode: response.status, data: data};
+        
+    } catch (error) {
+        console.error(error);
+        return {statusCode: 500, data: {error: "Error Connecting to Server"}};
+
+    }
+}
 const getAllUsers = async () => {
     try{
         const token = getToken();
@@ -84,9 +102,7 @@ const getAllUsers = async () => {
 
     }
 }
-
 // update profile
-
 const updateUsername = async (payload) => {
     try {
         const id = getID();
@@ -109,7 +125,6 @@ const updateUsername = async (payload) => {
 
     }
 }
-
 const updatePassword = async (payload) => {
     try {
         const id = getID();
@@ -201,6 +216,83 @@ const updateImage = async (payload) => {
     }
 }
 
+const GetDocument = async (id) => {
+    const token = getToken();
+    try {
+        const response = await fetch(`${config.baseURL}/dashboard/getuserdocument/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const data = await response.json();
+        return { statusCode: response.status, data: data };
+    }
+    catch (error) {
+        console.error(error);
+        return { statusCode: 500, data: { error: "Error Connecting to Server" } };
+    }
+}
+const SubmitDocument = async (payload) => {
+    const token = getToken();
+    try {
+        const response = await fetch(`${config.baseURL}/dashboard/submituserdocument`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        return { statusCode: response.status, data: data };
+    }
+    catch (error) {
+        console.error(error);
+        return { statusCode: 500, data: { error: "Error Connecting to Server" } };
+    }
+}
+const updateVerificationUser = async (payload) => {
+    // payload = {property_id: "property_id", status: "verified", message: "message" required if rejected`}
+    const token = getToken();
+    try {
+        const response = await fetch(`${config.baseURL}/dashboard/verifyuser`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        return { statusCode: response.status, data: data };
+    }
+    catch (error) {
+        console.error(error);
+        return { statusCode: 500, data: { error: "Error Connecting to Server" } };
+    }
+}
+
+const DashGetPendingUsers = async (page) => {
+    const token = getToken();
+    try {
+        const response = await fetch(`${config.baseURL}/dashboard/pendingusers/${page}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const data = await response.json();
+        return { statusCode: response.status, data: data };
+    }
+    catch (error) {
+        console.error(error);
+        return { statusCode: 500, data: { error: "Error Connecting to Server" } };
+    }
+}
+
 export const UserApi = {
     Login,
     Register,
@@ -210,5 +302,10 @@ export const UserApi = {
     updatePassword,
     updateEmail,
     updatePhone,
-    updateImage
+    updateImage,
+    GetDocument,
+    updateVerificationUser,
+    SubmitDocument,
+    DashGetPendingUsers,
+    getUserById
 };

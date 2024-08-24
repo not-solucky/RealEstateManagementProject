@@ -27,7 +27,6 @@ function ImageModal({setShowModal, setImages, images, modalIndex}) {
         }
 
         if (cropperRef.current) {
-            const croppedImage = cropperRef.current.getCanvas().toDataURL();
             var new_arr =[ ...images ]
             new_arr[modalIndex] = (cropperRef.current.getCanvas().toDataURL())
 
@@ -362,8 +361,8 @@ function Page6({images, setImages, setPart}) {
 
     const handleGoNext = () => {
         console.log(images.length)
-        if (images.length === 0){
-            setError("Please upload atleast one image")
+        if (images.length < 2){
+            setError("Please upload atleast 2 image")
         } else {
             setError("")
             setPart(7)
@@ -592,7 +591,7 @@ function Page7({primary, location, feature, images, setPart, setImages}){
                     {message && <p className="message">{message}</p>}
                     {status==="Success" && <p className='message'>Now verify your property by visiting the my property section.</p>}
                     {status === "Success" && <button onClick={()=>handleAddanother()}>Add Another</button>}
-                    {status ==="Failed" && <button onClick={()=>setPart(7)}>Try Again</button>}
+                    {status ==="Failed" && <button onClick={()=>setSubmit(!submit)}>Try Again</button>}
                 </div>
                 }
                 <div className="button-container">
@@ -604,7 +603,6 @@ function Page7({primary, location, feature, images, setPart, setImages}){
         </div>
     )
 }
-
 function AddProperty() {
     const [part, setPart] = useState(1)
 

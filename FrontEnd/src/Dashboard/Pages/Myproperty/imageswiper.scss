@@ -1,0 +1,159 @@
+.imageswiper-section {
+    .property-container {
+        max-width: 1600px;
+        margin: auto;
+
+        .swiper-content {
+            background-color: var(--gray-10);
+            padding: 50px;
+            border-radius: 12px;
+            border: 1px solid var(--gray-15);
+
+            .swiper-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                row-gap: 30px;
+
+
+                .swiper-button-container {
+                    display: flex;
+
+                    justify-content: center;
+                    align-items: center;
+                    background-color: var(--gray-08);
+                    gap: 10px;
+                    padding: 10px;
+                    border-radius: 100px;
+
+                    .swiper-pagination {
+                        position: relative;
+                        display: flex;
+                        gap: 4px;
+                        justify-content: center;
+                        align-items: center;
+                        bottom: auto;
+
+                        .swiper-pagination-bullet {
+                            width: 20px;
+                            height: 5px;
+                            border-radius: 60px;
+                            background-color: var(--gray-30);
+                            margin: 0;
+                            opacity: 1;
+                        }
+
+                        .swiper-pagination-bullet-active {
+                            background-color: var(--purple-60);
+                        }
+                    }
+
+                    .swiper-button-prev,
+                    .swiper-button-next {
+                        color: var(--white);
+                        background-color: var(--gray-10);
+                        aspect-ratio: 1;
+                        height: 58px;
+                        border-radius: 50%;
+                        padding: 10px;
+                        background-repeat: no-repeat;
+                        background-position: center;
+                        background-size: cover;
+                        border: 1px solid var(--gray-15);
+                        background-size: 35px;
+
+                    }
+
+                    .swiper-button-prev {
+                        background-image: url("./icons/prev.svg");
+
+                    }
+
+                    .swiper-button-next {
+                        background-image: url("./icons/next.svg");
+                    }
+
+                    .swiper-button-disabled {
+                        opacity: 0.6;
+                        border-color: var(--gray-20);
+                        background-color: transparent;
+                    }
+                }
+            }
+
+            .swiper {
+                .swiper-image-container {
+                    aspect-ratio: 72/53;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    overflow: hidden;
+                    border-radius: 10px;
+
+                    img {
+                        width: 100%;
+                        object-fit: cover;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1440px) {
+    .imageswiper-section {
+        .container {
+            .swiper-content {
+                padding: 30px;
+
+                .swiper-container {
+                    row-gap: 20px;
+
+                    .swiper-button-container {
+                        padding: 8px;
+                        gap: 8px;
+
+                        .swiper-button-prev,
+                        .swiper-button-next {
+                            height: 44px;
+                            background-size: 30px;
+                        }
+
+                        .swiper-pagination {
+                            .swiper-pagination-bullet {
+                                width: 12px;
+                                height: 3px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+
+@media screen and (max-width: 1024px) {
+    .imageswiper-section {
+        .container {
+            .swiper-content {
+                padding: 20px;
+
+                .swiper-container {
+                    .swiper-button-container {
+                        width: 100%;
+                        padding: 6px;
+                        gap: 6px;
+
+                        .swiper-button-prev,
+                        .swiper-button-next {
+                            height: 38px;
+                            background-size: 25px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

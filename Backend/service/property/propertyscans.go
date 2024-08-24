@@ -61,6 +61,7 @@ func (s *Store) ScanRowToPropertyFull(row *sql.Rows) (*types.PropertyFull, error
 	var parkingFacility sql.NullBool
 	var floorNo sql.NullInt32
 	var floorCount sql.NullInt32
+	var photoURLs string
 
 	err := row.Scan(
 		&p.ID,
@@ -87,6 +88,7 @@ func (s *Store) ScanRowToPropertyFull(row *sql.Rows) (*types.PropertyFull, error
 		&p.Verified,
 		&p.CreatedAt,
 		&p.UpdatedAt,
+		&photoURLs,
 	)
 	if err != nil {
 		return nil, err
@@ -133,6 +135,7 @@ func (s *Store) ScanRowToPropertyFull(row *sql.Rows) (*types.PropertyFull, error
 	} else {
 		p.FloorCount = nil
 	}
+	p.Image = strings.Split(photoURLs, ",")
 
 	return p, nil
 }

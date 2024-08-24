@@ -188,6 +188,7 @@ type PropertyFull struct {
 	Verified         bool      `json:"verified"`
 	CreatedAt        time.Time `json:"created_at"`
 	UpdatedAt        time.Time `json:"updated_at"`
+	Image			 []string    `json:"photo_url"`
 }
 
 type DashPropertyVerified struct {
@@ -216,4 +217,10 @@ type DashPropertyNotVerified struct {
 	IsVerified  bool     `json:"is_verified"`
 	DocumentID  *int64   `json:"document_id"` // Pointer to int64 for nullable field
 	Status      *string  `json:"status"`      // Pointer to string for nullable field
+}
+
+type PropertyVerifyPayload struct {
+	PropertyID int 				`json:"property_id"`
+	Status     string			`json:"status"`
+	Message    string			`json:"message"`
 }

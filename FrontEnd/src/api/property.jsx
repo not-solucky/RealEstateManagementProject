@@ -15,6 +15,7 @@ const buildQueryParams = (filters) => {
 };
 const AddProperty = async (payload) => {
     const token = getToken();
+    console.log(payload);
     try {
         var type = payload.property_category;
         const response = await fetch(`${config.baseURL}/property/create/${type}`, {
@@ -26,9 +27,9 @@ const AddProperty = async (payload) => {
             body: JSON.stringify(payload),
         });
         const data = await response.json();
+        console.log(data);
         return { statusCode: response.status, data: data };
     } catch (error) {
-        console.error(error);
         return { statusCode: 500, data: { error: "Error Connecting to Server" } };
     }
 };
@@ -122,11 +123,113 @@ const DashGetPendingListings = async () => {
         return { statusCode: 500, data: { error: "Error Connecting to Server" } };
     }
 };
+
+const DashGetPendingAllproperties = async (page) => {
+    const token = getToken();
+    try {
+        const response = await fetch(`${config.baseURL}/dashboard/getallpendingproperty/${page}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+
+            },
+        });
+        const data = await response.json();
+        return { statusCode: response.status, data: data };
+    }
+    catch (error) {
+        console.error(error);
+        return { statusCode: 500, data: { error: "Error Connecting to Server" } };
+    }
+};
+
+const GetPropertyById = async (id) => {
+    try {
+        const response = await fetch(`${config.baseURL}/getproperty/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const data = await response.json();
+        return { statusCode: response.status, data: data };
+    } catch (error) {
+        console.error(error);
+        return { statusCode: 500, data: { error: "Error Connecting to Server" } };
+    }
+};
+
+const GetDocument = async (id) => {
+    const token = getToken();
+    try {
+        const response = await fetch(`${config.baseURL}/dashboard/getpropertydocument/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+
+            },
+        });
+        const data = await response.json();
+        return { statusCode: response.status, data: data };
+    }
+    catch (error) {
+        console.error(error);
+        return { statusCode: 500, data: { error: "Error Connecting to Server" } };
+    }
+}
+
+const SubmitDocument = async (payload) => {
+    const token = getToken();
+    try {
+        const response = await fetch(`${config.baseURL}/dashboard/submitpropertydocument`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        return { statusCode: response.status, data: data };
+    }
+    catch (error) {
+        console.error(error);
+        return { statusCode: 500, data: { error: "Error Connecting to Server" } };
+    }
+}
+
+const updateVerificationProperty = async (payload) => {
+    // payload = {property_id: "property_id", status: "verified", message: "message" required if rejected`}
+    const token = getToken();
+    try {
+        const response = await fetch(`${config.baseURL}/dashboard/verifyproperty`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        return { statusCode: response.status, data: data };
+    }
+    catch (error) {
+        console.error(error);
+        return { statusCode: 500, data: { error: "Error Connecting to Server" } };
+    }
+}
 export const PropertyApi = {
     AddProperty,
     GetSaleProperties,
     GetRentProperties,
     AdminGetAllProperty,
     DashGetActiveListings,
-    DashGetPendingListings
+    DashGetPendingListings,
+    GetPropertyById,
+    GetDocument,
+    SubmitDocument,
+    DashGetPendingAllproperties,
+    updateVerificationProperty
 };

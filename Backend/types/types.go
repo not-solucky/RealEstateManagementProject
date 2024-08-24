@@ -5,7 +5,7 @@ import (
 )
 
 type UserStore interface {
-	GetUserByEmail(email string) (*User, error)
+	GetUserByEmail(email string) (*Usershort, error)
 	GetUserByID(id int) (*User, error)
 	CreateUser(u *User) error
 	GetAllUsers() ([]*User, error)
@@ -15,7 +15,14 @@ type UserStore interface {
 	UpdateUserImage(id int, image string) error
 	UpdateUserEmail(id int, email string) error
 	UpdateUserRole(id int, role string) error
-	VerifyUser(id int) error
+	
+	SubmitDocument(payload UserDocumentPayload) error
+	UpdateDocument(payload UserDocumentPayload) error
+	GetDocumentID(userID int) (int, error)
+	GetDocumentByID(id int) (*UserDocument, error)
+	VerifyUser(payload UserVerifyPayload) error
+	GetAllPendingUsers(page int) ([]*User, int, error)
+	
 }
 
 type PropertyStore interface {
@@ -27,6 +34,13 @@ type PropertyStore interface {
 	// dashboardfuncs
 	DashGetPropertyVerified(id int) ([]*DashPropertyVerified, error)
 	DashGetPropertyNotVerified(id int) ([]*DashPropertyNotVerified, error)
+	GetDocumentByID(id int) (*PropertyDocument, error)
+	SubmitDocument(payload PropertyDocumentPayload) error
+	UpdateDocument(payload PropertyDocumentPayload) error
+	GetDocumentID(propertyID int) (int, error)
+	GetAllPendingProperty(page int) ([]*DashPropertyNotVerified,int, error)
+	VerifyProperty(payload PropertyVerifyPayload) error
+
 }
 
 type ImageStore interface {

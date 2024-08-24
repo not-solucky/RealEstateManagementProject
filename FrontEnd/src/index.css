@@ -10,26 +10,6 @@
     
 
 }
-*::-webkit-scrollbar {
-    width: 5px;
-}
-
-/* Track */
-*::-webkit-scrollbar-track {
-    background: var(--purple-90);
-
-}
-
-/* Handle */
-*::-webkit-scrollbar-thumb {
-    background: var(--purple-60);
-}
-
-/* Handle on hover */
-*::-webkit-scrollbar-thumb:hover {
-    background: var(--purple-70);
-}
-
 
 body {
     display: block;
@@ -66,15 +46,14 @@ body {
     --small: 20px;
     --extra-small: 18px;
     --error: rgb(250, 96, 75);
+    --success: #9ece6a;
 }
 
 body {
     background-color: var(--gray-08);
 }
 
-oll {
-    overflow: hidden;
-}
+
 
 .container {
     max-width: 1920px;
