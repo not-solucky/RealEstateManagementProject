@@ -127,7 +127,7 @@ function PropertyView({id, setShowProperty, setPropertyId}){
         </>
     )
 }
-function TitleSection({ title, price }) {
+function TitleSection({ title, price , state, city}) {
     return (
         <div className="property-title-section">
             <div className="property-container">
@@ -138,7 +138,7 @@ function TitleSection({ title, price }) {
                     <div className="property-info">
                         <div className="property-location">
                             <div className="location-icon"></div>
-                            <p>San Francisco, CA</p>
+                            <p>{city}, {state}</p>
                         </div>
                         <div className="property-price">
                             <p>For sale</p>
@@ -154,7 +154,7 @@ function TitleSection({ title, price }) {
 function PropertyInfo({property, images}) {
     return (
         <>
-            <TitleSection title={property.title} price={property.price} />
+            <TitleSection title={property.title} price={property.price} city={property.city} state={property.state} />
             <ImageSwiper images={images} />
             <div className="description-box">
                 <p className="dstitle">Description</p>

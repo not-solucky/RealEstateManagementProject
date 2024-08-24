@@ -4,7 +4,24 @@ import (
 	"time"
 )
 
+
 type User struct {
+	ID        int       `json:"user_id"`
+	Name      string    `json:"username"`
+	Email     string    `json:"email"`
+	Password  string    `json:"-"`
+	Phone     string    `json:"phone_number"`
+	ImagePath string    `json:"image"`
+	Role      string    `json:"role"`
+	Verified  bool      `json:"is_verified"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	DocumentID *int	    `json:"document_id"`
+	Status	   *string   `json:"document_status"`
+
+}
+
+type Usershort struct {
 	ID        int       `json:"user_id"`
 	Name      string    `json:"username"`
 	Email     string    `json:"email"`
@@ -58,4 +75,10 @@ type UpdateUserRolePayload struct {
 }
 type VerifyUserPayload struct {
 	ID int `json:"id"`
+}
+
+type UserVerifyPayload struct {
+	UserID 	   int 				`json:"user_id"`
+	Status     string			`json:"status"`
+	Message    string			`json:"message"`
 }

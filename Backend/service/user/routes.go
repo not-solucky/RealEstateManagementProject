@@ -32,6 +32,12 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/update/userimage", auth.WithJWTAuth(h.handleUpdateUserImage, h.store)).Methods(http.MethodPut)
 	router.HandleFunc("/update/phone", auth.WithJWTAuth(h.handleUpdatePhone, h.store)).Methods(http.MethodPut)
 	router.HandleFunc("/admin/users", auth.WithJWTAuth(h.handleGetAllUsers, h.store)).Methods(http.MethodGet)
+	router.HandleFunc("/dashboard/getuserdocument/{id}", auth.WithJWTAuth(h.handleDashGetDocument, h.store)).Methods("GET")
+	router.HandleFunc("/dashboard/submituserdocument", auth.WithJWTAuth(h.handleDashSubmitDocument, h.store)).Methods("POST")
+	router.HandleFunc("/dashboard/verifyuser", auth.WithJWTAuth(h.handleVerifyUser, h.store)).Methods("POST")
+	router.HandleFunc("/dashboard/pendingusers/{page}", auth.WithJWTAuth(h.handleGetPendingUsers, h.store)).Methods("GET")
+
+	
 	// router.HandleFunc("/test", h.handletest).Methods("POST")
 
 }
@@ -78,7 +84,6 @@ func (h *Handler) handleUpdateUserImage(w http.ResponseWriter, r *http.Request) 
 	fmt.Printf("File uploaded successfully: %s\n", fileName)
 
 }
-
 func (h *Handler) handleUpdateUserName(w http.ResponseWriter, r *http.Request) {
 	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
 	userID := contextValues.ID
@@ -266,7 +271,6 @@ func (h *Handler) handleUpdatePhone(w http.ResponseWriter, r *http.Request) {
 
 	utils.WriteJSON(w, http.StatusOK, nil)
 }
-
 // admin privilages
 func (h *Handler) handleGetAllUsers(w http.ResponseWriter, r *http.Request) {
 	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
@@ -283,7 +287,6 @@ func (h *Handler) handleGetAllUsers(w http.ResponseWriter, r *http.Request) {
 	}
 	utils.WriteJSON(w, http.StatusOK, users)
 }
-
 // user privilages
 
 func (h *Handler) handleGetUser(w http.ResponseWriter, r *http.Request) {
@@ -397,4 +400,34 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 	// return success
 	utils.WriteJSON(w, http.StatusCreated, nil)
 
+}
+
+func (h *Handler) handleGetPendingUsers (w http.ResponseWriter, r *http.Request) {
+	contextValues := r.Context().Value(auth.UserKey).(types.UserContext)
+	if contextValues.Role != "admin" {
+		http.Error(w, "you must be an admin to view all properties", http.StatusUnauthorized)
+		return
+	}
+
+	page, err := strconv.Atoi(mux.Vars(r)["page"])
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid page number"))
+		return
+	}
+
+
+	users,count, err := h.store.GetAllPendingUsers(page)
+
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+
+	// Prepare the response
+	response := map[string]interface{}{
+		"count": count,
+		"users": users,
+	}
+	utils.WriteJSON(w, http.StatusOK, response)
 }

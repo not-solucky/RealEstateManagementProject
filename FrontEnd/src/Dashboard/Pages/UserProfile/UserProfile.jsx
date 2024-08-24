@@ -395,6 +395,7 @@ function UserProfile() {
                     if (statusCode === 200) {
                         setProfile(data); // Ensure setProfile is properly defined
                         setUserInfo(data);
+                        console.log(data);
                     }
                 }
             } catch (error) {
@@ -447,6 +448,14 @@ function UserProfile() {
                         </div>
                         
                     </div>
+
+                    {
+                        !userInfo.is_verified && (
+                            <VerificationBox props={{
+                                documentID: userInfo.document_id,
+                                userID: userInfo.user_id
+                            } } />)
+                    }
                     <EditForm />
 
                     {modalOpen && <UserImageUploadModal onClose={onClose}/>}
@@ -457,4 +466,212 @@ function UserProfile() {
     );
 }
 
+function ImageModal({setShowModal,submitImagefunc}) {
+    const [image, setImage] = useState('');
+    const cropperRef = useRef(null);
+    const [loading, setLoading] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
+    const [error, setError] = useState("");
+    const handleImageChange = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    const handleSubmit = async() => {
+        setLoading(true);
+        if (image) {
+            const cropped_image = cropperRef.current.getCanvas().toDataURL()
+            const imageData = Utility.imageParser(cropped_image);
+            const data = await submitImagefunc(imageData);
+
+            if (data.statusCode === 200) {
+                setSubmitted(true);
+                setError("");
+            } else {
+                setSubmitted(false);
+                setError(data.error);
+            }
+        }
+        setLoading(false);
+    };
+    const handleCancel = () => {
+        setImage(null);
+        setShowModal(false);
+    };
+
+    return(
+        <div className="modal">
+            <div className="modal-content">
+                <div className="modal-header">
+                    <h2>Upload Profile Image</h2>
+                </div>
+                {error && (
+                    <div className="error">
+                        <p>{error}</p>
+                    </div>
+                )}
+                {loading ? (
+                    <div className="loading">
+                        <p>Loading...</p>
+                    </div>) : submitted ? (
+                    <div className="success-message">
+                        <p>Image submitted successfully!</p>
+                        <button onClick={() => setShowModal(false)}>Close</button>
+                    </div> ) : (
+                    <div className="image-upload">
+                        <div className="input">
+                            <input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
+                            <label htmlFor="image">Choose Image</label>
+                        </div>
+                        <div className="preview">
+                        {image ? (
+                            <div className="image-container">
+                                <Cropper
+                                    ref={cropperRef}
+                                    src={image}
+                                    className="cropper"
+                                    style={{ height: 300, width: 400 }}
+                                    cropperOptions={{
+                                        aspectRatio: 2/3,
+
+                                    }}
+                                    aspectRatio={2/3}
+                                />
+                            </div>
+                        ) : (
+                            <div className="no-image">
+                                <p>No image selected</p>
+                            </div>
+                        )}
+                        </div>
+                        <div className="button-container">
+                            <button onClick={handleSubmit}>Ok</button>
+                            <button onClick={handleCancel}>Cancel</button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
+    )
+}
+function VerificationBox({props}) {
+    const [documentID, setDocumentID] = useState(props.documentID);
+    const [image, setImage] = useState(null);
+    const [showImage, setShowImage] = useState(false);
+    const [message, setMessage] = useState("");
+    const [status, setStatus] = useState("");
+    const [submitted, setSubmitted] = useState("");
+
+    const [error, setError] = useState("");
+    const [modal, setModal] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const submitDocumentModal = () => {
+        setModal(true);
+    }
+
+    const getDocument = async () => {
+        setLoading(true);
+        const { statusCode, data } = await UserApi.GetDocument(documentID);
+        if (statusCode === 200) {
+            setImage(data.image);
+            setMessage(data.message);
+            setStatus(data.status);
+            setSubmitted(data.submitted);
+            setError("");
+            
+        } else {
+            setError(data.error);
+        }
+        setLoading(false);
+    }
+    const submitDocumentfunc = async (image) => {
+        const payload = {
+            user_id: props.userID,  
+            image: image,
+        };
+        setLoading(true);
+        var error = "";
+        const { statusCode, data } = await UserApi.SubmitDocument(payload);
+        if (statusCode === 200) {
+            setDocumentID(data.document_id);
+            setMessage(data.message);
+            setStatus(data.status);
+            setSubmitted(data.submitted);
+            setImage(data.image);
+            setError("");
+        } else {
+            setError(data.error);
+            error = data.error;
+        }
+        setLoading(false);
+        return {
+            statusCode: statusCode,
+            error: error,
+        }
+    }
+
+    useEffect(() => {
+        if (documentID) {
+            getDocument();
+        }
+    }, [documentID]);
+    return(
+        <>
+            <div className="verification-box">
+                <div className="title-box">
+                    <h2>Verification</h2>
+                </div>
+                <div className="content">
+                    {documentID === null && (
+                        <>
+                            <p>No document has been submitted for verification.</p>
+                            <button onClick={submitDocumentModal}>Submit Document</button>
+                        </>
+                    )}
+                    {
+                        image && (
+                            <>
+                                {status === "pending" && (
+                                    <div className="message">
+                                        
+                                        <p>Pending verification. This may take upto 48 hours.</p>
+                                    </div>
+                                )}
+                                {status === "rejected" && (
+                                    <div className="message">
+                                        <p>Document rejectet for the following reasons. Please review and resubmit.</p>
+                                        <div className="message-box">
+                                            <p className="title">Rejection reason:</p>
+                                            <p>{message}</p>
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="document">
+                                    <div className="dropdown">
+                                        <button onClick={() => setShowImage(!showImage)}>{ showImage ? (`Minimize Document`) : (`View Document`)}</button>
+                                        {showImage && (
+                                            <div className="image">
+                                                <img src={ImageApi.GetStaticUserDocumentImage(image)} alt="document" />
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="footer">
+                                    <button onClick={submitDocumentModal}>Resubmit Document</button>
+
+                                </div>
+                            </>
+                        )
+                    }
+                </div>
+                { modal && <ImageModal setShowModal={setModal} submitImagefunc={submitDocumentfunc}/> }
+            </div>
+        </>
+    );
+}
 export default UserProfile;

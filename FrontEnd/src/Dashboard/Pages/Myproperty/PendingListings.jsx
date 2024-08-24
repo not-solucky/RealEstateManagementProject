@@ -380,10 +380,10 @@ function ImageModal({setShowModal,submitImagefunc}) {
                                 <p>No image selected</p>
                             </div>
                         )}
-                            <div className="button-container">
-                                <button onClick={handleSubmit}>Ok</button>
-                                <button onClick={handleCancel}>Cancel</button>
-                            </div>
+                        </div>
+                        <div className="button-container">
+                            <button onClick={handleSubmit}>Ok</button>
+                            <button onClick={handleCancel}>Cancel</button>
                         </div>
                     </div>
                 )}
@@ -470,6 +470,7 @@ function VerificationBox({props}) {
                             <>
                                 {status === "pending" && (
                                     <div className="message">
+                                        
                                         <p>Pending verification. This may take upto 48 hours.</p>
                                     </div>
                                 )}
@@ -477,13 +478,14 @@ function VerificationBox({props}) {
                                     <div className="message">
                                         <p>Document rejectet for the following reasons. Please review and resubmit.</p>
                                         <div className="message-box">
+                                            <p className="title">Rejection reason:</p>
                                             <p>{message}</p>
                                         </div>
                                     </div>
                                 )}
                                 <div className="document">
                                     <div className="dropdown">
-                                        <button onClick={() => setShowImage(!showImage)}>{ showImage ? (`Close Document`) : (`View Document`)}</button>
+                                        <button onClick={() => setShowImage(!showImage)}>{ showImage ? (`Minimize Document`) : (`View Document`)}</button>
                                         {showImage && (
                                             <div className="image">
                                                 <img src={ImageApi.GetStaticPropertyDocumentImage(image)} alt="document" />

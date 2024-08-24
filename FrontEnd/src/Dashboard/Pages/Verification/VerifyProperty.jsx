@@ -383,9 +383,7 @@ function VerificationBox({ docID, pID }) {
                                         onClose={() => setToggle(false)}
                                     />
                                 )}
-                                {
-                                    error && <div className="error"><p>{error}</p></div>
-                                }
+                                {error && <div className="error"><p>{error}</p></div>}
                                 
                             </>
                         )}
