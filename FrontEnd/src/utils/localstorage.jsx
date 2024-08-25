@@ -38,8 +38,7 @@ export const getID = () => {
 export const getRole = () => {
     let token = getToken()
     if (!!token) {
-        data = jwtDecode(token)
-
+        const data = jwtDecode(token)
         return data.role
     }
     return false

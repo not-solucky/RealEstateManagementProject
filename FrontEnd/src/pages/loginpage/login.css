@@ -187,6 +187,13 @@
   transition: 0.3s;
 }
 
+.login-section .container .login-content .login-form .form .login-link p{
+  font-size: var(--extra-small);
+}
+.login-section .container .login-content .login-form .form .login-link p a{
+  color: var(--success);
+}
+
 @media screen and (max-width: 1440px) {
 
   .login-section .container {
