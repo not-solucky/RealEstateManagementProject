@@ -59,7 +59,6 @@ const getProfile = async () => {
 
     }
 }
-
 const getUserById = async (id) => {
     try {
         const token = getToken();
@@ -147,7 +146,6 @@ const updatePassword = async (payload) => {
 
     }
 }
-
 const updateEmail = async (payload) => {
     try {
         const id = getID();
@@ -170,7 +168,6 @@ const updateEmail = async (payload) => {
 
     }
 }
-
 const updatePhone = async (payload) => {
     try {
         const id = getID();
@@ -193,7 +190,6 @@ const updatePhone = async (payload) => {
 
     }
 }
-
 const updateImage = async (payload) => {
     try {
         const token = getToken();
@@ -215,7 +211,6 @@ const updateImage = async (payload) => {
 
     }
 }
-
 const GetDocument = async (id) => {
     const token = getToken();
     try {
@@ -273,7 +268,6 @@ const updateVerificationUser = async (payload) => {
         return { statusCode: 500, data: { error: "Error Connecting to Server" } };
     }
 }
-
 const DashGetPendingUsers = async (page) => {
     const token = getToken();
     try {

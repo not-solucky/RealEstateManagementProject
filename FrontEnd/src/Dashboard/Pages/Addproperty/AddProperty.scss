@@ -312,6 +312,11 @@
                         }
                         margin-bottom: 20px;
                     }
+                    .success{
+                        p{
+                            color: var(--success);
+                        }
+                    }
                     .message{
                         font-size: var(--extra-small);
                         color: var(--gray-50);

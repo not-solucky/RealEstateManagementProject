@@ -109,6 +109,7 @@ func CreateJWT(secret []byte, user *types.Usershort) (string, error) {
 		"expiredAt": time.Now().Add(expiration).Unix(),
 		"username":  user.Name,
 		"userImage": user.ImagePath,
+		"role": user.Role,
 	})
 
 	tokenString, err := token.SignedString(secret)
