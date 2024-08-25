@@ -69,7 +69,7 @@ func (s *Store) UpdateUserRole(id int, role string) error {
 }
 
 func (s *Store) GetAllUsers() ([]*types.User, error) {
-	rows, err := s.DB.Query("SELECT * FROM users")
+	rows, err := s.DB.Query("SELECT u.user_id, u.username, u.email, u.password, u.phone_number, u.image, u.role, u.is_verified, u.created_at, u.updated_at, d.document_id, d.status FROM users u LEFT JOIN userdocuments d ON u.user_id = d.user_id")
 	if err != nil {
 		log.Println("Error querying users")
 		return nil, err

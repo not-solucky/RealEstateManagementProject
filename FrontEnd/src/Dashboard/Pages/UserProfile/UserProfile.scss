@@ -327,7 +327,12 @@
                         width: 400px;
                     }
                 }
-
+                .loading{
+                    font-size: var(--extra-small);
+                    p{
+                        color: var(--purple-70);
+                    }
+                }
                 .image-upload{
                     display: flex;
                     flex-direction: column;
@@ -365,7 +370,26 @@
                         }
                     }
                 }
+                .success-message{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                    font-size: var(--extra-small);
+                    p{
+                        color: var(--success);
+                    }
 
+                    button{
+                        padding: 10px 24px;
+                        font-size: var(--extra-small);
+                        font-weight: var(--font-weight-medium);
+                        background-color: var(--error);
+                        border: none;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        color: white;
+                    }
+                }
                 .button-container{
                     display: flex;
                     gap: 10px;

@@ -15,7 +15,6 @@ type UserStore interface {
 	UpdateUserImage(id int, image string) error
 	UpdateUserEmail(id int, email string) error
 	UpdateUserRole(id int, role string) error
-	
 	SubmitDocument(payload UserDocumentPayload) error
 	UpdateDocument(payload UserDocumentPayload) error
 	GetDocumentID(userID int) (int, error)

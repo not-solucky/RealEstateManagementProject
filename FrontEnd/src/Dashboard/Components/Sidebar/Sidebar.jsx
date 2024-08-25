@@ -35,7 +35,6 @@ function DashboardSidebar() {
 
                 </div>
                 <div className="dashboard-exit">
-                    <div className="line"></div>
                     <div className="link">
                         <NavLink to={'/'}>Exit Dashboard</NavLink>
                     </div>

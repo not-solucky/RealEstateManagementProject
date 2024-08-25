@@ -461,8 +461,14 @@ function VerificationBox({props}) {
                 <div className="content">
                     {documentID === null && (
                         <>
-                            <p>No document has been submitted for verification.</p>
-                            <button onClick={submitDocumentModal}>Submit Document</button>
+                            <div className="message">
+                                <p>No document has been submitted for verification.</p>
+
+                            </div>
+                            <div className="footer">
+
+                                <button onClick={submitDocumentModal}>Submit Document</button>
+                            </div>
                         </>
                     )}
                     {

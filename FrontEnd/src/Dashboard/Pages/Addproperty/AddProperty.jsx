@@ -587,8 +587,8 @@ function Page7({primary, location, feature, images, setPart, setImages}){
                 <div className="submit-container">
                     {status=== "loading" ?(
                         <Loader/>
-                    ):(<div className='status'><p>{status}</p></div>)}
-                    {message && <p className="message">{message}</p>}
+                    ):(<div className={`status ${status === "Success" ? "success" : ""}`}><p>{status}</p></div>)}
+                    {message && <p className={`message `}>{message}</p>}
                     {status==="Success" && <p className='message'>Now verify your property by visiting the my property section.</p>}
                     {status === "Success" && <button onClick={()=>handleAddanother()}>Add Another</button>}
                     {status ==="Failed" && <button onClick={()=>setSubmit(!submit)}>Try Again</button>}

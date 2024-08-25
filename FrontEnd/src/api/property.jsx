@@ -123,7 +123,6 @@ const DashGetPendingListings = async () => {
         return { statusCode: 500, data: { error: "Error Connecting to Server" } };
     }
 };
-
 const DashGetPendingAllproperties = async (page) => {
     const token = getToken();
     try {
@@ -143,7 +142,6 @@ const DashGetPendingAllproperties = async (page) => {
         return { statusCode: 500, data: { error: "Error Connecting to Server" } };
     }
 };
-
 const GetPropertyById = async (id) => {
     try {
         const response = await fetch(`${config.baseURL}/getproperty/${id}`, {
@@ -159,7 +157,6 @@ const GetPropertyById = async (id) => {
         return { statusCode: 500, data: { error: "Error Connecting to Server" } };
     }
 };
-
 const GetDocument = async (id) => {
     const token = getToken();
     try {
@@ -179,7 +176,6 @@ const GetDocument = async (id) => {
         return { statusCode: 500, data: { error: "Error Connecting to Server" } };
     }
 }
-
 const SubmitDocument = async (payload) => {
     const token = getToken();
     try {
@@ -199,7 +195,6 @@ const SubmitDocument = async (payload) => {
         return { statusCode: 500, data: { error: "Error Connecting to Server" } };
     }
 }
-
 const updateVerificationProperty = async (payload) => {
     // payload = {property_id: "property_id", status: "verified", message: "message" required if rejected`}
     const token = getToken();
@@ -220,6 +215,7 @@ const updateVerificationProperty = async (payload) => {
         return { statusCode: 500, data: { error: "Error Connecting to Server" } };
     }
 }
+
 export const PropertyApi = {
     AddProperty,
     GetSaleProperties,
