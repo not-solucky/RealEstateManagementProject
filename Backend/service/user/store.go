@@ -7,6 +7,7 @@ import (
 	"log"
 )
 
+// example comment
 type Store struct {
 	DB *sql.DB
 }
@@ -146,10 +147,9 @@ func (s *Store) GetAllPendingUsers(page int) ([]*types.User, int, error) {
 	offset := (page - 1) * 15
 	var totalCount int
 
-
 	err := s.DB.QueryRow("SELECT COUNT(*) FROM userdocuments WHERE status = 'pending'").Scan(&totalCount)
 	if err != nil {
-		return nil,0, err
+		return nil, 0, err
 	}
 
 	rows, err := s.DB.Query("SELECT u.user_id, u.username, u.email, u.password, u.phone_number, u.image, u.role, u.is_verified, u.created_at, u.updated_at, d.document_id, d.status FROM users u LEFT JOIN userdocuments d ON u.user_id = d.user_id WHERE d.status = 'pending' LIMIT 15 OFFSET ?", offset)
@@ -162,11 +162,11 @@ func (s *Store) GetAllPendingUsers(page int) ([]*types.User, int, error) {
 	for rows.Next() {
 		u, err := scanRowtoUser(rows)
 		if err != nil {
-			return nil,0, err
+			return nil, 0, err
 		}
 		users = append(users, u)
 	}
-	return users,totalCount, nil
+	return users, totalCount, nil
 }
 
 func scanRowtoUser(rows *sql.Rows) (*types.User, error) {
@@ -223,7 +223,6 @@ func scanRowtoUsershort(rows *sql.Rows) (*types.Usershort, error) {
 		&user.Verified,
 		&user.CreatedAt,
 		&user.UpdatedAt,
-		
 	)
 	if err != nil {
 		return nil, err

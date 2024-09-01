@@ -3,3 +3,7 @@
 
 2. Probability of a race condition at documentHandler.go file.
     L handleDashSubmitDocument might suffer from race condition where the condition check whether a document id exists for a particular property or not (very small case but dangerous.). solution: (using transaction or shift the whole checking thing to store function) --- to future me. must fix!!!
+
+3. Pressing <Enter> key doesnt initiate login or signup process (optional)
+
+4. Cant sign out directly from dashboard. (optional) -- level 2
